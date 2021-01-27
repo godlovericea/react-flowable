@@ -3,11 +3,17 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import zhCN from 'antd/es/locale/zh_CN';
+import 'antd/dist/antd.css';
+import { ConfigProvider } from 'antd';
+
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <ConfigProvider locale={zhCN}>
+      <React.StrictMode>
+          <App />
+      </React.StrictMode>
+  </ConfigProvider>,
   document.getElementById('root')
 );
 
