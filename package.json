@@ -155,5 +155,8 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "webpack-plugin-fr-theme": "^0.2.0"
   }
 }

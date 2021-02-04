@@ -5,15 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import zhCN from 'antd/es/locale/zh_CN';
 import 'antd/dist/antd.css';
+import { BrowserRouter } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 
 
 ReactDOM.render(
-  <ConfigProvider locale={zhCN}>
-      <React.StrictMode>
-          <App />
-      </React.StrictMode>
-  </ConfigProvider>,
+  <BrowserRouter>
+      <ConfigProvider locale={zhCN}>
+              <App />
+      </ConfigProvider>
+  </BrowserRouter>,
   document.getElementById('root')
 );
 
