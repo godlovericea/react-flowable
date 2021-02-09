@@ -1,9 +1,24 @@
 import React from 'react';
 import Generator from 'fr-generator';
-import { CreateModel,GetFormJson, UpdateFormDef } from '../../apis/process'
+import { CreateModel,GetFormJson } from '../../apis/process'
 import {Modal, Form, Input, Button} from 'antd'
 // import FormTransfer from '../../libs/transform/transform'
 
+
+const defaultValue = {
+    schema: {
+      type: 'object',
+      properties: {
+        inputName: {
+          title: '简单输入框',
+          type: 'string',
+        },
+      },
+    },
+    displayType: 'row',
+    showDescIcon: true,
+    labelWidth: 120,
+  };
 const templates = [
   {
     text: '模板1',
@@ -33,7 +48,7 @@ const templates = [
   },
 ];
 
-class EditForm extends React.Component{
+class NewForm extends React.Component{
     constructor(props){
         super(props);
         this.genRef = React.createRef();
@@ -48,62 +63,67 @@ class EditForm extends React.Component{
         this.extraButtons = [
             true, true, false, true, 
             { 
-                text: '确定修改',
+                text: '保存',
                 type: 'primary',
                 onClick: () => this.handleScheam()
             },
             { 
                 text: '返回列表',
-                type: 'primary',
-                onClick: () => this.goBackToHome()
-            }
+                onClick: () => this.goBackToList()
+            },
         ]
     }
-    componentDidMount(){
-        this.getData()
-    }
-    getData =()=>{
-        const id = this.props.location.state.id
-        GetFormJson(id)
-          .then((res)=>{
-              if (res.status === 200) {
-                  this.setState({
-                    defaultValue: JSON.parse(res.data)
-                  })
-              }
-          })
-    }
     handleScheam = ()=>{
-      this.handleOk()
+        this.setState({
+            isModalVisible: true
+        })
+    }
+    goBackToList=()=>{
+        this.props.history.push({
+            pathname: '/home'
+        })
     }
     handleCancel= ()=>{
         this.setState({
             isModalVisible: false
         })
     }
-    goBackToHome=()=>{
-        this.props.history.push({
-            pathname: '/home'
-        })
-      }
     handleOk=()=>{
         const FormInfo = this.genRef.current && this.genRef.current.getValue()
+        var cookies = document.cookie
+        var arr = cookies.split(";")
+        var cookieKeyVal = ""
+        arr.forEach(item=>{
+            if (item.indexOf("FLOWABLE_REMEMBER_ME") > 0) {
+                cookieKeyVal  = item
+            }
+        })
+        var cookie = cookieKeyVal.split("=")[1]
+
+        console.log(this.formNameRef.current.state.value)
+        if (!this.formNameRef.current.state.value) {
+            alert("表单名称必填")
+            return false
+        }
         const params = {
             FormInfo: JSON.stringify(FormInfo),
-            description:this.props.location.state.desc,
-            key: this.props.location.state.key,
+            description:this.formDescRef.current.state.value,
+            key:this.formKeyRef.current.state.value,
             modelType:2,
-            name: this.props.location.state.name
+            name: this.formNameRef.current.state.value
         }
-        UpdateFormDef(this.props.location.state.id,params)
+        CreateModel(cookie,params)
         .then(res=>{
-            alert("修改成功")
+            alert("新增成功")
+            this.setState({
+                isModalVisible: false
+            })
         })
     }
     render(){
         return(
             <div style={{ height: '100vh' }}>
-                <Generator ref={this.genRef} defaultValue={this.state.defaultValue} templates={templates} extraButtons={this.extraButtons}/>
+                <Generator ref={this.genRef} defaultValue={defaultValue} templates={templates} extraButtons={this.extraButtons}/>
                 <Modal title="保存表单" visible={this.state.isModalVisible} onOk={this.handleOk} onCancel={this.handleCancel}>
                     <Form layout={"horizontal"}>
                         <Form.Item label="表单名称">
@@ -122,4 +142,4 @@ class EditForm extends React.Component{
     }
 }
 
-export default EditForm;
+export default NewForm;

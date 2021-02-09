@@ -1,8 +1,8 @@
 import React from "react";
-import { GetWorkflowBaseInfo, UpdateStatus, CreateModel, flowableLogin } from '../../apis/process'
+import { GetWorkflowBaseInfo, UpdateStatus, CreateModel, flowableLogin, GetFormListInfo } from '../../apis/process'
 // import Modeler from "../../components/Modeler";
-import { Table, Tag, Space, Button, Form, Input, DatePicker, Pagination, Modal } from 'antd';
-const { RangePicker } = DatePicker;
+import { Table, Space, Button, Form, Input, Pagination, Modal } from 'antd';
+import './process.less'
 const { TextArea } = Input;
 const { Column } = Table;
 class Process extends React.Component{
@@ -13,28 +13,13 @@ class Process extends React.Component{
         endDate: '',// 检索栏截止日期
         total: 0, // 数据总数
         curPage: 1,// 当前页码
-        pageSize: 10,// 当前分页条数
+        pageSize: 20,// 当前分页条数
         confirmLoading: false,// 加载新增接口loading效果
         visible: false, // 模态框显示隐藏
         processName: '',// 新增流程名称
         processKey: '',// 新增流程标识
         processDesc: '',// 新增流程描述
         cookieData: ''
-    }
-    mockLogin=()=>{
-        const myData = {
-            j_username: 'admin',
-            j_password: 'test',
-            submit: 'Login',
-            _spring_security_remember_me: true
-        }
-        flowableLogin(myData)
-        .then((res)=>{
-            let cookieData = res.data.split(';')[0].split('=')[1]
-            this.setState({
-                cookieData: cookieData
-            })
-        })
     }
     handleProName = (e)=>{
         this.setState({
@@ -48,17 +33,16 @@ class Process extends React.Component{
             startDate: !dateString[0] ? '' : dateString[0] + ' ' + '00:00:00',
             endDate: !dateString[1]? '' : dateString[1] + ' ' +'23:59:59',
         })
-        console.log(this.state.startDate)
-        console.log(this.state.endDate)
     }
     handlePageChange =(curPage, pageSize) => {
-        console.log(curPage)
-        console.log(pageSize)
         this.setState({
             curPage: curPage,
             pageSize: pageSize
+        },()=>{
+            console.log(this.state.curPage,this.state.pageSize)
+            this.getData()
         })
-        this.getData()
+        
     }
     handlePageSizeChange=(page, size)=>{
         console.log(page)
@@ -66,7 +50,7 @@ class Process extends React.Component{
     }
     // 拉取数据
     getData = ()=> {
-        GetWorkflowBaseInfo(this.state.name,this.state.startDate || '',this.state.endDate || '',this.state.curPage, this.state.pageSize)
+        GetFormListInfo(this.state.name,this.state.curPage, this.state.pageSize)
         .then(res=>{
             this.setState({
                 tableData: res.data.getMe,
@@ -88,7 +72,7 @@ class Process extends React.Component{
             name: this.state.processName,
             key: this.state.processKey,
             description: this.state.processDesc,
-            modelType: 0
+            modelType: 2
         }
         CreateModel(this.state.cookieData, myData)
         .then((res)=>{
@@ -119,14 +103,37 @@ class Process extends React.Component{
         })
     }
     openModal=()=>{
-        this.setState({
-            visible: true
+        this.props.history.push({
+            pathname: '/new'
         })
     }
-    componentDidMount() {
-        this.getData()
-        this.mockLogin()
+    goEdit=(id,name,key,desc)=>{
+        return ()=>{
+            this.props.history.push({
+                pathname: '/edit',
+                state:{
+                    id: id,
+                    name: name,
+                    key: key,
+                    desc: desc
+                }
+            })
+        }
+    }
+    goShow=(id)=>{
+        // console.log(id)
+        return ()=>{
+            this.props.history.push({
+                pathname: '/show',
+                state:{
+                    id: id
+                }
+            })
+        }
         
+    }
+    componentDidMount() {
+        this.getData()        
     }
     render() {
         return(
@@ -136,50 +143,41 @@ class Process extends React.Component{
                     <Form.Item label="流程名称">
                         <Input placeholder="请输入流程名称" allowClear onChange={this.handleProName}/>
                     </Form.Item>
-                    <Form.Item label="日期范围">
-                        <RangePicker
-                            format={'YYYY-MM-DD'}
-                            onChange={this.handleDateChange}
-                        />
+                    <Form.Item>
+                        <Button className="localBtnClass" size="small" type="primary" onClick={this.getData}>查询</Button>
                     </Form.Item>
                     <Form.Item>
-                        <Button type="primary" onClick={this.getData}>查询</Button>
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="dashed" onClick={this.openModal}>新增</Button>
+                        <Button className="localBtnClass" size="small" type="primary" onClick={this.openModal}>新增</Button>
                     </Form.Item>
                 </Form>
-                <Table dataSource={this.state.tableData} pagination={false}>
-                    <Column title="流程名称" dataIndex="WorkflowName" key="WorkflowName" />
-                    <Column title="流程标识" dataIndex="Key" key="Key" />
-                    <Column title="创建时间" dataIndex="Creatime" key="Creatime" />
-                    <Column title="最后修改时间" dataIndex="LastUpdateTime" key="LastUpdateTime" />
-                    <Column title="流程版本" dataIndex="Version" key="Version" />
-                    <Column title="部署编码" dataIndex="DeployCode" key="DeployCode" />
+                <Table dataSource={this.state.tableData} pagination={false} rowClassName="rowClassName">
+                    <Column title="流程名称" dataIndex="name" key="WorkflowName" />
+                    <Column title="流程标识" dataIndex="key" key="Key" />
+                    <Column title="创建人" dataIndex="createdBy" key="createdBy" />
+                    <Column title="创建时间" dataIndex="created" key="created" />
+                    <Column title="最后修改时间" dataIndex="lastUpdated" key="lastUpdated" />
                     <Column
                         title="操作"
                         key="action"
                         render={(text, record) => (
                             <Space size="middle">
                                 {
-                                    !record.FlowID ?
+                                    record.createdBy ?
                                     <div>
-                                        <Button type="ghost">编辑{record.name}</Button>
-                                        <Button type="primary">部署{record.name}</Button>
-                                        <Button type="danger" onClick={this.delProcess(record)}>删除</Button>
+                                        <Button className="localBtnClass" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.goEdit(record.id, record.name, record.key, record.description)}>编辑</Button>
+                                        <Button className="localBtnClass" size="small" type="primary" onClick={this.goShow(record.id)}>查看</Button>
                                     </div>
                                     :
                                     <div>
-                                        <Button type="primary">发起</Button>
-                                        <Button type="primary">取消部署</Button>
+                                        <Button className="localBtnClass" size="small" type="primary" onClick={this.goShow(record.id)}>查看</Button>
                                     </div>
                                 }
                             </Space>
                         )}
                     />
                 </Table>
-                <Modal
-                    title="新增流程"
+                {/* <Modal
+                    title="新增表单"
                     visible={this.state.visible}
                     okText="确定"
                     cancelText="取消"
@@ -188,24 +186,24 @@ class Process extends React.Component{
                     onCancel={this.handleCancel}
                 >
                     <Form layout="vertical" preserve={false}>
-                        <Form.Item label="流程名称">
-                            <Input placeholder="请输入流程名称" onChange={this.handleCreateProcessName}/>
+                        <Form.Item label="表单名称">
+                            <Input placeholder="请输入表单名称" onChange={this.handleCreateProcessName}/>
                         </Form.Item>
-                        <Form.Item label="流程标识">
-                            <Input placeholder="请输入流程标识" onChange={this.handleCreateProcessKey}/>
+                        <Form.Item label="表单标识">
+                            <Input placeholder="请输入表单标识" onChange={this.handleCreateProcessKey}/>
                         </Form.Item>
-                        <Form.Item label="流程描述">
-                            <TextArea placeholder="请输入流程描述" onChange={this.handleCreateProcessDesc}></TextArea>
+                        <Form.Item label="表单描述">
+                            <TextArea placeholder="请输入表单描述" onChange={this.handleCreateProcessDesc}></TextArea>
                         </Form.Item>
                     </Form>
-                </Modal>
+                </Modal> */}
                 <Pagination
                     current={this.state.curPage}
                     total={this.state.total}
                     showSizeChanger
                     showQuickJumper
+                    defaultPageSize={20}
                     onChange = {this.handlePageChange}
-                    onShowSizeChange={this.handlePageSizeChange}
                     showTotal={total => `共 ${total} 条数据`}>
                 </Pagination>
             </div>

@@ -7,30 +7,32 @@ class FormTransfer {
                 type: 'object',
                 properties: {},
             },
-            displayType: 'column',
+            displayType: "column",
             showDescIcon: false,
-            column: 1
+            column: 3,
+            labelWidth: 0
         }
         this.handleResData()
     }
     // 处理数组数据
     handleResData(){
         this.dataArr.forEach((pItem,pIndex) => {
-            pItem.forEach((cItem, cIndex)=>{
+            pItem.Schema.forEach((cItem, cIndex)=>{
                 this.handleForm(cItem, pIndex, cIndex)
             })
         })
     }
     // 处理表单数据
     handleForm(formObj, pIndex, cIndex){
+        console.log(formObj)
         if( !formObj)  return;
-        if (formObj.Shape.indexOf("文本") > 0) {
+        if (formObj.Shape.indexOf("文本") > -1) {
             this.ctText(formObj, pIndex, cIndex)
-        } else if (formObj.Shape.indexOf("选择器") > 0){
+        } else if (formObj.Shape.indexOf("选择器") > -1){
             this.ctSelect(formObj, pIndex, cIndex)
         } else if (formObj.Shape === "日期") {
             this.ctDate(formObj, pIndex, cIndex)
-        } else if (formObj.Shape.indexOf("时间") > 0) {
+        } else if (formObj.Shape.indexOf("时间") > -1) {
             this.ctDateTime(formObj, pIndex, cIndex)
         }
     }
@@ -41,19 +43,35 @@ class FormTransfer {
             title: formObj.FieldName,
             type: formObj.Type === '数值' ? 'number' : 'string',
         }
-        console.log(this.defaultValue)
+        // console.log(this.defaultValue)
     }
     // 处理下拉选择类型
-    ctSelect(){
-
+    ctSelect(formObj, pIndex, cIndex){
+        const key = `selectName_${pIndex}_${cIndex}`
+        this.defaultValue.schema.properties[key] = {
+            title: formObj.FieldName,
+            type: 'string',
+            enum: ["a", "b", "c"],
+            enumNames: ["jack", "steve", "david"],
+        }
     }
     // 处理日期类型
-    ctDate(){
-
+    ctDate(formObj, pIndex, cIndex){
+        const key = `date_${pIndex}_${cIndex}`
+        this.defaultValue.schema.properties[key] = {
+            title: formObj.FieldName,
+            type: "range",
+            format: "date"
+        }
     }
     // 处理日期时间
-    ctDateTime(){
-
+    ctDateTime(formObj, pIndex, cIndex){
+        const key = `dateTime${pIndex}_${cIndex}`
+        this.defaultValue.schema.properties[key] = {
+            title: formObj.FieldName,
+            type: "range",
+            format: "dateTime"
+        }
     }
 }
 

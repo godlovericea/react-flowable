@@ -25,6 +25,15 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>表单设计器</title>
+    <script>
+      window.addEventListener('message',(event) =>{
+          document.cookie = event.data
+          var Days = 365;
+          var exp = new Date(); 
+          exp.setTime(exp.getTime() + Days*24*60*60*1000);
+          document.cookie = event.data + ";expires=" + exp.toGMTString();
+      }, false);
+  </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

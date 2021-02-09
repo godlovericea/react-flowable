@@ -1,103 +1,63 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import FormRender from 'form-render/lib/antd';
-import { Button } from 'antd';
-// import schema from '../../json/schema.json';
+import {Button} from 'antd'
+import { GetFormJson } from '../../apis/process'
+import './ShowForm.less'
 
-const schema = {
-    "schema": {
-      "type": "object",
-      "properties": {
-        "inputName": {
-          "title": "简单输入框",
-          "type": "string"
-        },
-        "textarea_r6eO40": {
-          "title": "编辑框",
-          "type": "string",
-          "format": "textarea"
-        },
-        "input_hjoN-g": {
-          "title": "输入框",
-          "type": "string"
-        },
-        "switch_0tHmO-": {
-          "title": "是否选择",
-          "type": "boolean",
-          "ui:widget": "switch"
-        },
-        "radio_c5CUWq": {
-          "title": "单选",
-          "type": "string",
-          "enum": [
-            "a",
-            "b",
-            "c"
-          ],
-          "enumNames": [
-            "早",
-            "中",
-            "晚"
-          ],
-          "ui:widget": "radio"
-        },
-        "checkboxes_uRVKRd": {
-          "title": "多选",
-          "description": "点击多选",
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "enum": [
-            "A",
-            "B",
-            "C",
-            "D"
-          ],
-          "enumNames": [
-            "杭州",
-            "武汉",
-            "湖州",
-            "贵阳"
-          ]
-        }
-      },
-      "ui:displayType": "row",
-      "ui:showDescIcon": true
-    },
-    "displayType": "row",
-    "showDescIcon": true
+class ShowForm extends React.Component{
+    constructor(props){
+      super(props)
+      this.formRef = React.createRef()
+      this.state = {
+          schema:{}
+      }
+    }
+    componentDidMount(){
+        this.getData()
+    }
+    getData =()=>{
+        const id = this.props.location.state.id
+        GetFormJson(id)
+          .then((res)=>{
+              if (res.status === 200) {
+                  this.setState({
+                      schema: JSON.parse(res.data)
+                  })
+              }
+          })
+    }
+      setFormData =() =>{
+          
+      }
+
+      handleSubmit = () => {
+        // alert(JSON.stringify(formData, null, 2));
+      };
+
+      handleClick = () => {
+          // formRef.current.resetData({}).then(res => {
+          // alert(JSON.stringify(res, null, 2));
+          // });
+      };
+      goBackToHome=()=>{
+        this.props.history.push({
+            pathname: '/home'
+        })
+      }
+      render(){
+        return (
+          <div>
+              <FormRender
+                  ref={this.formRef}
+                  {...this.state.schema}
+                  onChange={this.setFormData}
+              />
+              <div className="backtohome">
+                    <Button size="small" className="localBtnClass" type="primary" onClick={this.goBackToHome}>返回列表</Button>
+              </div>
+          </div>
+        );
+      }
 }
-
-const ShowForm = () => {
-  const [formData, setFormData] = useState({});
-  const formRef = useRef();
-
-  const handleSubmit = () => {
-    alert(JSON.stringify(formData, null, 2));
-  };
-
-  const handleClick = () => {
-    formRef.current.resetData({}).then(res => {
-      alert(JSON.stringify(res, null, 2));
-    });
-  };
-
-  return (
-    <div style={{ width: 400 }}>
-      <FormRender
-        ref={formRef}
-        {...schema}
-        formData={formData}
-        onChange={setFormData}
-      />
-      <Button style={{ marginRight: 12 }} onClick={handleClick}>
-        重置
-      </Button>
-      <Button type="primary" onClick={handleSubmit}>
-        提交
-      </Button>
-    </div>
-  );
-};
 
 export default ShowForm;
