@@ -130,7 +130,6 @@ class Process extends React.Component{
                 }
             })
         }
-        
     }
     componentDidMount() {
         this.getData()        

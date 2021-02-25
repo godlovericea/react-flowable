@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FormRender from "form-render/lib/antd";
 import SCHEMA from "./schema.json";
 import Cascade from "./Cascader/Cascader";
+import Calendar from './Sequelize/Sequelize'
 class Demo extends React.Component {
     state = {
         formData: {},
@@ -30,7 +31,7 @@ class Demo extends React.Component {
                     formData={this.state.formData}
                     onChange={this.listenChange}
                     onValidate={this.onValidate}
-                    widgets={{ cascade: Cascade }}
+                    widgets={{ cascade: Cascade,calendar: Calendar }}
                 />
                 <button onClick={this.submit}>提交</button>
             </div>

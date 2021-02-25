@@ -5,6 +5,8 @@ import ShowForm from './pages/ShowForm/ShowForm'
 import NewForm from './pages/NewForm/NewForm'
 import Transformer from './pages/Transform/Transform'
 import Customize from './pages/Customize/Customize'
+import StartForm from './pages/StartForm/StartForm'
+import NeedToDeal from './pages/NeedToDeal/NeedToDeal'
 import {Switch, Route, Redirect} from 'react-router-dom'
 
 function App() {
@@ -17,6 +19,8 @@ function App() {
             <Route exact path="/show" component={ShowForm}/>
             <Route exact path="/trans" component={Transformer}/>
             <Route exact path="/cus" component={Customize}/>
+            <Route exact path="/start" component={StartForm}/>
+            <Route exact path="/need" component={NeedToDeal}/>
             <Redirect to="/home"></Redirect>
         </Switch>
     </div>

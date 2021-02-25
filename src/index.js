@@ -8,6 +8,10 @@ import 'antd/dist/antd.css';
 import { BrowserRouter } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
+
 
 ReactDOM.render(
   <BrowserRouter>

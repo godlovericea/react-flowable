@@ -1,63 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
-import {Button} from 'antd'
+import { Button } from 'antd';
 import { GetFormJson } from '../../apis/process'
-import './ShowForm.less'
 
-class ShowForm extends React.Component{
-    constructor(props){
-      super(props)
-      this.formRef = React.createRef()
-      this.state = {
-          schema:{}
-      }
-    }
-    componentDidMount(){
-        this.getData()
-    }
-    getData =()=>{
-        const id = this.props.location.state.id
+const StartForm = (props) => {
+    const [formData, setFormData] = useState({});
+    const [schema, setSchema] = useState({})
+    const formRef = useRef();
+    const getData =()=>{
+        const id = props.location.state.id
         GetFormJson(id)
-          .then((res)=>{
-              if (res.status === 200) {
-                  this.setState({
-                      schema: JSON.parse(res.data)
-                  })
-              }
-          })
+        .then((res)=>{
+            if (res.status === 200) {
+                setSchema(JSON.parse(res.data))
+            }
+        })
     }
-      setFormData =() =>{
-          
-      }
+    useEffect(()=>{
+        getData()
+    },[])
 
-      handleSubmit = () => {
-        // alert(JSON.stringify(formData, null, 2));
-      };
+    const handleClick = () => {
+        formRef.current.resetData({}).then(res => {
+        alert(JSON.stringify(res, null, 2));
+        });
+    };
 
-      handleClick = () => {
-          // formRef.current.resetData({}).then(res => {
-          // alert(JSON.stringify(res, null, 2));
-          // });
-      };
-      goBackToHome=()=>{
-        this.props.history.push({
+    const handleClickReback = ()=>{
+        props.history.push({
             pathname: '/home'
         })
-      }
-      render(){
-        return (
-          <div>
-              <FormRender
-                  ref={this.formRef}
-                  {...this.state.schema}
-                  onChange={this.setFormData}
-              />
-              <div className="backtohome">
-                    <Button size="small" className="localBtnClass" type="primary" onClick={this.goBackToHome}>返回列表</Button>
-              </div>
-          </div>
-        );
-      }
-}
+    }
 
-export default ShowForm;
+    return (
+        <div style={{ width: 400 }}>
+            <FormRender
+                ref={formRef}
+                {...schema}
+                formData={formData}
+                onChange={setFormData}
+            />
+            <Button type="primary" style={{ marginLeft: 30 }} onClick={handleClickReback}>
+                返回列表
+            </Button>
+        </div>
+    );
+};
+
+export default StartForm;
