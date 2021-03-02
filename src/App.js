@@ -7,6 +7,8 @@ import Transformer from './pages/Transform/Transform'
 import Customize from './pages/Customize/Customize'
 import StartForm from './pages/StartForm/StartForm'
 import NeedToDeal from './pages/NeedToDeal/NeedToDeal'
+import DoneDeal from './pages/DoneDeal/DoneDeal'
+import HistoryFlow from './pages/HistoryFlow/HistoryFlow'
 import {Switch, Route, Redirect} from 'react-router-dom'
 
 function App() {
@@ -21,6 +23,8 @@ function App() {
             <Route exact path="/cus" component={Customize}/>
             <Route exact path="/start" component={StartForm}/>
             <Route exact path="/need" component={NeedToDeal}/>
+            <Route exact path="/done" component={DoneDeal}/>
+            <Route exact path="/hisflow" component={HistoryFlow}/>
             <Redirect to="/home"></Redirect>
         </Switch>
     </div>

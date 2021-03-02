@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
-import { Button } from 'antd';
-import { GetStartForm, WorkflowStart } from '../../apis/process'
+import { Button, message } from 'antd';
+import FormTransfer from '../../libs/transform/transform'
+import { GetStartForm, WorkflowStart, getTableName, getSelectName } from '../../apis/process'
+import "./startform.less"
 // import schema from '../../json/schema.json';
 
 const StartForm = () => {
@@ -15,6 +17,86 @@ const StartForm = () => {
     // const [processDefinitionId, setProcessDefinitionId] = useState('')
 
     const formRef = useRef();
+
+    const asyncFunc = async(name) =>{
+        let result = await getSelectName(name)
+        return result.data
+    }
+
+    const hanldeSelect = async(name)=> {
+        let obj = {}
+        let data = await asyncFunc(name);
+        let enumVals = []
+        let enumNames = []
+        data.forEach((item)=>{
+            enumVals.push(item.NODEVALUE)
+            enumNames.push(item.NODENAME)
+        })
+        obj = {
+            title: name,
+            type: 'string',
+            enum: enumVals,
+            enumNames: enumNames
+        }
+        return obj
+    }
+
+    const handleEveryGroup= async(schemaList)=>{
+        let obj = {}
+        let key = ""
+        for(let i=0;i<schemaList.length;i++) {
+            if (schemaList[i].Shape.indexOf("文本") > -1) {
+                key = `inputName_${i}`
+                obj[key] = {
+                    title: schemaList[i].FieldName,
+                    type: schemaList[i].Type === '数值' ? 'number' : 'string',
+                }
+            } else if (schemaList[i].Shape.indexOf("日期") > -1) {
+                key = `date_${i}`
+                obj[key] = {
+                    title: schemaList[i].FieldName,
+                    type: "range",
+                    format: "date"
+                }
+            } else if (schemaList[i].Shape.indexOf("时间") > -1) {
+                key = `dateTime_${i}`
+                obj[key] = {
+                    title: schemaList[i].FieldName,
+                    type: "range",
+                    format: "dateTime"
+                }
+            } else if (schemaList[i].Shape.indexOf("选择器") > -1) {
+                let formObj =await hanldeSelect(schemaList[i].FieldName)
+                key = `selectName_${i}`
+                obj[key] = formObj
+            }
+        }
+        return obj
+    }
+
+    const handleGroup= async(dataArr)=>{
+        let obj = {}
+        let key = ""
+        for(let i = 0; i< dataArr.length; i++) {
+            key = `object_${i}`
+            let objData =await handleEveryGroup(dataArr[i].Schema)
+            obj[key] = {
+                type:"object",
+                title: dataArr[i].GroupName,
+                properties: objData
+            }
+        }
+        setSchema({
+            schema:{
+                type: 'object',
+                properties: obj
+            },
+            displayType: "row",
+            showDescIcon: false,
+            column: 3,
+            labelWidth: 120
+        })
+    }
 
     const getData =()=>{
         const search = window.location.search.slice(1)
@@ -30,9 +112,18 @@ const StartForm = () => {
                             return
                         }
                         setFormId(res.data.FormID)
-                        let resData = `${res.data.Form}`// 这里必须强转字符串，否则无法解析成对象
-                        let jsonData = JSON.parse(resData)
-                        setSchema(jsonData)
+                        if (res.data.Type === "台账") {
+                            const tableName = res.data.Form
+                            getTableName(tableName)
+                            .then((response)=>{
+                                const dataArr = response.data.getMe[0].Groups
+                                handleGroup(dataArr)
+                            })
+                        } else if (res.data.Type === "表单") {
+                            let resData = `${res.data.Form}`// 这里必须强转字符串，否则无法解析成对象
+                            let jsonData = JSON.parse(resData)
+                            setSchema(jsonData)
+                        }
                     }))
             } 
             
@@ -41,18 +132,7 @@ const StartForm = () => {
     useEffect(()=>{
         getData()
     },[])
-    // getData()
-    // const getCookie=()=>{
-    //     let winCookie = window.document.cookie
-    //     let winCookieArr = winCookie.split(";")
-    //     winCookieArr.forEach((item)=>{
-    //         if (item.indexOf("FLOWABLE_REMEMBER_ME") > -1) {
-    //             let itemArr = item.split("=")
-    //             setCookie(itemArr[1])
-    //         }
-    //     })
-    // }
-    // getCookie()
+
     const handleSubmit = () => {
         // alert(JSON.stringify(formData, null, 2));
         let processDefinitionId = ""
@@ -85,12 +165,13 @@ const StartForm = () => {
         var date = new Date()
         const myData = {
             FormInfo,
+            Config: JSON.stringify(schema),
             processDefinitionId,
             name: `${name} - ${date.getDate()} ${date.getMonth() + 1} ${date.getFullYear()}`,
         }
         WorkflowStart(cookie, userId, myData)
         .then((res)=>{
-            console.log(res)
+            message.success("提交成功")
         })
     };
 
@@ -101,7 +182,7 @@ const StartForm = () => {
     };
 
     return (
-        <div style={{ width: 400 }}>
+        <div className="startwrap">
             <FormRender
                 ref={formRef}
                 {...schema}

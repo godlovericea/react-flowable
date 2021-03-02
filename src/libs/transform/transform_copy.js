@@ -11,7 +11,7 @@ class FormTransfer {
             },
             displayType: "column",
             showDescIcon: false,
-            column: 1,
+            column: 3,
             labelWidth: 0
         }
         this.handleResData()

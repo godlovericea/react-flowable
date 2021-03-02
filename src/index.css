@@ -17,4 +17,7 @@ code {
 .ant-layout-content{
   padding: 20px 0 0 0;
 }
+.fr-map{
+  padding: 10px !important;
+}
 

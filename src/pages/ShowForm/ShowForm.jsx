@@ -33,7 +33,7 @@ const StartForm = (props) => {
     }
 
     return (
-        <div style={{ width: 400 }}>
+        <div>
             <FormRender
                 ref={formRef}
                 {...schema}

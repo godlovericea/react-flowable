@@ -1,7 +1,7 @@
 import React from "react";
-import { GetWorkflowBaseInfo, UpdateStatus, CreateModel, flowableLogin, GetFormListInfo } from '../../apis/process'
+import { GetWorkflowBaseInfo, UpdateStatus, CreateModel, flowableLogin, GetFormListInfo, DeleteFormLogic } from '../../apis/process'
 // import Modeler from "../../components/Modeler";
-import { Table, Space, Button, Form, Input, Pagination, Modal } from 'antd';
+import { Table, Space, Button, Form, Input, Pagination, Modal, message } from 'antd';
 import './process.less'
 const { TextArea } = Input;
 const { Column } = Table;
@@ -19,7 +19,8 @@ class Process extends React.Component{
         processName: '',// 新增流程名称
         processKey: '',// 新增流程标识
         processDesc: '',// 新增流程描述
-        cookieData: ''
+        cookieData: '',
+        formId: '', // 表单ID
     }
     handleProName = (e)=>{
         this.setState({
@@ -67,19 +68,27 @@ class Process extends React.Component{
             })
         }
     }
-    handleOk=()=>{
-        const myData = {
-            name: this.state.processName,
-            key: this.state.processKey,
-            description: this.state.processDesc,
-            modelType: 2
-        }
-        CreateModel(this.state.cookieData, myData)
-        .then((res)=>{
-            console.log(res)
+    // 删除表单
+    delForm = (id)=>{
+        return ()=>{
             this.setState({
-                visible: false
+                visible: true,
+                formId: id
             })
+        }
+    }
+    handleOk=()=>{
+        DeleteFormLogic('', this.state.formId)
+        .then((res)=>{
+            if(res.data.statusCode === "0000") {
+                message.success("删除成功")
+                this.setState({
+                    visible: false
+                })
+                this.getData()
+            } else {
+                message.success(res.data.errMsg)
+            }
         })
     }
     handleCancel=()=>{
@@ -131,8 +140,19 @@ class Process extends React.Component{
             })
         }
     }
+    // 跳转到台账
+    goShowAccount=(name)=>{
+        return ()=>{
+            this.props.history.push({                              
+                pathname: '/trans',
+                state:{
+                    name: name
+                }
+            })
+        }
+    }
     componentDidMount() {
-        this.getData()        
+        this.getData()
     }
     render() {
         return(
@@ -161,22 +181,24 @@ class Process extends React.Component{
                         render={(text, record) => (
                             <Space size="middle">
                                 {
-                                    record.createdBy ?
+                                    record.Type === '表单' ?
                                     <div>
                                         <Button className="localBtnClass" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.goEdit(record.id, record.name, record.key, record.description)}>编辑</Button>
+                                        <Button className="localBtnClass" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.delForm(record.id)}>删除</Button>
                                         <Button className="localBtnClass" size="small" type="primary" onClick={this.goShow(record.id)}>查看</Button>
                                     </div>
                                     :
                                     <div>
-                                        <Button className="localBtnClass" size="small" type="primary" onClick={this.goShow(record.id)}>查看</Button>
+                                        <Button className="localBtnClass" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.delForm(record.id)}>删除</Button>
+                                        <Button className="localBtnClass" size="small" type="primary" onClick={this.goShowAccount(record.TableName)}>查看</Button>
                                     </div>
                                 }
                             </Space>
                         )}
                     />
                 </Table>
-                {/* <Modal
-                    title="新增表单"
+                <Modal
+                    title="提示"
                     visible={this.state.visible}
                     okText="确定"
                     cancelText="取消"
@@ -184,18 +206,8 @@ class Process extends React.Component{
                     confirmLoading={this.state.confirmLoading}
                     onCancel={this.handleCancel}
                 >
-                    <Form layout="vertical" preserve={false}>
-                        <Form.Item label="表单名称">
-                            <Input placeholder="请输入表单名称" onChange={this.handleCreateProcessName}/>
-                        </Form.Item>
-                        <Form.Item label="表单标识">
-                            <Input placeholder="请输入表单标识" onChange={this.handleCreateProcessKey}/>
-                        </Form.Item>
-                        <Form.Item label="表单描述">
-                            <TextArea placeholder="请输入表单描述" onChange={this.handleCreateProcessDesc}></TextArea>
-                        </Form.Item>
-                    </Form>
-                </Modal> */}
+                    确定删除该表单吗？
+                </Modal>
                 <Pagination
                     current={this.state.curPage}
                     total={this.state.total}
