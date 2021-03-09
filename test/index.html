@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var arr = [
+            {
+                shape: 'text',
+                type: 'txt',
+                webRow: [
+                    {
+                        FieldName: "项目流sadfsa水号0",
+                        FieldValue: "003sdfsa520",
+                        FontColor: "",
+                        FontSize: "",
+                        Weight: 0,
+                    },
+                    {
+                        FieldName: "项目流sdfaf水号1",
+                        FieldValue: "00safsafas3521",
+                        FontColor: "",
+                        FontSize: "",
+                        Weight: 0,
+                    },
+                    {
+                        FieldName: "项目流vvadsd水号2",
+                        FieldValue: "00safsaf3522",
+                        FontColor: "",
+                        FontSize: "",
+                        Weight: 0,
+                    },
+                    {
+                        FieldName: "项目asfsaf流水号3",
+                        FieldValue: "003asfasdf523",
+                        FontColor: "",
+                        FontSize: "",
+                        Weight: 0,
+                    },
+                ]
+            },
+            {
+                shape: 'png',
+                type: 'txt',
+                webRow: [
+                    {
+                        FieldName: "项目流asfasfa水号0",
+                        FieldValue: "003asfasfsa520",
+                        FontColor: "",
+                        FontSize: "",
+                        Weight: 0,
+                    },
+                    {
+                        FieldName: "项目asfsafas流水号1",
+                        FieldValue: "003cfsc521",
+                        FontColor: "",
+                        FontSize: "",
+                        Weight: 0,
+                    },
+                    {
+                        FieldName: "项目流safsdf水号2",
+                        FieldValue: "003asfsaf522",
+                        FontColor: "",
+                        FontSize: "",
+                        Weight: 0,
+                    },
+                    {
+                        FieldName: "项目流asfasf水号3",
+                        FieldValue: "0035safsadf23",
+                        FontColor: "",
+                        FontSize: "",
+                        Weight: 0,
+                    },
+                ]
+            },
+            {
+                shape: 'jpeg',
+                type: 'png',
+                webRow: [
+                    {
+                        FieldName: "项目流水号safasfsd0",
+                        FieldValue: "003520assaff",
+                        FontColor: "",
+                        FontSize: "",
+                        Weight: 0,
+                    },
+                    {
+                        FieldName: "项asfas目流水号1",
+                        FieldValue: "00asfas3521",
+                        FontColor: "",
+                        FontSize: "",
+                        Weight: 0,
+                    },
+                    {
+                        FieldName: "项目asfsa流水号2",
+                        FieldValue: "00asfas3522",
+                        FontColor: "",
+                        FontSize: "",
+                        Weight: 0,
+                    },
+                    {
+                        FieldName: "项目asfsa流水号3",
+                        FieldValue: "003asfsa523",
+                        FontColor: "",
+                        FontSize: "",
+                        Weight: 0,
+                    },
+                ]
+            },
+            {
+                shape: '文本',
+                type: 'text',
+                webRow: [
+                    {
+                        FieldName: "sdasdas项目流水号0",
+                        FieldValue: "asfasfdafsaf003520",
+                        FontColor: "",
+                        FontSize: "",
+                        Weight: 0,
+                    },
+                    {
+                        FieldName: "项fsasadfsaf目流水号1",
+                        FieldValue: "0sdada03521",
+                        FontColor: "",
+                        FontSize: "",
+                        Weight: 0,
+                    },
+                    {
+                        FieldName: "项目safsasa流水号2",
+                        FieldValue: "00asfsa3522",
+                        FontColor: "",
+                        FontSize: "",
+                        Weight: 0,
+                    },
+                    {
+                        FieldName: "项目asfas流水号3",
+                        FieldValue: "003sasaf52asfsa3",
+                        FontColor: "",
+                        FontSize: "",
+                        Weight: 0,
+                    },
+                ]
+            }
+        ]
+        function avatar() {
+            let arrWrap = []
+            arr.forEach((item)=>{
+                let obj = hanldeItem(item)
+                arrWrap.push(obj)
+            })
+            console.log(arrWrap)
+        }
+        
+
+        function handleHeader() {
+            let headerArr = []
+            arr.forEach((item)=>{
+                headerArr.push(item.shape)
+            })
+            return headerArr
+        }
+
+        function hanldeItem(obj) {
+            let objarr = []
+            let objobj ={}
+            obj.webRow.forEach((item)=>{
+                objarr.push(item.FieldValue)
+            })
+            let heas = handleHeader()
+            for(let i =0 ;i<heas.length; i++) {
+                for(let j=0;j<objarr.length;j++) {
+                    if (i===j) {
+                        objobj[heas[i]] = objarr[j]
+                    }
+                }
+            }
+            return objobj
+        }
+
+        avatar()
+    </script>
+</body>
+</html>

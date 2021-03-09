@@ -4,13 +4,20 @@ import FormTransfer from '../../libs/transform/transform'
 import FormRender from 'form-render/lib/antd';
 import { Button } from 'antd';
 import './transform.less'
+import StaffSelect from '../../components/StaffSelect/StaffSelect'
+import TreeCascader from '../../components/TreeCascader/TreeCascader'
+import SearchSelect from '../../components/SearchSelect/SearchSelect'
+import TableAccount from '../../components/TableAccount/TableAccount'
+import UploadFile from '../../components/UploadFile/UploadFile'
+import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
 
 export default class Transform extends Component {
     constructor(props){
         super(props)
         this.formRef = React.createRef()
         this.state={
-            schema: {}
+            schema: {},
+            formData: {}
         }
     }
     componentDidMount(){
@@ -45,38 +52,262 @@ export default class Transform extends Component {
         }
         return obj
     }
+    // 多级联动
+    hanldeSelectTreeNode=async(name)=>{
+        console.log("级联选择起码")
+        return {
+            title: name,
+            "ui:widget": "cascader"
+        }
+    }
     handleEveryGroup= async(schemaList)=>{
         let obj = {}
-        let key = ""
+        let objKey = ""
         for(let i=0;i<schemaList.length;i++) {
-            if (schemaList[i].Shape.indexOf("文本") > -1) {
-                key = `inputName_${i}`
-                obj[key] = {
-                    title: schemaList[i].FieldName,
-                    type: schemaList[i].Type === '数值' ? 'number' : 'string',
+            if (!schemaList[i].Visible){
+                return
+            }
+            const shape = schemaList[i].Shape
+            const type = schemaList[i].Type
+            const name = schemaList[i].FieldName
+            const itemObj = schemaList[i]
+            const ConfigInfo = schemaList[i].ConfigInfo
+            
+            if ((shape === "文本" || shape === "编码") && type === "文本") {
+                objKey =  `inputName_${i}`
+                obj[objKey] = await this.handleInput(itemObj)
+            } else if (shape === "多行文本") {
+                objKey =  `textarea_${i}`
+                obj[objKey] = await this.handleTextarea(name)
+            } else if ((shape + type).indexOf("数值") > -1) {
+                objKey = `inputNumber_${i}`
+                obj[objKey] = await this.handleNumberInput(name)
+            } else if (shape === "日期") {
+                objKey = `date_${i}`
+                obj[objKey] = await this.handleDatePicker(name)
+            } else if (shape === "日期时间" || shape === "时间") {
+                objKey = `dateTime_${i}`
+                obj[objKey] = await this.handleDateTime(name)
+            } else if (shape === "选择器") {
+                if (ConfigInfo.indexOf('.') > -1) {
+                    objKey = `selectTreeNode_${i}_${ConfigInfo}`
+                    obj[objKey] = await this.hanldeSelectTreeNode(name)
+                } else {
+                    objKey = `selectName_${i}`
+                    obj[objKey] = await this.hanldeSelect(name)
                 }
-            } else if (schemaList[i].Shape.indexOf("日期") > -1) {
-                key = `date_${i}`
-                obj[key] = {
-                    title: schemaList[i].FieldName,
-                    type: "range",
-                    format: "date"
-                }
-            } else if (schemaList[i].Shape.indexOf("时间") > -1) {
-                key = `dateTime_${i}`
-                obj[key] = {
-                    title: schemaList[i].FieldName,
-                    type: "range",
-                    format: "dateTime"
-                }
-            } else if (schemaList[i].Shape.indexOf("选择器") > -1) {
-                let formObj =await this.hanldeSelect(schemaList[i].FieldName)
-                key = `selectName_${i}`
-                obj[key] = formObj
+            } else if (shape === "日期年份") {
+                objKey = `selectYear_${i}`
+                obj[objKey] = await this.hanldeYearSelect(name)
+            } else if (shape === "本人姓名") {
+                objKey = `mySelfName_${i}`
+                obj[objKey] = await this.handleMySelfName(name)
+            } else if (shape === "本人部门") {
+                objKey = `mySelfDe_${i}`
+                obj[objKey] = await this.handleMySelfDepart(name)
+            } else if (shape === "人员选择器") {
+                objKey = `staffSelect_${i}`
+                obj[objKey] = await this.handleStaffSelect(name)
+            } else if (shape === "附件" || shape==="可预览附件") {
+                objKey = `file_${i}`
+                obj[objKey] = await this.handleFileUploadWidget(name)
+            } else if (shape === "值选择器") {
+                objKey = `selecValtName_${i}`
+                obj[objKey] = await this.hanldeValueSelect(itemObj)
+            } else if (shape === "搜索选择器") {
+                objKey = `selectSearchName_${i}_${ConfigInfo}`
+                obj[objKey] = await this.hanldeSearchSelect(itemObj)
+            } else if (shape === "台账选择器") {
+                objKey = `accountName_${i}_${ConfigInfo}`
+                obj[objKey] = await this.handleTableAccount(itemObj)
+            } else if (shape === "可编辑值选择器") {
+                objKey = `editble_${i}`
+                obj[objKey] = await this.handleEditBle(itemObj)
             }
         }
         return obj
     }
+    // 处理校验规则
+    handlePattern=(ValidateRule)=>{
+        let obj = {}
+        // 如果不存在校验规则，直接返回
+        if (!ValidateRule) {
+            return
+        }
+        // 如果只有一条校验规则
+        if (ValidateRule.indexOf(',') < 0) {
+            if (ValidateRule.indexOf(':') > -1) {
+                let maxLengthArr = ValidateRule.split(':')
+                if (maxLengthArr[0] === 'maxlength') {
+                    obj.minLength = null
+                    obj.maxLength = parseInt(maxLengthArr[1])
+                }
+            } else if (ValidateRule.indexOf(':') < 0) {
+                if (ValidateRule === 'required') {
+                    obj.required = true
+                }
+            }
+        } else {
+            let arr = ValidateRule.split(',')
+            arr.forEach((item)=>{
+                if (item.indexOf(':') > -1) {
+                    let maxLengthArr = item.split(':')
+                    if (maxLengthArr[0] === 'maxlength') {
+                        obj.minLength = null
+                        obj.maxLength = parseInt(maxLengthArr[1])
+                    }
+                } else {
+                    if (item === "required") {
+                        obj.required = true
+                    }
+                }
+            })
+        }
+        return obj
+    }
+    // 文本输入框
+    handleInput=(dataObj)=>{
+        return {
+            title:dataObj.Alias,
+            type: 'string',
+            default: dataObj.PresetValue,
+            minLength: this.handlePattern(dataObj.ValidateRule).minLength,
+            maxLength: this.handlePattern(dataObj.ValidateRule).maxLength,
+            pattern: this.handlePattern(dataObj.ValidateRule).required ?  `^.{1,100}$` : "",
+            message:{
+                pattern: '此项必填'
+            }
+        }
+    }
+    // 多行文本 
+    handleTextarea=(title)=>{
+        return {
+            title,
+            type: 'string',
+            format: "textarea",
+            "ui:width": "300%"
+        }
+    }
+    // 数字输入框
+    handleNumberInput=(title)=>{
+        return {
+            title,
+            type: "string",
+            pattern: "^[0-9].*$",
+            message: {
+                pattern: "请输入数字"
+            }
+        }
+    }
+    // 日期
+    handleDatePicker=(title)=>{
+        return {
+            title,
+            type: "string",
+            format: "date",
+            "ui:options": {
+              format: "YY/MM/DD"
+            }
+        }
+    }
+    // 日期时间
+    handleDateTime=(title)=>{
+        return {
+            title,
+            type: "string",
+            format: "dateTime",
+        }
+    }
+    // 日期年份
+    hanldeYearSelect=(title)=>{
+        let date = new Date()
+        const curYear = date.getFullYear()
+        const startYear = curYear - 10
+        let enumVals = []
+        let enumNames = []
+        for(let i = curYear ; i > startYear ; i--) {
+            enumNames.push(i)
+            enumVals.push(i)
+        }
+        return {
+            title,
+            type: "string",
+            enum: enumVals,
+            enumNames: enumNames,
+            default: curYear
+        }
+    }
+    // 值选择器
+    hanldeValueSelect=(dataObj)=>{
+        console.log(dataObj)
+        if (!dataObj.ConfigInfo) {
+            return
+        }
+        let myOptions = dataObj.ConfigInfo.split(',')
+        return {
+            title: dataObj.Alias,
+            type: "string",
+            enum: myOptions,
+            enumNames: myOptions,
+            default: dataObj.PresetValue
+        }
+    }
+    // 搜索选择器
+    hanldeSearchSelect=(dataObj)=>{
+        return {
+            title: dataObj.Alias,
+            "ui:widget": "search",
+        }
+    }
+    handleEditBle=(dataObj)=>{
+        return {
+            title: dataObj.Alias,
+            "ui:widget": "editSearch",
+            "ui:options": {
+                value: dataObj.ConfigInfo
+            }
+        }
+    }
+    // 本人姓名
+    handleMySelfName=(title)=>{
+        return {
+            title,
+            type: "string",
+            "ui:readonly": true
+        }
+    }
+
+    // 本人部门
+    handleMySelfDepart=(title)=>{
+        return {
+            title,
+            type: "string",
+            "ui:readonly": true
+        }
+    }
+
+    // 人员选择器
+    handleStaffSelect=(title)=>{
+        return {
+            title,
+            "ui:widget": "staff",
+        }
+    }
+    // 附件上传
+    handleFileUploadWidget=(title)=>{
+        return {
+            title,
+            "ui:widget": "file",
+        }
+    }
+    // 台账选择器
+    handleTableAccount=(dataObj)=>{
+        return {
+            title: dataObj.Alias,
+            "ui:widget": "table",
+        }
+    }
+    // 处理每个分组
     handleGroup= async(dataArr)=>{
         let obj = {}
         let key = ""
@@ -87,7 +318,8 @@ export default class Transform extends Component {
             obj[key] = {
                 type:"object",
                 title: dataArr[i].GroupName,
-                properties: objData
+                properties: objData,
+                required:[]
             }
         }
         this.setState({
@@ -95,6 +327,7 @@ export default class Transform extends Component {
                 schema:{
                     type: 'object',
                     properties: obj,
+                    required:[]
                 },
                 displayType: "row",
                 showDescIcon: false,
@@ -111,12 +344,15 @@ export default class Transform extends Component {
         })
     }
     render() {
+        const {formData} = this.state
         return (
             <div className="transform-wrapper">
                 <FormRender
                     ref={this.formRef}
+                    {...formData}
                     {...this.state.schema}
                     onChange={this.setFormData}
+                    widgets={{ staff: StaffSelect, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file: UploadFile, editSearch: EditbleSelct }}
                 />
                 <div className="gobackBtn">
                     <Button type="primary" onClick={this.handleClickReback}>

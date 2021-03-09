@@ -1,9 +1,9 @@
 import request from '../utils/request'
 
 // 流程列表
-export function GetWorkflowBaseInfo (WorkflowName, STime, ETime, pageIndex, pageSize) {
+export function GetWorkflowBaseInfo (WorkflowName, userName, STime, ETime, pageIndex, pageSize) {
     return request({
-        url: '/GetWorkflowBaseInfo?WorkflowName=' + WorkflowName + `&STime=` + STime + `&ETime=` + ETime + `&pageIndex=` + pageIndex + `&pageSize=` + pageSize + `&sortFields=created&direction=desc`,
+        url: '/GetWorkflowBaseInfo?WorkflowName=' + WorkflowName +`&UserName=${userName}` + `&STime=` + STime + `&ETime=` + ETime + `&pageIndex=` + pageIndex + `&pageSize=` + pageSize + `&sortFields=created&direction=desc`,
         method: 'get'
     })
 }
@@ -165,10 +165,19 @@ export function uploadToService (TaskID, FilePath) {
     })
 }
 
+// 流程发起权限配置
+export function UpdateWorkFlowRight (USERNAME, FORMKEYLIST) {
+    return request({
+        url: `/UpdateWorkFlowRight?UserName=${USERNAME}&FormKeyList=${FORMKEYLIST}`,
+        method: 'get'
+    })
+}
+
+
 // 新增流程  
 export function getAssetsList(){
     return request({
-        url: `http://192.168.12.55:8089/CityInterface/rest/services/CountyProduct.svc/AccountManage/GetTableGroupMetaV3?tableName=资产管理_资产明细表&columnName=设备状态`,
+        url: `http://localhost:8089/CityInterface/rest/services/CountyProduct.svc/AccountManage/GetTableGroupMetaV3?tableName=资产管理_资产明细表&columnName=设备状态`,
         method: 'get'
     })
 }
@@ -176,7 +185,7 @@ export function getAssetsList(){
 // 台账查询
 export function getTableName(name){
     return request({
-        url: `http://192.168.12.55:8089/CityInterface/rest/services/CountyProduct.svc/AccountManage/GetTableGroupMetaV3?tableName=${name}`,
+        url: `http://localhost:8089/CityInterface/rest/services/CountyProduct.svc/AccountManage/GetTableGroupMetaV3?tableName=${name}`,
         method: 'get'
     })
 }
@@ -184,7 +193,7 @@ export function getTableName(name){
 // 选择器选项的值查询
 export function getSelectName(nodeName){
     return request({
-        url: `http://192.168.12.55:8089/CityInterface/Services/CityServer_WorkFlow/REST/WorkFlowREST.svc/WorkFlow/175/?nodeName=${nodeName}`,
+        url: `http://localhost:8089/CityInterface/Services/CityServer_WorkFlow/REST/WorkFlowREST.svc/WorkFlow/175/?nodeName=${nodeName}`,
         method: 'get'
     })
 }
@@ -192,7 +201,31 @@ export function getSelectName(nodeName){
 // 姓名查询
 export function getUserName(name){
     return request({
-        url: `http://192.168.12.55:8089/CityInterface/rest/services/OA.svc/GetAllPerson_PandaWisdom?UserName=${name}`,
+        url: `http://localhost:8089/CityInterface/rest/services/OA.svc/GetAllPerson_PandaWisdom?UserName=${name}`,
+        method: 'get'
+    })
+}
+
+// 人员选择器查询
+export function getUserListForRole(){
+    return request({
+        url: `http://localhost:8089/Cityinterface/rest/services/CountyProduct.svc/AccountManage/getUserListForRole?_version=9999`,
+        method: 'get'
+    })
+}
+
+// 台账的表查询
+export function GetAccountConfigInfo(accountName){
+    return request({
+        url: `http://localhost:8089/CityInterface/Services/CityServer_CaseManage/REST/CaseManageREST.svc/GetAccountConfigInfo?accountName=${accountName}`,
+        method: 'get'
+    })
+}
+
+// 台账的表查询
+export function GetAccountPageList(pageIndex, pageSize, accountName, info){
+    return request({
+        url: `http://localhost:8089/CityInterface/Services/CityServer_CaseManage/REST/CaseManageREST.svc/GetAccountPageList?pageIndex=${pageIndex}&pageSize=${pageSize}&sortFields=录入时间&direction=desc&accountName=${accountName}&info=${info}`,
         method: 'get'
     })
 }

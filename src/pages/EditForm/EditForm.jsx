@@ -1,7 +1,7 @@
 import React from 'react';
 import Generator from 'fr-generator';
 import { CreateModel,GetFormJson, UpdateFormDef } from '../../apis/process'
-import {Modal, Form, Input, Button} from 'antd'
+import {Modal, Form, Input, Button, message} from 'antd'
 // import FormTransfer from '../../libs/transform/transform'
 
 const templates = [
@@ -85,15 +85,48 @@ class EditForm extends React.Component{
         this.props.history.push({
             pathname: '/home'
         })
-      }
+    }
+    hanldeDeepObject = (properties) => {
+        let BaseTypeList = []
+        for(let key in properties) {
+            if (properties[key].hasOwnProperty('properties')) {
+                for(let childkey in properties[key].properties) {
+                    BaseTypeList.push({
+                        Name:properties[key].properties[childkey].title,
+                        Type: properties[key].properties[childkey].type
+                    })
+                }
+            } else {
+                BaseTypeList.push({
+                    Name:properties[key].title,
+                    Type: properties[key].type
+                })
+            }
+        }
+        const names = BaseTypeList.map((items)=> items.Name)
+        console.log(names)
+        const nameSet = new Set(names);
+        if (names.length === nameSet.size) {
+            return BaseTypeList
+        } else {
+            message.error("您提交的表单组件不可有重名，请检查！")
+            return false
+        }
+    }
     handleOk=()=>{
         const FormInfo = this.genRef.current && this.genRef.current.getValue()
+        let {properties} = FormInfo.schema
         const params = {
             FormInfo: JSON.stringify(FormInfo),
             description:this.props.location.state.desc,
             key: this.props.location.state.key,
             modelType:2,
-            name: this.props.location.state.name
+            name: this.props.location.state.name,
+            BaseTypeList: this.hanldeDeepObject(properties)
+        }
+        if(!params.BaseTypeList){
+            message.error("您提交的表单组件不可有重名，请检查！")
+            return false
         }
         UpdateFormDef(this.props.location.state.id,params)
         .then(res=>{

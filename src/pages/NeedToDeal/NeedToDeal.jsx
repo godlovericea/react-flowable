@@ -4,10 +4,17 @@ import configData from '../../utils/config'
 import { Button, message, Modal, Radio, Input, Table, Space} from 'antd';
 import { GetFormList, SaveFormInfo, TaskSave, GetTaskBaseInfo, getUserName, UpdateTaskInfo, TaskGoBack, WorkflowUrging, GetFlowProcessInfo, WorkflowFileOperation, uploadToService} from '../../apis/process'
 import './NeedToDeal.less'
-const { Search } = Input
+import StaffSelect from '../../components/StaffSelect/StaffSelect'
+import TreeCascader from '../../components/TreeCascader/TreeCascader'
+import SearchSelect from '../../components/SearchSelect/SearchSelect'
+import TableAccount from '../../components/TableAccount/TableAccount'
+import UploadFile from '../../components/UploadFile/UploadFile'
+import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
+const { Search } = Input;
 const { Column } = Table;
 
 const NeedToDeal = (props) => {
+    const [valid, setValid] = useState([])
     const [formData, setFormData] = useState({});
     const [schema, setSchema] = useState({})
     const [cookie, setCookie] = useState("")
@@ -59,6 +66,7 @@ const NeedToDeal = (props) => {
             if (item.indexOf("taskId") > -1) {
                 taskIdScope = decodeURI(item.split("=")[1])
                 setTaskId(taskIdScope)
+                window.taskId = taskIdScope
             }
         })
         GetFormList(cookieScope, taskIdScope)
@@ -519,6 +527,8 @@ const NeedToDeal = (props) => {
                 {...schema}
                 formData={formData}
                 onChange={setFormData}
+                onValidate={setValid}
+                widgets={{ staff: StaffSelect, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file: UploadFile, editSearch: EditbleSelct }}
             />
         </div>
     );

@@ -160,7 +160,7 @@ class Process extends React.Component{
                 {/* <Modeler></Modeler> */}
                 <Form layout="inline" >
                     <Form.Item label="流程名称">
-                        <Input placeholder="请输入流程名称" allowClear onChange={this.handleProName}/>
+                        <Input placeholder="请输入表单名称" allowClear onChange={this.handleProName}/>
                     </Form.Item>
                     <Form.Item>
                         <Button className="localBtnClass" size="small" type="primary" onClick={this.getData}>查询</Button>

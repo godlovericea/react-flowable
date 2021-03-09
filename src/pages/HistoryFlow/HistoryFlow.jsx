@@ -3,6 +3,12 @@ import FormRender from 'form-render/lib/antd';
 import { Button, message, Modal, Radio } from 'antd';
 import { GetFormList, SaveFormInfo, TaskSave, GetTaskBaseInfo } from '../../apis/process'
 import './HistoryFlow.less'
+import StaffSelect from '../../components/StaffSelect/StaffSelect'
+import TreeCascader from '../../components/TreeCascader/TreeCascader'
+import SearchSelect from '../../components/SearchSelect/SearchSelect'
+import TableAccount from '../../components/TableAccount/TableAccount'
+import UploadFile from '../../components/UploadFile/UploadFile'
+import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
 
 const NeedToDeal = (props) => {
     const [formData, setFormData] = useState({});
@@ -100,6 +106,7 @@ const NeedToDeal = (props) => {
                 {...schema}
                 formData={formData}
                 onChange={setFormData}
+                widgets={{ staff: StaffSelect, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file: UploadFile, editSearch: EditbleSelct }}
             />
             <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={handleClickReback}>返回</Button>
         </div>
