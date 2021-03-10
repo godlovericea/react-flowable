@@ -4,7 +4,7 @@ import FormTransfer from '../../libs/transform/transform'
 import FormRender from 'form-render/lib/antd';
 import { Button } from 'antd';
 import './transform.less'
-import StaffSelect from '../../components/StaffSelect/StaffSelect'
+import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
 import TreeCascader from '../../components/TreeCascader/TreeCascader'
 import SearchSelect from '../../components/SearchSelect/SearchSelect'
 import TableAccount from '../../components/TableAccount/TableAccount'
@@ -352,7 +352,7 @@ export default class Transform extends Component {
                     {...formData}
                     {...this.state.schema}
                     onChange={this.setFormData}
-                    widgets={{ staff: StaffSelect, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file: UploadFile, editSearch: EditbleSelct }}
+                    widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file: UploadFile, editSearch: EditbleSelct }}
                 />
                 <div className="gobackBtn">
                     <Button type="primary" onClick={this.handleClickReback}>

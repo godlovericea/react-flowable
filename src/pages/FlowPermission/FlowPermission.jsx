@@ -21,19 +21,17 @@ class FlowPermission extends React.Component {
     }
     
     onChange=(event)=>{
-        //console.log(val)
-        console.log(event)
-        // const value = event.target.value;
-        // const data = this.state.flowArr;
-        // const updateData = data.map(item => {
-        //     item.checked = item.checked ? true: (item.value === value) ? true: false
-        //     return item;
-        // });
-        // this.setState({
-        //     flowArr: updateData
-        // })
+        const value = event.target.value;
+        let updateData = []
+        this.state.flowArr.forEach((item)=>{
+            if (item.value === value) {
+                item.checked = !item.checked
+            }
+            updateData.push(item)
+        })
+        console.log(updateData)
         this.setState({
-            keyList: event
+            flowArr: updateData
         })
     }
 
@@ -44,27 +42,31 @@ class FlowPermission extends React.Component {
     }
     
     getData=()=>{
+        console.log(this.state.userName)
         let arr =[]
-        let deArr = []
         let name =  ''
-        GetWorkflowBaseInfo(name, '王万里', '', '', 1, 1000)
+        GetWorkflowBaseInfo(name, this.state.userName, '', '', 1, 1000)
         .then((res)=>{
             res.data.getMe.forEach((item)=>{
-                const obj = {
+                arr.push({
                     label: item.WorkflowName,
                     value: item.Key,
-                    // checked: item.AccessRight === '1' ? true: false
-                }
-                arr.push(obj)
+                    checked: item.AccessRight === "1" ? true: false
+                })
             })
             this.setState({
-                flowArr: arr,
-                // defaultVal: deArr
+                flowArr: arr
             })
         })
     }
     linkToModeler=()=>{
-        let FORMKEYLIST = this.state.keyList.toString()
+        let keyList = []
+        this.state.flowArr.forEach((item)=>{
+            if (item.checked) {
+                keyList.push(item.value)
+            }
+        })
+        let FORMKEYLIST = keyList.toString()
         UpdateWorkFlowRight(this.state.userName, FORMKEYLIST)
         .then((res)=>{
             if (res.data.statusCode === "0000") {
@@ -76,18 +78,20 @@ class FlowPermission extends React.Component {
     }
     handleRouteParams=()=>{
         const search = window.location.search.slice(1)
+        console.log(search)
         const searchArr = search.split("=")
+        console.log(searchArr)
         this.setState({
             userName:decodeURI(searchArr[1])
         },()=>{
+            console.log(this.state.userName)
             this.getData()
         })
     }
     componentDidMount(){
-        this.getData()
+        this.handleRouteParams()
     }
     render(){
-        console.log(this.state.flowArr)
         return (
             <div className="flowpermiss-wrapper">
                 <div className="form-headerbox">
@@ -107,18 +111,17 @@ class FlowPermission extends React.Component {
                     </Form>
                 </div>
                 <div className="contentbox">
-                {/* <Row gutter={[20, 10]}>
-                    {
-                        this.state.flowArr.map((item,index)=>{
-                            return(
-                                <Col span={6} key={index}>
-                                    <Checkbox value={item.value} checked={item.checked} onChange={(value)=>this.onChange(value, item)}>{item.label}</Checkbox>
-                                </Col>
-                            )
-                        })
-                    }
-                </Row> */}
-                    <Checkbox.Group options={this.state.flowArr}  onChange={this.onChange} />
+                    <Row gutter={[20, 10]}>
+                        {
+                            this.state.flowArr.map((item,index)=>{
+                                return(
+                                    <Col span={6} key={index}>
+                                        <Checkbox value={item.value} checked={item.checked} onChange={this.onChange}>{item.label}</Checkbox>
+                                    </Col>
+                                )
+                            })
+                        }
+                    </Row>
                 </div>
             </div>
         )

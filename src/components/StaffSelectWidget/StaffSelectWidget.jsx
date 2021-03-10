@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react'
 import { Modal, Button, Radio, Input } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
 import { getUserListForRole } from '../../apis/process';
-import './StaffSelect.less';
+import './StaffSelectWidget.less';
 const { Search } = Input;
 
-const StaffSelect =(props)=> {
+const StaffSelectWidget =(props)=> {
     const [visible, setVisible] = useState(false)
     const [personArr, setPersonArr] = useState([])
     const [person, setPerson] = useState('')
@@ -27,7 +27,7 @@ const StaffSelect =(props)=> {
     }
     const onOk=()=>{
         setVisible(false)
-        props.handleStaff(person);
+        props.onChange(props.name, person)
     }
     const onCancel=()=>{
         setVisible(false)
@@ -37,7 +37,6 @@ const StaffSelect =(props)=> {
         setPerson(e.target.value)
     }
     const handleChange=(e)=>{
-        console.log(e)
         setPerson(e.target.value)
     }
     const onSearch=(e)=>{
@@ -85,7 +84,7 @@ const StaffSelect =(props)=> {
                                         {
                                             item.userList.map((child,childIndex)=>{
                                                 return(
-                                                    <Radio value={child.userName} key={childIndex}>{child.userName}</Radio>
+                                                    <Radio value={child.userName}>{child.userName}</Radio>
                                                 )
                                             })
                                         }
@@ -101,4 +100,4 @@ const StaffSelect =(props)=> {
     
 }
 
-export default StaffSelect
+export default StaffSelectWidget

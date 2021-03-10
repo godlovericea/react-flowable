@@ -6,25 +6,18 @@ import { GetStartForm, WorkflowStart, getTableName, getSelectName } from '../../
 import "./StartForm.less"
 import StaffSelect from '../../components/StaffSelect/StaffSelect'
 import TreeCascader from '../../components/TreeCascader/TreeCascader'
-import SearchSelect from '../../components/SearchSelect/SearchSelect'
+import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
 import TableAccount from '../../components/TableAccount/TableAccount'
 import UploadFile from '../../components/UploadFile/UploadFile'
 import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
 
-// import schema from '../../json/schema.json';
-
 const StartForm = (props) => {
     const [formData, setFormData] = useState({});
     const [schema, setSchema] = useState({})
-    // const [cookie, setCookie] = useState('')
+    const [FormKey, setFormKey] = useState('')
     const [formId, setFormId] = useState('')
     const [valid, setValid] = useState([])
     const [column, setColumn] = useState(3)
-    // const [FlowDefID, setFlowDefID] = useState('')
-    // const [name, setName] = useState('')
-    // const [userId, setUserId] = useState(null)
-    // const [processDefinitionId, setProcessDefinitionId] = useState('')
-
     const formRef = useRef();
 
     const asyncFunc = async(name) =>{
@@ -70,7 +63,6 @@ const StartForm = (props) => {
             const name = schemaList[i].FieldName
             const itemObj = schemaList[i]
             const ConfigInfo = schemaList[i].ConfigInfo
-            const isRequired = false
             
             if ((shape === "文本" || shape === "编码") && type === "文本") {
                 objKey =  `inputName_${i}`
@@ -207,10 +199,10 @@ const StartForm = (props) => {
         const { minLength, maxLength, required } = handlePattern(dataObj.ValidateRule)
         return {
             title:dataObj.Alias,
-            type: "string",
+            type: "number",
             minLength: minLength,
             maxLength: maxLength,
-            pattern: required ? "^(\-|\+)?\d+(\.\d+)?$" : "",
+            pattern: required ? `^.{1,10}$` : "",
             message: {
                 pattern: "请输入数字"
             }
@@ -419,6 +411,7 @@ const StartForm = (props) => {
                 return
             }
             setFormId(res.data.FormID)
+            setFormKey(res.data.FormKey)
             if (res.data.Type === "台账") {
                 const tableName = res.data.Form
                 getTableName(tableName)
@@ -464,6 +457,7 @@ const StartForm = (props) => {
             Config: JSON.stringify(schema),
             processDefinitionId,
             name: `${flowName} - ${date.getDate()} ${date.getMonth() + 1} ${date.getFullYear()}`,
+            FormKey: FormKey
         }
         WorkflowStart(cookie, userId, myData)
         .then((res)=>{
@@ -485,13 +479,13 @@ const StartForm = (props) => {
                 formData={formData}
                 onChange={setFormData}
                 onValidate={onValidate}
-                widgets={{ staff: StaffSelect, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
+                widgets={{ staff: StaffSelect, cascader: TreeCascader, search: StaffSelectWidget, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
             />
             <Button style={{ marginLeft: 30 }} onClick={handleClick}>
                 重置
             </Button>
             <Button type="primary" onClick={handleSubmit}>
-                提交
+                发起
             </Button>
         </div>
     );

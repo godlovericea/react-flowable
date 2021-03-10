@@ -1,38 +1,70 @@
-import { getSelectName } from '../../apis/process'
-class FormTransfer {
-    constructor(dataArr){
-        // 实例化时候传递过来的表单数据对象
-        this.dataArr = dataArr
-        this.column = 3
-        this.schema = {}
-        this.handleGroup()
-    }
-    // 处理数组数据
-    async handleGroup(){
-        let obj = {}
-        let key = ""
-        for(let i = 0; i< this.dataArr.length; i++) {
-            key = `object_${i}`
-            let objData =await this.handleEveryGroup(this.dataArr[i].Schema)
-            obj[key] = {
-                type:"object",
-                title: this.dataArr[i].GroupName,
-                properties: objData,
-                required: this.judgeRequired(objData)
-            }
+import React, { Component } from 'react'
+import { getTableName, getSelectName } from '../../apis/process'
+import FormTransfer from '../../libs/transform/transform'
+import FormRender from 'form-render/lib/antd';
+import { Button } from 'antd';
+import './transform.less'
+import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
+import TreeCascader from '../../components/TreeCascader/TreeCascader'
+import SearchSelect from '../../components/SearchSelect/SearchSelect'
+import TableAccount from '../../components/TableAccount/TableAccount'
+import UploadFile from '../../components/UploadFile/UploadFile'
+import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
+
+export default class Transform extends Component {
+    constructor(props){
+        super(props)
+        this.formRef = React.createRef()
+        this.state={
+            schema: {},
+            formData: {}
         }
-        this.schema = JSON.stringify({
-            schema:{
-                type: 'object',
-                properties: obj
-            },
-            displayType: "row",
-            showDescIcon: false,
-            column: this.column,
-            labelWidth: 120
+    }
+    componentDidMount(){
+        this.getData()
+    }
+    getData = ()=>{
+        const tableName = this.props.location.state.name
+        getTableName(tableName)
+        .then((res)=>{
+            const dataArr = res.data.getMe[0].Groups
+            let schemaData = new FormTransfer(dataArr)
+            console.log(schemaData)
+            console.log(schemaData.schema)
+            this.setState({
+                schema: JSON.parse(schemaData.schema)
+            })           
         })
     }
-    async handleEveryGroup(schemaList){
+    asyncFunc = async(name) =>{
+        let result = await getSelectName(name)
+        return result.data
+    }
+    hanldeSelect = async(name)=> {
+        let obj = {}
+        let data = await this.asyncFunc(name);
+        let enumVals = []
+        let enumNames = []
+        data.forEach((item)=>{
+            enumVals.push(item.NODEVALUE)
+            enumNames.push(item.NODENAME)
+        })
+        obj = {
+            title: name,
+            type: 'string',
+            enum: enumVals,
+            enumNames: enumNames
+        }
+        return obj
+    }
+    // 多级联动
+    hanldeSelectTreeNode=async(name)=>{
+        return {
+            title: name,
+            "ui:widget": "cascader"
+        }
+    }
+    handleEveryGroup= async(schemaList)=>{
         let obj = {}
         let objKey = ""
         for(let i=0;i<schemaList.length;i++) {
@@ -50,16 +82,16 @@ class FormTransfer {
                 obj[objKey] = await this.handleInput(itemObj)
             } else if (shape === "多行文本") {
                 objKey =  `textarea_${i}`
-                obj[objKey] = await this.handleTextarea(itemObj)
+                obj[objKey] = await this.handleTextarea(name)
             } else if ((shape + type).indexOf("数值") > -1) {
                 objKey = `inputNumber_${i}`
-                obj[objKey] = await this.handleNumberInput(itemObj)
+                obj[objKey] = await this.handleNumberInput(name)
             } else if (shape === "日期") {
                 objKey = `date_${i}`
-                obj[objKey] = await this.handleDatePicker(itemObj)
+                obj[objKey] = await this.handleDatePicker(name)
             } else if (shape === "日期时间" || shape === "时间") {
                 objKey = `dateTime_${i}`
-                obj[objKey] = await this.handleDateTime(itemObj)
+                obj[objKey] = await this.handleDateTime(name)
             } else if (shape === "选择器") {
                 if (ConfigInfo.indexOf('.') > -1) {
                     objKey = `selectTreeNode_${i}_${ConfigInfo}`
@@ -70,7 +102,7 @@ class FormTransfer {
                 }
             } else if (shape === "日期年份") {
                 objKey = `selectYear_${i}`
-                obj[objKey] = await this.hanldeYearSelect(itemObj)
+                obj[objKey] = await this.hanldeYearSelect(name)
             } else if (shape === "本人姓名") {
                 objKey = `mySelfName_${i}`
                 obj[objKey] = await this.handleMySelfName(name)
@@ -79,9 +111,9 @@ class FormTransfer {
                 obj[objKey] = await this.handleMySelfDepart(name)
             } else if (shape === "人员选择器") {
                 objKey = `staffSelect_${i}`
-                obj[objKey] = await this.handleStaffSelect(itemObj)
+                obj[objKey] = await this.handleStaffSelect(name)
             } else if (shape === "附件" || shape==="可预览附件") {
-                objKey = `fileUpload_${i}`
+                objKey = `file_${i}`
                 obj[objKey] = await this.handleFileUploadWidget(name)
             } else if (shape === "值选择器") {
                 objKey = `selecValtName_${i}`
@@ -100,26 +132,23 @@ class FormTransfer {
         return obj
     }
     // 处理校验规则
-    handlePattern(ValidateRule){
+    handlePattern=(ValidateRule)=>{
         let obj = {}
         // 如果不存在校验规则，直接返回
         if (!ValidateRule) {
-            obj.required = false
-            return obj
+            return
         }
         // 如果只有一条校验规则
         if (ValidateRule.indexOf(',') < 0) {
             if (ValidateRule.indexOf(':') > -1) {
                 let maxLengthArr = ValidateRule.split(':')
                 if (maxLengthArr[0] === 'maxlength') {
-                    obj.minLength = 0
+                    obj.minLength = null
                     obj.maxLength = parseInt(maxLengthArr[1])
                 }
             } else if (ValidateRule.indexOf(':') < 0) {
                 if (ValidateRule === 'required') {
                     obj.required = true
-                } else {
-                    obj.required = false
                 }
             }
         } else {
@@ -128,98 +157,73 @@ class FormTransfer {
                 if (item.indexOf(':') > -1) {
                     let maxLengthArr = item.split(':')
                     if (maxLengthArr[0] === 'maxlength') {
-                        obj.minLength = 0
+                        obj.minLength = null
                         obj.maxLength = parseInt(maxLengthArr[1])
                     }
                 } else {
                     if (item === "required") {
                         obj.required = true
-                    } else {
-                        obj.required = false
                     }
                 }
             })
         }
         return obj
     }
-
     // 文本输入框
-    handleInput(dataObj){
-        const { minLength, maxLength, required } = this.handlePattern(dataObj.ValidateRule)
+    handleInput=(dataObj)=>{
         return {
             title:dataObj.Alias,
             type: 'string',
             default: dataObj.PresetValue,
-            minLength: minLength,
-            maxLength: maxLength,
-            pattern: required ?  `^.{${minLength},${maxLength}}$` : "",
+            minLength: this.handlePattern(dataObj.ValidateRule).minLength,
+            maxLength: this.handlePattern(dataObj.ValidateRule).maxLength,
+            pattern: this.handlePattern(dataObj.ValidateRule).required ?  `^.{1,100}$` : "",
             message:{
-                pattern: required ? '此项必填': ""
+                pattern: '此项必填'
             }
         }
     }
     // 多行文本 
-    handleTextarea(dataObj){
-        const { minLength, maxLength, required } = this.handlePattern(dataObj.ValidateRule)
+    handleTextarea=(title)=>{
         return {
-            title:dataObj.Alias,
+            title,
             type: 'string',
             format: "textarea",
-            "ui:width": `${this.column}00%`,
-            minLength: minLength,
-            maxLength: maxLength,
-            pattern: required ?  `^.{${minLength},${maxLength}}$` : "",
-            message:{
-                pattern: required ? '此项必填': ""
-            }
+            "ui:width": "300%"
         }
     }
     // 数字输入框
-    handleNumberInput(dataObj){
-        const { minLength, maxLength, required } = this.handlePattern(dataObj.ValidateRule)
+    handleNumberInput=(title)=>{
         return {
-            title:dataObj.Alias,
+            title,
             type: "string",
-            minLength: minLength,
-            maxLength: maxLength,
-            pattern: required ? "^(\-|\+)?\d+(\.\d+)?$" : "",
+            pattern: "^[0-9].*$",
             message: {
                 pattern: "请输入数字"
             }
         }
     }
     // 日期
-    handleDatePicker(dataObj){
-        const { required } = this.handlePattern(dataObj.ValidateRule)
+    handleDatePicker=(title)=>{
         return {
-            title:dataObj.Alias,
+            title,
             type: "string",
             format: "date",
             "ui:options": {
-                format: "YY/MM/DD"
-            },
-            pattern: required ? "^.{1,30}$" : "",
-            message: {
-                pattern: "请选择日期"
+              format: "YY/MM/DD"
             }
         }
     }
     // 日期时间
-    handleDateTime(dataObj){
-        const { required } = this.handlePattern(dataObj.ValidateRule)
+    handleDateTime=(title)=>{
         return {
-            title:dataObj.Alias,
+            title,
             type: "string",
             format: "dateTime",
-            pattern: required ? "^.{1,30}$" : "",
-            message: {
-                pattern: "请选择日期时间"
-            }
         }
     }
     // 日期年份
-    hanldeYearSelect(dataObj){
-        const { required } = this.handlePattern(dataObj.ValidateRule)
+    hanldeYearSelect=(title)=>{
         let date = new Date()
         const curYear = date.getFullYear()
         const startYear = curYear - 10
@@ -230,65 +234,45 @@ class FormTransfer {
             enumVals.push(i)
         }
         return {
-            title:dataObj.Alias,
+            title,
             type: "string",
             enum: enumVals,
             enumNames: enumNames,
-            default: curYear,
-            pattern: required ? "^.{1,30}$" : "",
-            message: {
-                pattern: "请选择年份"
-            }
+            default: curYear
         }
     }
     // 值选择器
-    hanldeValueSelect(dataObj){
+    hanldeValueSelect=(dataObj)=>{
         if (!dataObj.ConfigInfo) {
             return
         }
-        const { required } = this.handlePattern(dataObj.ValidateRule)
         let myOptions = dataObj.ConfigInfo.split(',')
         return {
             title: dataObj.Alias,
             type: "string",
             enum: myOptions,
             enumNames: myOptions,
-            default: dataObj.PresetValue,
-            pattern: required ? "^.{1,30}$" : "",
-            message: {
-                pattern: "必填项"
-            }
+            default: dataObj.PresetValue
         }
     }
     // 搜索选择器
-    hanldeSearchSelect(dataObj){
-        const { required } = this.handlePattern(dataObj.ValidateRule)
+    hanldeSearchSelect=(dataObj)=>{
         return {
             title: dataObj.Alias,
             "ui:widget": "search",
-            pattern: required ? "^.{1,100}$" : "",
-            message: {
-                pattern: "必填项"
-            }
         }
     }
-    // 可编辑值选择器
-    handleEditBle(dataObj){
-        const { required } = this.handlePattern(dataObj.ValidateRule)
+    handleEditBle=(dataObj)=>{
         return {
             title: dataObj.Alias,
             "ui:widget": "editSearch",
             "ui:options": {
                 value: dataObj.ConfigInfo
-            },
-            pattern: required ? "^.{1,100}$" : "",
-            message: {
-                pattern: "必填项"
             }
         }
     }
     // 本人姓名
-    handleMySelfName(title){
+    handleMySelfName=(title)=>{
         return {
             title,
             type: "string",
@@ -297,7 +281,7 @@ class FormTransfer {
     }
 
     // 本人部门
-    handleMySelfDepart(title){
+    handleMySelfDepart=(title)=>{
         return {
             title,
             type: "string",
@@ -306,82 +290,78 @@ class FormTransfer {
     }
 
     // 人员选择器
-    handleStaffSelect(dataObj){
-        const { required } = this.handlePattern(dataObj.ValidateRule)
+    handleStaffSelect=(title)=>{
         return {
-            title: dataObj.Alias,
+            title,
             "ui:widget": "staff",
-            pattern: required ? "^.{1,100}$" : "",
-            message: {
-                pattern: "必填项"
-            }
         }
     }
     // 附件上传
-    handleFileUploadWidget(dataObj){
-        const { required } = this.handlePattern(dataObj.ValidateRule)
+    handleFileUploadWidget=(title)=>{
         return {
-            title: dataObj.Alias,
+            title,
             "ui:widget": "file",
-            pattern: required ? "^.{1,100}$" : "",
-            message: {
-                pattern: "必填项"
-            }
         }
     }
     // 台账选择器
-    handleTableAccount(dataObj){
-        const { required } = this.handlePattern(dataObj.ValidateRule)
+    handleTableAccount=(dataObj)=>{
         return {
             title: dataObj.Alias,
             "ui:widget": "table",
-            pattern: required ? "^.{1,100}$" : "",
-            message: {
-                pattern: "必填项"
-            }
         }
     }
-    // 判断是否是必填字段
-    judgeRequired(objData){
-        let requireList = []
-        for(let ckey in objData) {
-            if (objData[ckey].pattern && objData[ckey].pattern !== "") {
-                requireList.push(ckey)
-            }
-        }
-        return requireList
-    }
-    // 接口请求异步函数
-    async asyncFunc(name){
-        let result = await getSelectName(name)
-        return result.data
-    }
-
-    async hanldeSelect(name){
+    // 处理每个分组
+    handleGroup= async(dataArr)=>{
         let obj = {}
-        let data = await this.asyncFunc(name);
-        let enumVals = []
-        let enumNames = []
-        data.forEach((item)=>{
-            enumVals.push(item.NODEVALUE)
-            enumNames.push(item.NODENAME)
+        let key = ""
+        for(let i = 0; i< dataArr.length; i++) {
+            key = `object_${i}`
+            let objData =await this.handleEveryGroup(dataArr[i].Schema)
+            obj[key] = {
+                type:"object",
+                title: dataArr[i].GroupName,
+                properties: objData,
+                required:[]
+            }
+        }
+        this.setState({
+            schema:{
+                schema:{
+                    type: 'object',
+                    properties: obj,
+                    required:[]
+                },
+                displayType: "row",
+                showDescIcon: false,
+                column: 3,
+                labelWidth: 120
+            }
         })
-        obj = {
-            title: name,
-            type: 'string',
-            enum: enumVals,
-            enumNames: enumNames
-        }
-        return obj
     }
-
-    // 多级联动
-    hanldeSelectTreeNode(name){
-        return {
-            title: name,
-            "ui:widget": "cascader"
-        }
+    setFormData=(val)=>{
+    }
+    handleClickReback=()=>{
+        this.props.history.push({
+            pathname: '/home'
+        })
+    }
+    render() {
+        const {formData} = this.state
+        return (
+            <div className="transform-wrapper">
+                <FormRender
+                    ref={this.formRef}
+                    {...formData}
+                    {...this.state.schema}
+                    onChange={this.setFormData}
+                    widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file: UploadFile, editSearch: EditbleSelct }}
+                />
+                <div className="gobackBtn">
+                    <Button type="primary" onClick={this.handleClickReback}>
+                        返回列表
+                    </Button>
+                </div>
+            </div>
+        )
     }
 }
-
-export default FormTransfer

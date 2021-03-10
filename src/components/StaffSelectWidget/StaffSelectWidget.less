@@ -1,0 +1,49 @@
+.person-select{
+    padding: 10px 0;
+    border-bottom: 1px solid #cccccc;
+    /deep/ .personheader {
+        font-size: 16px;
+    }
+    /deep/ .person-radio {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 3px 0 3px 10px;
+    }
+    /deep/ .ant-radio-wrapper{
+        width: 80px;  
+    }
+}
+.selectvalue{
+    margin-right: 10px;
+}
+.fieldset-class{
+    padding: 10px 0;
+    /deep/ fieldset{
+        border: 1px solid #dddddd;
+    }
+    /deep/ legend{
+        width: auto;
+    }
+}
+
+.personModalClass{
+    /deep/ .ant-modal-body::-webkit-scrollbar{
+        width:10px;
+        height:10px;
+        /**/
+    }
+    /deep/ .ant-modal-body::-webkit-scrollbar-track{
+        background: rgb(239, 239, 239);
+        border-radius:2px;
+    }
+    /deep/ .ant-modal-body::-webkit-scrollbar-thumb{
+        background: #bfbfbf;
+        border-radius:10px;
+    }
+    /deep/ .ant-modal-body::-webkit-scrollbar-thumb:hover{
+        background: #333;
+    }
+    /deep/ .ant-modal-body::-webkit-scrollbar-corner{
+        background: #179a16;
+    }
+}
