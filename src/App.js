@@ -12,6 +12,7 @@ import HistoryFlow from './pages/HistoryFlow/HistoryFlow'
 import FlowPermission from './pages/FlowPermission/FlowPermission'
 import StartPermission from './pages/StartPermission/StartPermission'
 import EditbleSelct from './components/EditbleSelct/EditbleSelct'
+import SetFlowForm from './pages/SetFlowForm/SetFlowForm'
 import {Switch, Route, Redirect} from 'react-router-dom'
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             <Route exact path="/permis" component={FlowPermission}/>
             <Route exact path="/stpermis" component={StartPermission}/>
             <Route exact path="/cascader" component={EditbleSelct}/>
+            <Route exact path="/setform" component={SetFlowForm}/>
             <Redirect to="/home"></Redirect>
         </Switch>
     </div>

@@ -34,15 +34,13 @@ class StartPermission extends React.Component {
     getData=()=>{
         let deArr = []
         let name =  this.state.flowName || ''
-        // GetWorkflowBaseInfo(name, this.state.userName, '', '', 1, 1000)
-        GetWorkflowBaseInfo(name, '王万里', '', '', 1, 1000)
+        GetWorkflowBaseInfo(name, this.state.userName, '', '', 1, 1000)
         .then((res)=>{
             res.data.getMe.forEach((item)=>{
                 if (item.AccessRight === '1') {
                     deArr.push(item)
                 }
             })
-            console.log(deArr)
             this.setState({
                 flowArr: deArr
             })
@@ -68,8 +66,6 @@ class StartPermission extends React.Component {
         })
     }
     handleStart=(flowName, FlowDefID)=>{
-        console.log(flowName, FlowDefID)
-        debugger
         return ()=>{
             this.props.history.push({
                 pathname: '/start',
@@ -82,8 +78,7 @@ class StartPermission extends React.Component {
         }
     }
     componentDidMount(){
-        // this.handleRouteParams()
-        this.getData()
+        this.handleRouteParams()
     }
     render(){
         return (

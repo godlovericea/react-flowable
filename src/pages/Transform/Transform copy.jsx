@@ -19,8 +19,7 @@ export default class Transform extends Component {
         this.formRef = React.createRef()
         this.state={
             schema: {},
-            formData: {},
-            tableName: ''
+            formData: {}
         }
     }
     componentDidMount(){
@@ -28,18 +27,15 @@ export default class Transform extends Component {
     }
     getData = ()=>{
         const tableName = this.props.location.state.name
-        this.setState({
-            tableName: tableName
+        getTableName(tableName)
+        .then(async(res)=>{
+            const dataArr = res.data.getMe[0].Groups
+            let formTransfer = new FormTransfer(dataArr)
+            let schema =await formTransfer.handleGroup()
+            this.setState({
+                schema: schema
+            })
         })
-        // getTableName(tableName)
-        // .then(async(res)=>{
-        //     const dataArr = res.data.getMe[0].Groups
-        //     let formTransfer = new FormTransfer(dataArr)
-        //     let schema =await formTransfer.handleGroup()
-        //     this.setState({
-        //         schema: schema
-        //     })
-        // })
     }
     
     setFormData=(val)=>{
@@ -53,7 +49,13 @@ export default class Transform extends Component {
         const {formData} = this.state
         return (
             <div className="transform-wrapper">
-                <FormRenderTrans tableName={this.props.location.state.name}/>
+                <FormRender
+                    ref={this.formRef}
+                    {...formData}
+                    {...this.state.schema}
+                    onChange={this.setFormData}
+                    widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file: UploadFile, editSearch: EditbleSelct }}
+                />
                 <div className="gobackBtn">
                     <Button type="primary" onClick={this.handleClickReback}>
                         返回列表

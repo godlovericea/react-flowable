@@ -4,6 +4,7 @@ import { Select } from 'antd';
 const { Option } = Select;
 
 const EditbleSelct=(props)=>{
+    console.log(props)
     const arr = props.options.value.split(',')
     let children = []
     for (let i = 0; i < arr.length; i++) {
@@ -15,7 +16,7 @@ const EditbleSelct=(props)=>{
     }
 
     return(
-        <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']}>
+        <Select mode="tags" defaultValue={props.default} style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']}>
             {children}
         </Select>
     )

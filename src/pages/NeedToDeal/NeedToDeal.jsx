@@ -4,12 +4,12 @@ import configData from '../../utils/config'
 import { Button, message, Modal, Radio, Input, Table, Space} from 'antd';
 import { getTableName, getSelectName, GetFormList, SaveFormInfo, TaskSave, GetTaskBaseInfo, getUserName, UpdateTaskInfo, TaskGoBack, WorkflowUrging, GetFlowProcessInfo, WorkflowFileOperation, uploadToService} from '../../apis/process'
 import './NeedToDeal.less'
-import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
 import TreeCascader from '../../components/TreeCascader/TreeCascader'
-import SearchSelect from '../../components/SearchSelect/SearchSelect'
+import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
 import TableAccount from '../../components/TableAccount/TableAccount'
 import UploadFile from '../../components/UploadFile/UploadFile'
 import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
+import SearchSelect from '../../components/SearchSelect/SearchSelect'
 const { Search } = Input;
 const { Column } = Table;
 
@@ -88,13 +88,21 @@ const NeedToDeal = (props) => {
                 } else {
                     let schemaConfig =  JSON.parse(fieldData.Config)
                     let fieldConfig = schemaConfig.schema.properties
-                    let formValObj = {}
                     if (fieldData.formId) {
-                        formValObj = JSON.parse(fieldData.formId).values
+                        let formValObj = JSON.parse(fieldData.formId).values
                         for(let skey in fieldConfig){
                             for(let val in formValObj) {
                                 if (skey === val) {
-                                    fieldConfig[skey].default = formValObj[val]
+                                    let valueObj = formValObj[val]
+                                    let childProps = fieldConfig[skey].properties
+                                    for(let childKey in fieldConfig[skey].properties) {
+                                        for(let childVlue in valueObj) {
+                                            if (childKey === childVlue) {
+                                                childProps[childKey].default = valueObj[childVlue]
+                                            }
+                                        }
+                                    }
+                                    fieldConfig[skey].properties = childProps
                                 }
                             }
                         }
@@ -102,7 +110,6 @@ const NeedToDeal = (props) => {
                     schemaConfig.schema.properties = fieldConfig
                     setSchema(schemaConfig)
                 }
-                
             }
         })
         GetTaskBaseInfo(taskIdScope)
@@ -446,7 +453,6 @@ const NeedToDeal = (props) => {
                 properties: objData,
                 required: judgeRequired(objData)
             }
-            
         }
         setSchema({
             schema:{
@@ -476,6 +482,7 @@ const NeedToDeal = (props) => {
             if ((shape === "文本" || shape === "编码") && type === "文本") {
                 objKey =  `inputName_${i}`
                 obj[objKey] = await handleInput(itemObj)
+                console.log(obj[objKey])
             } else if (shape === "多行文本") {
                 objKey =  `textarea_${i}`
                 obj[objKey] = await handleTextarea(itemObj)
@@ -579,9 +586,9 @@ const NeedToDeal = (props) => {
             title:dataObj.Alias,
             type: 'string',
             default: dataObj.PresetValue,
-            minLength: minLength,
-            maxLength: maxLength,
-            pattern: required ?  `^.{${minLength},${maxLength}}$` : "",
+            minLength: minLength || 0,
+            maxLength: maxLength || 255,
+            pattern: required ?  `^.{${minLength || 0},${maxLength || 255}}$` : "",
             message:{
                 pattern: required ? '此项必填': ""
             }
@@ -595,9 +602,9 @@ const NeedToDeal = (props) => {
             type: 'string',
             format: "textarea",
             "ui:width": `${column}00%`,
-            minLength: minLength,
-            maxLength: maxLength,
-            pattern: required ?  `^.{${minLength},${maxLength}}$` : "",
+            minLength: minLength || 0,
+            maxLength: maxLength || 255,
+            pattern: required ?  `^.{${minLength || 0},${maxLength || 255}}$` : "",
             message:{
                 pattern: required ? '此项必填': ""
             }
@@ -609,9 +616,9 @@ const NeedToDeal = (props) => {
         return {
             title:dataObj.Alias,
             type: "string",
-            minLength: minLength,
-            maxLength: maxLength,
-            pattern: required ? "^(\-|\+)?\d+(\.\d+)?$" : "",
+            minLength: minLength || 0,
+            maxLength: maxLength || 13,
+            pattern: required ?  `^.{${minLength || 0},${maxLength || 13}}$` : "",
             message: {
                 pattern: "请输入数字"
             }
@@ -695,6 +702,7 @@ const NeedToDeal = (props) => {
         return {
             title: dataObj.Alias,
             "ui:widget": "search",
+            type: 'string',
             pattern: required ? "^.{1,100}$" : "",
             message: {
                 pattern: "必填项"
@@ -707,6 +715,7 @@ const NeedToDeal = (props) => {
         return {
             title: dataObj.Alias,
             "ui:widget": "editSearch",
+            type: 'string',
             "ui:options": {
                 value: dataObj.ConfigInfo
             },
@@ -740,6 +749,7 @@ const NeedToDeal = (props) => {
         return {
             title: dataObj.Alias,
             "ui:widget": "staff",
+            type: 'string',
             pattern: required ? "^.{1,100}$" : "",
             message: {
                 pattern: "必填项"
@@ -752,6 +762,7 @@ const NeedToDeal = (props) => {
         return {
             title: dataObj.Alias,
             "ui:widget": "file",
+            type: 'string',
             pattern: required ? "^.{1,100}$" : "",
             message: {
                 pattern: "必填项"
@@ -764,6 +775,7 @@ const NeedToDeal = (props) => {
         return {
             title: dataObj.Alias,
             "ui:widget": "table",
+            type: 'string',
             pattern: required ? "^.{1,100}$" : "",
             message: {
                 pattern: "必填项"
@@ -923,6 +935,7 @@ const NeedToDeal = (props) => {
                 formData={formData}
                 onChange={setFormData}
                 onValidate={onValidate}
+                showValidate={false}
                 widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file: UploadFile, editSearch: EditbleSelct }}
             />
         </div>

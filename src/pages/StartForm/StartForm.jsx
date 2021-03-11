@@ -4,12 +4,12 @@ import { Button, message } from 'antd';
 import FormTransfer from '../../libs/transform/transform'
 import { GetStartForm, WorkflowStart, getTableName, getSelectName } from '../../apis/process'
 import "./StartForm.less"
-import StaffSelect from '../../components/StaffSelect/StaffSelect'
 import TreeCascader from '../../components/TreeCascader/TreeCascader'
 import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
 import TableAccount from '../../components/TableAccount/TableAccount'
 import UploadFile from '../../components/UploadFile/UploadFile'
 import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
+import SearchSelect from '../../components/SearchSelect/SearchSelect'
 
 const StartForm = (props) => {
     const [formData, setFormData] = useState({});
@@ -170,9 +170,9 @@ const StartForm = (props) => {
             title:dataObj.Alias,
             type: 'string',
             default: dataObj.PresetValue,
-            minLength: minLength,
-            maxLength: maxLength,
-            pattern: required ?  `^.{${minLength},${maxLength}}$` : "",
+            minLength: minLength || 0,
+            maxLength: maxLength || 255,
+            pattern: required ?  `^.{${minLength || 0},${maxLength || 255}}$` : "",
             message:{
                 pattern: required ? '此项必填': ""
             }
@@ -186,9 +186,9 @@ const StartForm = (props) => {
             type: 'string',
             format: "textarea",
             "ui:width": `${column}00%`,
-            minLength: minLength,
-            maxLength: maxLength,
-            pattern: required ?  `^.{${minLength},${maxLength}}$` : "",
+            minLength: minLength || 0,
+            maxLength: maxLength || 255,
+            pattern: required ?  `^.{${minLength || 0},${maxLength || 255}}$` : "",
             message:{
                 pattern: required ? '此项必填': ""
             }
@@ -200,9 +200,9 @@ const StartForm = (props) => {
         return {
             title:dataObj.Alias,
             type: "number",
-            minLength: minLength,
-            maxLength: maxLength,
-            pattern: required ? `^.{1,10}$` : "",
+            minLength: minLength || 0,
+            maxLength: maxLength || 13,
+            pattern: required ?  `^.{${minLength || 0},${maxLength || 13}}$` : "",
             message: {
                 pattern: "请输入数字"
             }
@@ -382,14 +382,15 @@ const StartForm = (props) => {
         for(let i = 0; i< dataArr.length; i++) {
             key = `object_${i}`
             let objData =await handleEveryGroup(dataArr[i].Schema)
+            console.log(objData)
             obj[key] = {
                 type:"object",
                 title: dataArr[i].GroupName,
                 properties: objData,
                 required: judgeRequired(objData)
             }
-            
         }
+        console.log(obj)
         setSchema({
             schema:{
                 type: 'object',
@@ -479,7 +480,8 @@ const StartForm = (props) => {
                 formData={formData}
                 onChange={setFormData}
                 onValidate={onValidate}
-                widgets={{ staff: StaffSelect, cascader: TreeCascader, search: StaffSelectWidget, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
+                showValidate={false}
+                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
             />
             <Button style={{ marginLeft: 30 }} onClick={handleClick}>
                 重置

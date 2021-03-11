@@ -6,6 +6,7 @@ import './SearchSelect.less';
 const { Option } = Select;
 
 const SearchSelect =(myOptions)=> {
+    console.log(myOptions)
     const [optionList, setOptionList] = useState([])
     const hanldeChange=(value)=>{
         console.log(value)
@@ -32,6 +33,7 @@ const SearchSelect =(myOptions)=> {
                 optionFilterProp="children"
                 onChange={hanldeChange}
                 onSearch={onSearch}
+                defaultValue={myOptions.value}
                 filterOption={(input, option) =>option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
             >
                 {

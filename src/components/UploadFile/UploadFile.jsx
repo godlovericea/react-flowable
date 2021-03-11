@@ -11,12 +11,17 @@ const UploadFile =(props)=> {
     const [taskId, setTaskId] = useState(window.taskId)
 
     const handleChange=(e)=>{
-        console.log(e)
+        
         setUpFileName(e.target.files[0])
+        console.log(upFileName)
     }
 
     // 确定上传附件
     const sureUploadVisible=()=>{
+        if (!upFileName){
+            message.error("请选择上传文件")
+            return false
+        }
         var _url = document.referrer + "cityinterface/rest/services/filedownload.svc/uploadfile/workflow/"+ props.name +'/' + upFileName.name;
         var formData = new FormData();
         formData.append("filedata", upFileName);

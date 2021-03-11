@@ -1,6 +1,7 @@
 // 自定义Form Render组件
 import React, { useState, useEffect, useRef } from 'react'
 import { Button, Input, Form, Row, Col, Checkbox, message } from 'antd';
+import { ToolFilled } from '@ant-design/icons';
 import { getUserListForRole, GetWorkflowBaseInfo, UpdateWorkFlowRight } from '../../apis/process';
 import StaffSelect from '../../components/StaffSelect/StaffSelect';
 import './FlowPermission.less';
@@ -51,6 +52,7 @@ class FlowPermission extends React.Component {
                 arr.push({
                     label: item.WorkflowName,
                     value: item.Key,
+                    id: item.ID,
                     checked: item.AccessRight === "1" ? true: false
                 })
             })
@@ -88,6 +90,17 @@ class FlowPermission extends React.Component {
             this.getData()
         })
     }
+    routeGo=(id, label)=>{
+        return ()=>{
+            this.props.history.push({
+                pathname: '/setform',
+                state:{
+                    id: id,
+                    label: label
+                }
+            })
+        }
+    }
     componentDidMount(){
         this.handleRouteParams()
     }
@@ -116,7 +129,8 @@ class FlowPermission extends React.Component {
                             this.state.flowArr.map((item,index)=>{
                                 return(
                                     <Col span={6} key={index}>
-                                        <Checkbox value={item.value} checked={item.checked} onChange={this.onChange}>{item.label}</Checkbox>
+                                        <Checkbox value={item.value} checked={item.checked} onChange={this.onChange} className="lableclass">{item.label}</Checkbox>
+                                        <ToolFilled title="点击配置表单字段" className="set-form-class" onClick={this.routeGo(item.id, item.label)}/>
                                     </Col>
                                 )
                             })

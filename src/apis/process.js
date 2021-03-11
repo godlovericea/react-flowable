@@ -173,6 +173,30 @@ export function UpdateWorkFlowRight (USERNAME, FORMKEYLIST) {
     })
 }
 
+// 查询节点信息
+export function GetActList (FLOWDEFID) {
+    return request({
+        url: `/GetActList?FlowDefID=${FLOWDEFID}`,
+        method: 'get'
+    })
+}
+
+// 获取字段配置信息
+export function GetColumnConfig (ACTID, FORMKEY) {
+    return request({
+        url: `/GetColumnConfig?ActID=${ACTID}&FormKey=${FORMKEY}`,
+        method: 'get'
+    })
+}
+
+// 保存字段配置信息
+export function SaveColumnConfig (ACTID, FORMKEY, COLUMNCONFIG) {
+    return request({
+        url: `/SaveColumnConfig?ActID=${ACTID}&FormKey=${FORMKEY}&ColumnConfig=${COLUMNCONFIG}`,
+        method: 'get'
+    })
+}
+
 
 // 新增流程  
 export function getAssetsList(){

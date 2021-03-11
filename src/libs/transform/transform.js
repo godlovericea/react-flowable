@@ -5,7 +5,6 @@ class FormTransfer {
         this.dataArr = dataArr
         this.column = 3
         this.schema = {}
-        this.handleGroup()
     }
     // 处理数组数据
     async handleGroup(){
@@ -21,7 +20,7 @@ class FormTransfer {
                 required: this.judgeRequired(objData)
             }
         }
-        this.schema = JSON.stringify({
+        this.schema = {
             schema:{
                 type: 'object',
                 properties: obj
@@ -30,7 +29,8 @@ class FormTransfer {
             showDescIcon: false,
             column: this.column,
             labelWidth: 120
-        })
+        }
+        return this.schema
     }
     async handleEveryGroup(schemaList){
         let obj = {}
@@ -82,7 +82,7 @@ class FormTransfer {
                 obj[objKey] = await this.handleStaffSelect(itemObj)
             } else if (shape === "附件" || shape==="可预览附件") {
                 objKey = `fileUpload_${i}`
-                obj[objKey] = await this.handleFileUploadWidget(name)
+                obj[objKey] = await this.handleFileUploadWidget(itemObj)
             } else if (shape === "值选择器") {
                 objKey = `selecValtName_${i}`
                 obj[objKey] = await this.hanldeValueSelect(itemObj)
@@ -150,9 +150,9 @@ class FormTransfer {
             title:dataObj.Alias,
             type: 'string',
             default: dataObj.PresetValue,
-            minLength: minLength,
-            maxLength: maxLength,
-            pattern: required ?  `^.{${minLength},${maxLength}}$` : "",
+            minLength: minLength || 0,
+            maxLength: maxLength || 255,
+            pattern: required ?  `^.{${minLength || 0},${maxLength || 255}}$` : "",
             message:{
                 pattern: required ? '此项必填': ""
             }
@@ -166,9 +166,9 @@ class FormTransfer {
             type: 'string',
             format: "textarea",
             "ui:width": `${this.column}00%`,
-            minLength: minLength,
-            maxLength: maxLength,
-            pattern: required ?  `^.{${minLength},${maxLength}}$` : "",
+            minLength: minLength || 0,
+            maxLength: maxLength || 255,
+            pattern: required ?  `^.{${minLength || 0},${maxLength || 255}}$` : "",
             message:{
                 pattern: required ? '此项必填': ""
             }
@@ -179,10 +179,10 @@ class FormTransfer {
         const { minLength, maxLength, required } = this.handlePattern(dataObj.ValidateRule)
         return {
             title:dataObj.Alias,
-            type: "string",
-            minLength: minLength,
-            maxLength: maxLength,
-            pattern: required ? "^(\-|\+)?\d+(\.\d+)?$" : "",
+            type: "number",
+            minLength: minLength || 0,
+            maxLength: maxLength || 13,
+            pattern: required ?  `^.{${minLength || 0},${maxLength || 13}}$` : "",
             message: {
                 pattern: "请输入数字"
             }
@@ -356,7 +356,7 @@ class FormTransfer {
         let result = await getSelectName(name)
         return result.data
     }
-
+    // 处理下拉
     async hanldeSelect(name){
         let obj = {}
         let data = await this.asyncFunc(name);
