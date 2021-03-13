@@ -20,12 +20,6 @@ const StartForm = (props) => {
         getData()
     },[])
 
-    const handleClick = () => {
-        formRef.current.resetData({}).then(res => {
-        alert(JSON.stringify(res, null, 2));
-        });
-    };
-
     const handleClickReback = ()=>{
         props.history.push({
             pathname: '/home'

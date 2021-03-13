@@ -4,7 +4,7 @@ import { TreeSelect } from 'antd';
 
 class Demo extends React.Component {
     state = {
-        routeParams: '所在分公司.所在大区.所在分公司.所在大区',
+        routeParams: '所在分公司.所在大区',
         value: undefined,
         treeData: [],
     };

@@ -1,18 +1,7 @@
 import React, { Component } from 'react'
-import { getTableName, getSelectName } from '../../apis/process'
-import FormTransfer from '../../libs/transform/transform'
-import FormRender from 'form-render/lib/antd';
 import { Button } from 'antd';
 import './transform.less'
-import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
-import TreeCascader from '../../components/TreeCascader/TreeCascader'
-import SearchSelect from '../../components/SearchSelect/SearchSelect'
-import TableAccount from '../../components/TableAccount/TableAccount'
-import UploadFile from '../../components/UploadFile/UploadFile'
-import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
-
 import FormRenderTrans from '../../components/FormRenderTrans/FormRenderTrans'
-
 export default class Transform extends Component {
     constructor(props){
         super(props)
@@ -31,26 +20,14 @@ export default class Transform extends Component {
         this.setState({
             tableName: tableName
         })
-        // getTableName(tableName)
-        // .then(async(res)=>{
-        //     const dataArr = res.data.getMe[0].Groups
-        //     let formTransfer = new FormTransfer(dataArr)
-        //     let schema =await formTransfer.handleGroup()
-        //     this.setState({
-        //         schema: schema
-        //     })
-        // })
     }
     
-    setFormData=(val)=>{
-    }
     handleClickReback=()=>{
         this.props.history.push({
             pathname: '/home'
         })
     }
     render() {
-        const {formData} = this.state
         return (
             <div className="transform-wrapper">
                 <FormRenderTrans tableName={this.props.location.state.name}/>

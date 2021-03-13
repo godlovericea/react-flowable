@@ -12,7 +12,7 @@ class TableAccount extends React.Component {
         visible: false,
         columns: [],
         tableData: [],
-        tableAccountValue: '',
+        tableAccountValue: this.props.name,
         searchVal: '',
         rowSelection: {
             onChange: (selectedRowKeys) => {

@@ -152,11 +152,6 @@ const NeedToDeal = (props) => {
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={showTransFlow}>流转信息</Button>
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={showModeler}>流程图</Button>
             </div>
-            <Modal title="任务移交" visible={visible} onOk={handleOK} onCancel={handleCancel}>
-                <Radio.Group value={transValue}>
-
-                </Radio.Group>
-            </Modal>
             <Modal title="流程图" visible={modelerVisible} onOk={handleModelerOK} onCancel={handleModelerCancel}>
                 <img src={processImgSrc} alt="process"/>
             </Modal>

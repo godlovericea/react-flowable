@@ -9,7 +9,7 @@ const { Search } = Input;
 const StaffSelectWidget =(props)=> {
     const [visible, setVisible] = useState(false)
     const [personArr, setPersonArr] = useState([])
-    const [person, setPerson] = useState('')
+    const [person, setPerson] = useState(props.value)
     const getData =()=>{
         getUserListForRole()
         .then((res)=>{

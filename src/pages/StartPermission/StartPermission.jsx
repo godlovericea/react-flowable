@@ -34,6 +34,7 @@ class StartPermission extends React.Component {
     getData=()=>{
         let deArr = []
         let name =  this.state.flowName || ''
+        // GetWorkflowBaseInfo(name, '王万里', '', '', 1, 1000)
         GetWorkflowBaseInfo(name, this.state.userName, '', '', 1, 1000)
         .then((res)=>{
             res.data.getMe.forEach((item)=>{

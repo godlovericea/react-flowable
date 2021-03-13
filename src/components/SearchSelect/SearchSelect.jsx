@@ -6,10 +6,8 @@ import './SearchSelect.less';
 const { Option } = Select;
 
 const SearchSelect =(myOptions)=> {
-    console.log(myOptions)
     const [optionList, setOptionList] = useState([])
     const hanldeChange=(value)=>{
-        console.log(value)
         myOptions.onChange(myOptions.name, value)
     }
     const onSearch=(e)=>{

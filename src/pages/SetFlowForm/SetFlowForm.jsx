@@ -1,6 +1,6 @@
 // 给流程配置需要显示的字段
 import React, { useState, useEffect, useRef } from 'react'
-import { Button, Input, Form, Row, Col, Checkbox, Tree } from 'antd';
+import { Button, Input, Form, Row, Col, Checkbox, Tree, message } from 'antd';
 import { ToolFilled } from '@ant-design/icons';
 import { GetActList, SaveColumnConfig, GetColumnConfig } from '../../apis/process';
 import './SetFlowForm.less';
@@ -32,7 +32,6 @@ const SetFlowForm =(props)=> {
             updateData.push(item)
         })
         SetNodeFlow(updateData)
-        
     }
 
     const getData = () => {
@@ -97,7 +96,7 @@ const SetFlowForm =(props)=> {
         const keys = checkedKeys.toString()
         SaveColumnConfig(actId, formKey, keys)
         .then((res)=>{
-            console.log(res.data)
+            message.success("保存成功！")
         })
     }
     const onExpand = (expandedKeys) => {

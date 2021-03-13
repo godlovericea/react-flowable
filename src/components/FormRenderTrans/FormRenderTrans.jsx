@@ -18,6 +18,18 @@ const FormRenderTrans=(props)=>{
     const [valid, setValid] = useState([])
     const [column, setColumn] = useState(3)
     const formRef = useRef();
+    
+    const judgeFormType=()=>{
+        console.log(props)
+        const { formType, schemaStr } = props
+        if (formType === "台账") {
+            getData()
+        } else {
+            console.log(schemaStr)
+            let schemaData = `${schemaStr}`
+            setSchema(JSON.parse(schemaData))
+        }
+    }
 
     const getData = ()=>{
         console.log(props)
@@ -36,6 +48,7 @@ const FormRenderTrans=(props)=>{
     }
 
     useEffect(()=>{
+        // judgeFormType()
         getData()
     }, [])
 
