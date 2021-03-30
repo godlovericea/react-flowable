@@ -9,201 +9,568 @@
 </head>
 
 <body>
-    <input type="text" id="aaa">
     <script>
+        let arr = [{
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "date_O9YUWZ",
+            "FieldName": "派单时间",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "1",
+            "Type": "",
+            "Unit": ""
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "input_aCUJ0c",
+            "FieldName": "派单信息",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "1",
+            "Type": "",
+            "Unit": ""
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "select_fnxK9n",
+            "FieldName": "处理时限",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "0",
+            "Type": "",
+            "Unit": ""
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "date_Mu9mZD",
+            "FieldName": "接单时间",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "0",
+            "Type": "",
+            "Unit": ""
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "input_4r9Nsv",
+            "FieldName": "处理人员",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "0",
+            "Type": "",
+            "Unit": ""
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "input_UCumQ1",
+            "FieldName": "承办科室",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "0",
+            "Type": "",
+            "Unit": ""
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "input_p-C7Ag",
+            "FieldName": "水表编号",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "0",
+            "Type": "",
+            "Unit": ""
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "input_09XpIU",
+            "FieldName": "维修内容",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "0",
+            "Type": "",
+            "Unit": ""
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "date_NT8w8m",
+            "FieldName": "维修时间",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "0",
+            "Type": "",
+            "Unit": ""
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "image_BoKhol",
+            "FieldName": "现场图标",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "0",
+            "Type": "",
+            "Unit": ""
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "image_9WetPr",
+            "FieldName": "完工图标",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "0",
+            "Type": "",
+            "Unit": ""
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "textarea_ng7GLp",
+            "FieldName": "备注",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "0",
+            "Type": "",
+            "Unit": ""
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "input_tzkvpC",
+            "FieldName": "超时记录",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "0",
+            "Type": "本人",
+            "Unit": "无"
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "textarea_4ZWJaB",
+            "FieldName": "复核意见",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "0",
+            "Type": "",
+            "Unit": ""
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "date_3fobcq",
+            "FieldName": "复核时间",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "0",
+            "Type": "",
+            "Unit": ""
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "input_LYiawW",
+            "FieldName": "复核部门",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "0",
+            "Type": "",
+            "Unit": ""
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "input_OlbjAL",
+            "FieldName": "复核人",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "0",
+            "Type": "",
+            "Unit": ""
+        }, {
+            "ActID": "sid-1282B0DC-D7FF-422E-9F3E-F305480F1812",
+            "Config": "",
+            "FieldCode": "input_Uo6WRF",
+            "FieldName": "工单编号",
+            "FieldType": "string",
+            "FormKey": "工单_漏损处理工单表",
+            "IsShow": "1",
+            "Type": "本部门",
+            "Unit": "个"
+        }]
         let schema = {
-                "type": "object",
-                "properties": {
-                    "inputDemo": {
-                        "title": "长度",
-                        "type": "string",
-                        "pattern": "^[A-Za-z0-9]+$",
-                        "message": {
-                            "pattern": "请输入正确格式"
-                        }
-                    },
-                    "numberDemo": {
-                        "title": "数字",
-                        "description": "数字输入框",
-                        "type": "number",
-                        "min": 10,
-                        "max": 100,
-                        "step": 10
-                    },
-                    "textareaDemo": {
-                        "title": "输入框",
-                        "type": "string"
-                    },
-                    "imgDemo": {
-                        "title": "图片",
-                        "type": "string",
-                        "format": "image",
-                        "default": "https://img.alicdn.com/tfs/TB1P8p2uQyWBuNjy0FpXXassXXa-750-1334.png"
-                    },
-                    "uploadDemo": {
-                        "title": "文件上传",
-                        "type": "string",
-                        "default": "https://img.alicdn.com/tfs/TB1P8p2uQyWBuNjy0FpXXassXXa-750-1334.png"
-                    },
-                    "disabledDemo": {
-                        "title": "不可用",
-                        "type": "string",
-                        "default": "我是一个被 disabled 的值"
-                    },
-                    "enumDemo": {
-                        "title": "枚举",
-                        "type": "string",
-                        "enum": [
-                            "A",
-                            "B"
-                        ],
-                        "enumNames": [
-                            "养成",
-                            "<span style='background-color: black;display: inline-block;vertical-align: text-top;width: 48px;height: 24px;margin-top:-2px;color:white; border: 1px solid #ddd;'>试试</span>"
-                        ]
-                    },
-                    "dateDemo": {
-                        "title": "时间",
-                        "format": "dateTime",
-                        "type": "string"
-                    },
-                    "objDemo": {
-                        "title": "单个对象",
-                        "description": "这是一个对象类型",
-                        "type": "object",
-                        "properties": {
-                            "isLike": {
-                                "title": "是否显示颜色选择",
-                                "type": "boolean",
-                                "default": true
-                            },
-                            "background": {
-                                "title": "颜色选择",
-                                "description": "特殊面板",
-                                "format": "color",
-                                "type": "string"
-                            },
-                            "wayToTravel": {
-                                "title": "旅行方式",
-                                "type": "string",
-                                "enum": [
-                                    "self",
-                                    "group"
-                                ],
-                                "enumNames": [
-                                    "自驾",
-                                    "跟团"
-                                ]
-                            },
-                            "canDrive": {
-                                "title": "是否拥有驾照",
-                                "type": "boolean",
-                                "default": false
-                            }
+            "type": "object",
+            "ui:displayType": "row",
+            "ui:showDescIcon": true,
+            "properties": {
+                "object_-UvCWr": {
+                    "title": "工单信息",
+                    "type": "object",
+                    "properties": {
+                        "input_tzkvpC": {
+                            "title": "超时记录",
+                            "type": "string",
+                            "ui:options": {}
                         },
-                        "required": [
-                            "background"
-                        ]
-                    },
-                    "multiSelectDemo": {
-                        "title": "多选组件",
-                        "description": "多选功能",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "enum": [
-                            "A",
-                            "B",
-                            "C",
-                            "D"
-                        ],
-                        "enumNames": [
-                            "杭州",
-                            "武汉",
-                            "湖州",
-                            "贵阳"
-                        ]
-                    },
-                    "custom": {
-                        "properties": {
-                            "payType": {
-                                "title": "支付方式",
-                                "description": "",
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                },
-                                "enum": [
-                                    "1",
-                                    "5",
-                                    "6"
-                                ],
-                                "enumNames": [
-                                    "预付",
-                                    "面付",
-                                    "信用住"
-                                ]
-                            }
-                        },
-                        "type": "object",
-                        "required": [
-                            "payType"
-                        ],
-                        "title": "酒店行业限制",
-                        "name": "custom"
-                    },
-                    "arrDemo": {
-                        "title": "对象数组",
-                        "description": "对象数组嵌套功能",
-                        "type": "array",
-                        "minItems": 1,
-                        "maxItems": 3,
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "num": {
-                                    "title": "数字参数",
-                                    "description": "number类型",
-                                    "type": "number"
-                                },
-                                "name": {
-                                    "title": "字符名称",
-                                    "description": "string类型",
-                                    "type": "string",
-                                    "pattern": "^[A-Za-z0-9]+$"
-                                }
-                            }
+                        "input_Uo6WRF": {
+                            "title": "工单编号",
+                            "type": "string",
+                            "ui:options": {}
                         }
                     }
                 },
-                "required": [
-                    "textareaDemo",
-                    "dateDemo",
-                    "multiSelectDemo"
-                ]
-            }
-        
-        console.log(schema.properties)
-
-        const {properties} = schema
-        let arr = []
-        for(let key in properties) {
-            arr.push(properties[key])
+                "object_Ic4XnA": {
+                    "title": "派单信息",
+                    "type": "object",
+                    "properties": {
+                        "date_O9YUWZ": {
+                            "title": "派单时间",
+                            "type": "string",
+                            "format": "date",
+                            "ui:options": {}
+                        },
+                        "input_aCUJ0c": {
+                            "title": "派单信息",
+                            "type": "string",
+                            "ui:options": {}
+                        },
+                        "select_fnxK9n": {
+                            "title": "处理时限",
+                            "type": "string",
+                            "enum": ["8", "24"],
+                            "enumNames": ["8小时", "24小时"],
+                            "ui:options": {}
+                        }
+                    }
+                },
+                "object_s3nPPO": {
+                    "title": "接单信息",
+                    "type": "object",
+                    "properties": {
+                        "date_Mu9mZD": {
+                            "title": "接单时间",
+                            "type": "string",
+                            "format": "date",
+                            "ui:options": {}
+                        },
+                        "input_4r9Nsv": {
+                            "title": "处理人员",
+                            "type": "string",
+                            "ui:options": {}
+                        },
+                        "input_UCumQ1": {
+                            "title": "承办科室",
+                            "type": "string",
+                            "ui:options": {}
+                        },
+                        "input_p-C7Ag": {
+                            "title": "水表编号",
+                            "type": "string",
+                            "ui:options": {}
+                        },
+                        "input_09XpIU": {
+                            "title": "维修内容",
+                            "type": "string",
+                            "ui:options": {}
+                        },
+                        "date_NT8w8m": {
+                            "title": "维修时间",
+                            "type": "string",
+                            "format": "date",
+                            "ui:options": {}
+                        },
+                        "image_BoKhol": {
+                            "title": "现场图标",
+                            "type": "string",
+                            "format": "image",
+                            "ui:options": {}
+                        },
+                        "image_9WetPr": {
+                            "title": "完工图标",
+                            "type": "string",
+                            "format": "image",
+                            "ui:options": {}
+                        },
+                        "textarea_ng7GLp": {
+                            "title": "备注",
+                            "type": "string",
+                            "format": "textarea",
+                            "ui:options": {},
+                            "ui:width": "300%"
+                        }
+                    }
+                },
+                "object_yVmzxn": {
+                    "title": "复核",
+                    "type": "object",
+                    "properties": {
+                        "input_OlbjAL": {
+                            "title": "复核人",
+                            "type": "string",
+                            "ui:options": {}
+                        },
+                        "input_LYiawW": {
+                            "title": "复核部门",
+                            "type": "string",
+                            "ui:options": {}
+                        },
+                        "date_3fobcq": {
+                            "title": "复核时间",
+                            "type": "string",
+                            "format": "date",
+                            "ui:options": {}
+                        },
+                        "textarea_4ZWJaB": {
+                            "title": "复核意见",
+                            "type": "string",
+                            "format": "textarea",
+                            "ui:options": {},
+                            "ui:width": "300%",
+                        }
+                    }
+                }
+            },
+            "ui:column": 3
         }
-        let cArr = []
-        arr.forEach((item)=>{
-            if (item.hasOwnProperty('properties')) {
-                for(let key in item.properties) {
-                    cArr.push(item.properties[key])
+
+        let {
+            properties
+        } = schema
+        for (let key in properties) {
+            for (let ckey in properties[key].properties) {
+                arr.forEach((item) => {
+                    if (item.FieldCode === ckey) {
+                        properties[key].properties[ckey].default = item.Type
+                        properties[key].properties[ckey]["ui:options"] = {
+                            addonAfter: item.Unit
+                        }
+                        if (item.IsShow === "1") {
+                            properties[key].properties[ckey]["ui:hidden"] = false
+                        } else {
+                            properties[key].properties[ckey]["ui:hidden"] = true
+                        }
+                    }
+                })
+            }
+        }
+        let hiddenNums = 0
+        for (let key in schema.properties) {
+            let arrSet = []
+            for (let ckey in schema.properties[key].properties) {
+                hiddenNums = Object.keys(schema.properties[key].properties).length
+                if (schema.properties[key].properties[ckey]["ui:hidden"] === true) {
+                    arrSet.push(ckey)
                 }
             }
-        })
-        
-        let arr1 =  arr.concat(cArr)
-        let arr2 = arr1.flat()
-        console.log(arr1)
-        console.log(arr2)
+            if (hiddenNums === arrSet.length) {
+                schema.properties[key]["ui:hidden"] = true
+            }
+        }
+
+        console.log(schema)
+
+        // let FormJson = {
+        //     "schema": {
+        //         "type": "object",
+        //         "ui:displayType": "row",
+        //         "ui:showDescIcon": true,
+        //         "properties": {
+        //             "object_-UvCWr": {
+        //                 "title": "工单信息",
+        //                 "type": "object",
+        //                 "properties": {
+        //                     "input_tzkvpC": {
+        //                         "title": "超时记录",
+        //                         "type": "string",
+        //                         "ui:options": {}
+        //                     },
+        //                     "input_Uo6WRF": {
+        //                         "title": "工单编号",
+        //                         "type": "string",
+        //                         "ui:options": {}
+        //                     }
+        //                 }
+        //             },
+        //             "object_Ic4XnA": {
+        //                 "title": "派单信息",
+        //                 "type": "object",
+        //                 "properties": {
+        //                     "date_O9YUWZ": {
+        //                         "title": "派单时间",
+        //                         "type": "string",
+        //                         "format": "date"
+        //                     },
+        //                     "input_aCUJ0c": {
+        //                         "title": "派单信息",
+        //                         "type": "string",
+        //                         "ui:options": {}
+        //                     },
+        //                     "select_fnxK9n": {
+        //                         "title": "处理时限",
+        //                         "type": "string",
+        //                         "enum": ["8", "24"],
+        //                         "enumNames": ["8小时", "24小时"]
+        //                     }
+        //                 }
+        //             },
+        //             "object_s3nPPO": {
+        //                 "title": "接单信息",
+        //                 "type": "object",
+        //                 "properties": {
+        //                     "date_Mu9mZD": {
+        //                         "title": "接单时间",
+        //                         "type": "string",
+        //                         "format": "date"
+        //                     },
+        //                     "input_4r9Nsv": {
+        //                         "title": "处理人员",
+        //                         "type": "string",
+        //                         "ui:options": {}
+        //                     },
+        //                     "input_UCumQ1": {
+        //                         "title": "承办科�??",
+        //                         "type": "string",
+        //                         "ui:options": {}
+        //                     },
+        //                     "input_p-C7Ag": {
+        //                         "title": "水表编号",
+        //                         "type": "string",
+        //                         "ui:options": {}
+        //                     },
+        //                     "input_09XpIU": {
+        //                         "title": "维修内�??",
+        //                         "type": "string",
+        //                         "ui:options": {}
+        //                     },
+        //                     "date_NT8w8m": {
+        //                         "title": "维修时间",
+        //                         "type": "string",
+        //                         "format": "date"
+        //                     },
+        //                     "image_BoKhol": {
+        //                         "title": "现场图标",
+        //                         "type": "string",
+        //                         "format": "image",
+        //                         "ui:options": {}
+        //                     },
+        //                     "image_9WetPr": {
+        //                         "title": "完工图标",
+        //                         "type": "string",
+        //                         "format": "image",
+        //                         "ui:options": {}
+        //                     },
+        //                     "textarea_ng7GLp": {
+        //                         "title": "备注",
+        //                         "type": "string",
+        //                         "format": "textarea",
+        //                         "ui:options": {},
+        //                         "ui:width": "300%"
+        //                     }
+        //                 }
+        //             },
+        //             "object_du_rtb": {
+        //                 "title": "部门审核",
+        //                 "type": "object",
+        //                 "properties": {
+        //                     "input_yYqJ0L": {
+        //                         "title": "审核�?",
+        //                         "type": "string",
+        //                         "ui:options": {}
+        //                     },
+        //                     "input_Q_wnkN": {
+        //                         "title": "审核部门",
+        //                         "type": "string",
+        //                         "ui:options": {}
+        //                     },
+        //                     "date_PkYqQS": {
+        //                         "title": "部门审核时间",
+        //                         "type": "string",
+        //                         "format": "date"
+        //                     },
+        //                     "textarea_Qmsa4s": {
+        //                         "title": "审核意�??",
+        //                         "type": "string",
+        //                         "format": "textarea",
+        //                         "ui:options": {},
+        //                         "ui:width": "300%"
+        //                     }
+        //                 }
+        //             },
+        //             "object_WNdEdt": {
+        //                 "title": "工程科�?�核",
+        //                 "type": "object",
+        //                 "properties": {
+        //                     "input_PQ3Khh": {
+        //                         "title": "工程科�?�核�?",
+        //                         "type": "string",
+        //                         "ui:options": {}
+        //                     },
+        //                     "date_gyH3V-": {
+        //                         "title": "工程科�?�核时间",
+        //                         "type": "string",
+        //                         "format": "date"
+        //                     },
+        //                     "textarea_F3ahcF": {
+        //                         "title": "工程科�?�核意�??",
+        //                         "type": "string",
+        //                         "format": "textarea",
+        //                         "ui:options": {},
+        //                         "ui:width": "300%"
+        //                     }
+        //                 }
+        //             },
+        //             "object_yVmzxn": {
+        //                 "title": "复核",
+        //                 "type": "object",
+        //                 "properties": {
+        //                     "input_OlbjAL": {
+        //                         "title": "复核�?",
+        //                         "type": "string",
+        //                         "ui:options": {}
+        //                     },
+        //                     "input_LYiawW": {
+        //                         "title": "复核部门",
+        //                         "type": "string",
+        //                         "ui:options": {}
+        //                     },
+        //                     "date_3fobcq": {
+        //                         "title": "复核时间",
+        //                         "type": "string",
+        //                         "format": "date"
+        //                     },
+        //                     "textarea_4ZWJaB": {
+        //                         "title": "复核意�??",
+        //                         "type": "string",
+        //                         "format": "textarea",
+        //                         "ui:options": {},
+        //                         "ui:width": "300%"
+        //                     }
+        //                 }
+        //             }
+        //         },
+        //         "ui:column": 3
+        //     },
+        //     "displayType": "row",
+        //     "showDescIcon": true,
+        //     "column": 3
+        // }
+        // console.log(FormJson)
+
+        // const formJsonProperties = FormJson.schema.properties
+
+        // let formArr = []
+
+        // for (key in formJsonProperties) {
+        //     for (let ckey in formJsonProperties[key].properties) {
+        //         let params = formJsonProperties[key].properties[ckey]
+        //         formArr.push({
+        //             ActID:"",
+        //             Config:"",
+        //             FieldCode: ckey,
+        //             FieldName: params.title,
+        //             FieldType: params.type,
+        //             FormKey: "",
+        //             IsShow: 1,
+        //             Type:"",
+        //             Unit:""
+        //         })
+        //     }
+        // }
+
+        // console.log(formArr)
     </script>
 
 </body>

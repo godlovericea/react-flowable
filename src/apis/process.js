@@ -197,6 +197,23 @@ export function SaveColumnConfig (ACTID, FORMKEY, COLUMNCONFIG) {
     })
 }
 
+// 获取移交人信息
+export function GetTransferList (TASKID, USERID, COOKIE, data) {
+    return request({
+        url: `/GetTransferList?TaskID=${TASKID}&UserID=${USERID}&Cookie=${COOKIE}`,
+        method: 'post',
+        data
+    })
+}
+
+// 移交完成接口
+export function SaveFormInfoTransfer (TASKID, USERID, COOKIE, WORKCODE, data) {
+    return request({
+        url: `/SaveFormInfoTransfer?TaskID=${TASKID}&UserID=${USERID}&Cookie=${COOKIE}&WorkCode=${WORKCODE}`,
+        method: 'post',
+        data
+    })
+}
 
 // 新增流程  
 export function getAssetsList(){

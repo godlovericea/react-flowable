@@ -1,9 +1,11 @@
+// 在办
 import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
 import FormTransfer from '../../libs/transform/transform'
+import ConfigSchemaClass from '../../libs/configSchema/configSchema'
 import configData from '../../utils/config'
 import { Button, message, Modal, Radio, Input, Table, Space} from 'antd';
-import { getTableName, GetFormList, SaveFormInfo, TaskSave, GetTaskBaseInfo, getUserName, UpdateTaskInfo, TaskGoBack, WorkflowUrging, GetFlowProcessInfo, WorkflowFileOperation, uploadToService} from '../../apis/process'
+import { getTableName, GetFormList, GetTransferList, SaveFormInfoTransfer, TaskSave, GetTaskBaseInfo, getUserName, UpdateTaskInfo, TaskGoBack, WorkflowUrging, GetFlowProcessInfo, WorkflowFileOperation, uploadToService} from '../../apis/process'
 import './NeedToDeal.less'
 import TreeCascader from '../../components/TreeCascader/TreeCascader'
 import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
@@ -15,50 +17,103 @@ const { Search } = Input;
 const { Column } = Table;
 
 const NeedToDeal = (props) => {
+    // FormRender提交表单校验
     const [valid, setValid] = useState([])
+    // 表单得标识key
     const [FormKey, setFormKey] = useState([])
+    // FormRender的formData
     const [formData, setFormData] = useState({});
+    // FormRender的schema
     const [schema, setSchema] = useState({})
+    // cookie
     const [cookie, setCookie] = useState("")
+    // 当前节点的任务ID
     const [taskId, setTaskId] = useState("")
+    // 当前节点的流程定义ID
     const [processDefinitionId, setProcessDefinitionId] = useState("")
+    // 用户ID
     const [userId, setUserId] = useState("")
+    // 表单ID
     const [formId, setFormId] = useState("")
+    // 任务移交Modal
     const [visible, setVisible] = useState(false)
+    // 会签选择候选人Modal
+    const [nextPersonVisible, setNextPersonVisible] = useState(false)
+    // 流程图Modal
     const [modelerVisible, setModelerVisible] = useState(false)
+    // 回退Modal
     const [rebackVisible, setRebackVisible] = useState(false)
+    // 催办Modal
     const [urgentVisible, setUrgentVisible] = useState(false)
+    // 候选人
     const [transValue, setTransValue] = useState(null)
+    // 候选移交人数组
     const [userNameArr, setUserNameArr] = useState([])
+    // 用户名
     const [userName, setUserName] = useState('')
+    // 用户所在部门
+    const [userDepart, setUserDepart] = useState('')
+    // 流程图图片地址
     const [processImgSrc, setProcessImgSrc] = useState(null)
+
     // 流程详细信息
+    // 分配人
     const [Assignee, setAssignee] = useState(null)
+    // 截至时间
     const [ETime, setETime] = useState(null)
+    // 开始时间
     const [STime, setSTime] = useState(null)
+    // 任务名称
     const [TaskName, setTaskName] = useState(null)
+    // 流转信息数据表格
     const [tableData, setTableData] = useState([])
+    // 回退时候查询节点流转信息
+    const [goBacktableData, setGoBacktableData] = useState([])
+    // 催办时候，查询节点流转信息
+    const [urgentTableData, setUrgentTableData] = useState([])
+    // 附件数组
     const [fileTableData, setFileTableData] = useState([])
+    // 流转信息Modal
     const [flowVisible, setFlowVisible] = useState(false)
+    // 附件Modal
     const [fileVisible, setFileVisible] = useState(false)
+    // 上传附件Modal
     const [uploadVisible, setUploadVisible] = useState(false)
+    // 上传附件文件的名字
     const [upFileName, setUpFileName] = useState([])
-    const [column, setColumn] = useState(3)
-
+    // 会签点击完成按钮，选择下一个完成人
+    const [nextPerson, setNextPerson] = useState('')
+    // 会签时候，点击完成，候选人列表
+    const [assigneeList, setAssigneeList] = useState([])
+    // 下一个移交人
+    const [workCode, setWorkCode] = useState("")
+    // 配置schema，传递给下一个节点
     const [configSchema, setConfigSchema] = useState('')
+    // 前一个节点带过来的values值
     const [prevSchemaValues, setPrevSchemaValues] = useState({})
-
+    // 表单类型：台账或者表单
+    const [formType, setFormType] = useState("")
+    // FormRender的ref
     const formRef = useRef();
+    // 回退的ref
     const backRef = useRef();
+    // 催办的ref
     const urgentRef = useRef();
+
+    // FormRender提交表单校验
     const onValidate=(valid)=>{
         setValid(valid)
     }
     const getData =()=>{
+        // cookie
         let cookieScope = ""
+        // 任务ID
         let taskIdScope = ""
+        // 处理cookie
         let winCookie = window.document.cookie
         let winCookieArr = winCookie.split(";")
+        let userNameScope = ""
+        let userDepartScope = ""
         winCookieArr.forEach((item)=>{
             if (item.indexOf("FLOWABLE_REMEMBER_ME") > -1) {
                 let itemArr = item.split("=")
@@ -66,7 +121,7 @@ const NeedToDeal = (props) => {
                 setCookie(cookieScope)
             }
         })
-        // 处理任务ID
+        // 处理任务ID，用户名称，用户所在部门
         const search = window.location.search.slice(1)
         const searchArr = search.split("&")
         searchArr.forEach((item)=>{
@@ -76,13 +131,23 @@ const NeedToDeal = (props) => {
                 window.taskId = taskIdScope
             } else if (item.indexOf("formId") > -1) {
                 setFormId(decodeURI(item.split("=")[1]))
+            } else if (item.indexOf("userDepart") > -1) {
+                userDepartScope = decodeURI(item.split("=")[1])
+                setUserDepart(decodeURI(item.split("=")[1]))
+            } else if (item.indexOf("userName") > -1) {
+                userNameScope = decodeURI(item.split("=")[1])
+                setUserName(decodeURI(item.split("=")[1]))
             }
         })
         GetFormList(cookieScope, taskIdScope)
         .then((res)=>{
+            console.log(res)
             if (res.status === 200) {
+
                 let fieldData = res.data
+                setFormType(fieldData.Type)
                 if(fieldData.Type === "台账") {
+                    // 台账类型
                     const tableName = fieldData.Config
                     getTableName(tableName)
                     .then(async(response)=>{
@@ -90,63 +155,19 @@ const NeedToDeal = (props) => {
                         let formTransfer = new FormTransfer(dataArr)
                         let schemadata =await formTransfer.handleGroup()
                         setSchema(schemadata)
+                        setConfigSchema(JSON.stringify(schemadata))
                     })
                 } else {
+                    // 表单类型
                     setConfigSchema(fieldData.Config)
-                    let schemaConfig = JSON.parse(fieldData.Config)
-
-                    if (fieldData.ColumnConfig){
-                        let ColumnConfig = fieldData.ColumnConfig
-                        let arr = []
-                        if(ColumnConfig.indexOf(',') > -1) {
-                            arr = ColumnConfig.split(',')
-                        } else {
-                            arr.push(ColumnConfig)
-                        }
-                        let properties = schemaConfig.schema.properties
-                        console.log(properties)
-                        let cusProperty = {}
-                        let childProperty = {}
-                        for(let key in properties){
-                            for(let ckey in properties[key].properties) {
-                                for(let i = 0;i< arr.length; i++) {
-                                    if (ckey === arr[i]) {
-                                        console.log(ckey)
-                                        childProperty[ckey] = properties[key].properties[ckey]
-                                        console.log(childProperty[ckey])
-                                        cusProperty[key] = properties[key]
-                                        console.log(properties[key])
-                                    }
-                                }
-                            }
-                        }
-                        schemaConfig.schema.properties = cusProperty
+                    const web4Config = {
+                        userName: userNameScope,
+                        userDepart: userDepartScope
                     }
-                    console.log(schemaConfig)
-                    let fieldConfig = schemaConfig.schema.properties
-                    if (fieldData.formId) {
-                        let formValObj = JSON.parse(fieldData.formId).values
-                        setPrevSchemaValues(formValObj)
-                        for(let skey in fieldConfig){
-                            for(let val in formValObj) {
-                                if (skey === val) {
-                                    let valueObj = formValObj[val]
-                                    let childProps = fieldConfig[skey].properties
-                                    for(let childKey in fieldConfig[skey].properties) {
-                                        for(let childVlue in valueObj) {
-                                            if (childKey === childVlue) {
-                                                childProps[childKey].default = valueObj[childVlue]
-                                            }
-                                        }
-                                    }
-                                    fieldConfig[skey].properties = childProps
-                                }
-                            }
-                        }
-                    }
-                    schemaConfig.schema.properties = fieldConfig
-
-                    setSchema(schemaConfig)
+                    // 上一个节点带过来的values
+                    let values = JSON.parse(fieldData.formId).values
+                    const testData = new ConfigSchemaClass(fieldData.ColumnConfig, fieldData.Config, web4Config, values)
+                    setSchema(testData.schema)
                 }
             }
         })
@@ -171,7 +192,7 @@ const NeedToDeal = (props) => {
             }
         })
 
-        // 处理任务ID
+        // 处理任务ID，用户ID，用户名称，用户所在部门
         const search = window.location.search.slice(1)
         console.log(search)
         const searchArr = search.split("&")
@@ -188,17 +209,19 @@ const NeedToDeal = (props) => {
             }
         })
     }
+    // 重置表单
     const handleClick = () => {
         formRef.current.resetData({}).then(res => {
         alert(JSON.stringify(res, null, 2));
         });
     };
-
+    // 返回
     const handleClickReback = ()=>{
         props.history.push({
             pathname: '/home'
         })
     }
+    // 任务移交时候搜索框
     const getTransferName =(value)=>{
         getUserName(value)
         .then((res)=>{
@@ -207,64 +230,129 @@ const NeedToDeal = (props) => {
     }
     // 保存
     const saveTask=()=>{
+        console.log(formData)
         if (valid.length > 0) {
             message.error("提交失败,请按照提示填写表单")
             return
         }
-        let obj = {}
-        for(let pkey in prevSchemaValues) {
-            for(let fkey in formData) {
-                obj[pkey] = prevSchemaValues[pkey]
-                obj[fkey] = formData[fkey]
-            }
-        }
+        // let obj = {}
+        // if (prevSchemaValues) {
+        //     for(let pkey in prevSchemaValues) {
+        //         for(let fkey in formData) {
+        //             obj[pkey] = prevSchemaValues[pkey]
+        //             obj[fkey] = formData[fkey]
+        //         }
+        //     }
+        // }
         const myData = {
             formId:JSON.stringify({
                 formId,
-                values: obj
+                values: formData
             }),
             Config: configSchema,
             FormKey: FormKey
         }
+
         TaskSave(cookie, taskId, userId, myData)
         .then((res)=>{
             message.success('保存成功');
         })
     }
     // 完成
+    // 这里的逻辑：点击完成时候，调取GetTransferList接口查询，下一个节点是否有会签，如果没有，该节点直接完成提交，否则，返回下一个节点的候选人
     const completeTask=()=>{
         if (valid.length > 0) {
+            console.log(valid)
             message.error("提交失败,请按照提示填写表单")
             return
         }
-        let obj = {}
-        for(let pkey in prevSchemaValues) {
-            for(let fkey in formData) {
-                obj[pkey] = prevSchemaValues[pkey]
-                obj[fkey] = formData[fkey]
-            }
-        }
+        // let obj = {}
+        // for(let pkey in prevSchemaValues) {
+        //     for(let fkey in formData) {
+        //         obj[pkey] = prevSchemaValues[pkey]
+        //         obj[fkey] = formData[fkey]
+        //     }
+        // }
         const myData = {
             formId:JSON.stringify({
                 formId,
-                values: obj
+                values: formData
             }),
             Config: configSchema,
             FormKey: FormKey
         }
-        SaveFormInfo(cookie, taskId, userId, myData)
+        GetTransferList(taskId, userId, cookie, myData)
         .then((res)=>{
-            message.success('提交成功');
+            if (res.data.say.statusCode === "0000") {
+                if (res.data.getMe.length > 0) {
+                    // 打开Modal
+                    setNextPersonVisible(true)
+                    // 拿去候选人数组
+                    setAssigneeList(res.data.getMe)
+                } else {
+                    message.success("当前节点已完成")
+                    setNextPersonVisible(false)
+                }
+            } else {
+                message.error(res.data.say.errMsg)
+            }
         })
     }
-    // 移交
+    // 选择候选人
+    const hanldeAssignChange=(e)=>{
+        setWorkCode(e.target.value)
+    }
+    // 完成关闭
+    const closeNextPersonModeler=()=>{
+        setNextPersonVisible(false)
+    }
+
+    // 选择候选人之后，完成确定
+    const sureNextPersonModeler=()=>{
+        
+        if (!workCode){
+            message.error("请选择移交人！")
+            return
+        }
+        // let obj = {}
+        // for(let pkey in prevSchemaValues) {
+        //     for(let fkey in formData) {
+        //         obj[pkey] = prevSchemaValues[pkey]
+        //         obj[fkey] = formData[fkey]
+        //     }
+        // }
+        const myData = {
+            formId:JSON.stringify({
+                formId,
+                values: formData
+            }),
+            Config: configSchema,
+            FormKey: FormKey
+        }
+        SaveFormInfoTransfer(taskId, userId, cookie, workCode, myData)
+        .then(res=>{
+            if (res.data.statusCode === "0000") {
+                setNextPersonVisible(true)
+                message.success("任务移交成功！")
+            } else {
+                message.error(res.data.errMsg)
+            }
+        })
+    }
+
+    // 移交按钮
     const transferTo=()=>{
         getTransferName("")
         setVisible(true)
     }
     // 回退按钮
     const goBack =()=>{
-        setRebackVisible(true)
+        GetFlowProcessInfo(processDefinitionId)
+        .then((res)=>{
+            setGoBacktableData(res.data.getMe)
+            setRebackVisible(true)
+        })
+        
     }
     // 取消回退
     const closeRebackModeler=()=>{
@@ -285,7 +373,11 @@ const NeedToDeal = (props) => {
     }
     //催办
     const urgentTask=()=>{
-        setUrgentVisible(true)
+        GetFlowProcessInfo(processDefinitionId)
+        .then((res)=>{
+            setUrgentTableData(res.data.getMe)
+            setUrgentVisible(true)
+        })
     }
     // 取消催办
     const closeUrgentModeler=()=>{
@@ -315,7 +407,7 @@ const NeedToDeal = (props) => {
         filename = pathnameArr[pathnameArr.length - 1]
         return filename
     }
-    // 附件
+    // 附件上传
     const uploadFile = ()=> {
         WorkflowFileOperation(taskId)
         .then((res)=>{
@@ -395,14 +487,16 @@ const NeedToDeal = (props) => {
             }
         })
     }
+    // 获取上传的文件
     const hanldeFileUpload=(e)=>{
         console.log(e.target.files[0])
         setUpFileName(e.target.files[0])
     }
+    // 关闭上传文件的Modal
     const closeFileVisible=()=>{
         setFileVisible(false)
     }
-    // 流转信息
+    // 打开查询流转信息
     const showTransFlow=()=>{
         GetFlowProcessInfo(processDefinitionId)
         .then((res)=>{
@@ -410,12 +504,15 @@ const NeedToDeal = (props) => {
             setFlowVisible(true)
         })
     }
+    // 关闭查询流转信息Modal
     const closeFlow=()=>{
         setFlowVisible(false)
     }
+    // 查询流转信息确定
     const sureFlow =()=>{
         setFlowVisible(false)
     }
+    // 查看历史节点表单
     const goShowHistoryForm=(taskId)=>{
         return ()=>{
             props.history.push({
@@ -426,12 +523,13 @@ const NeedToDeal = (props) => {
             })
         }
     }
-    // 流程图
+    // 获取流程图
     const showModeler=()=>{
         const imgSrc =  document.referrer + configData.baseURL + '/GetWorkflowDiagram?processInstanceId=' + processDefinitionId + '&t=' + (new Date()).getTime()
         setProcessImgSrc(imgSrc)
         setModelerVisible(true)
     }
+    // 关闭流程图Modal
     const closeModeler=()=>{
         setModelerVisible(false)
     }
@@ -455,9 +553,11 @@ const NeedToDeal = (props) => {
             }
         })
     }
+    // 关闭移交人Modal
     const handleCancel=()=>{
         setVisible(false)
     }
+    // 获取任务移交时候数据
     const handleSetTrans=(e)=>{
         setTransValue(e.target.value)
     }
@@ -489,6 +589,17 @@ const NeedToDeal = (props) => {
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={showModeler}>流程图</Button>
             </div>
             <div className="divider-box"></div>
+            <Modal title="请选择候选人" visible={nextPersonVisible} onCancel={closeNextPersonModeler} onOk={sureNextPersonModeler} width={650}>
+                <Radio.Group name="assigngroup" onChange={hanldeAssignChange}>
+                    {
+                        assigneeList.map((item,index)=>{
+                            return(
+                                <Radio key={index} value={item.UserID}>{item.UserName}</Radio>
+                            )
+                        })
+                    }
+                </Radio.Group>
+            </Modal>
             <Modal title="任务移交" visible={visible} onOk={handleOK} onCancel={handleCancel}
                 bodyStyle={{height:'500px',overflowY:'auto'}}>
                 <div>
@@ -517,19 +628,61 @@ const NeedToDeal = (props) => {
                     </div>
                 </Radio.Group>
             </Modal>
-            <Modal title="流程图" visible={modelerVisible} onCancel={closeModeler} onOk={closeModeler} width={800}
+            <Modal title="流程图" visible={modelerVisible} onCancel={closeModeler} onOk={closeModeler} width={1000}
                 bodyStyle={{ display: 'flex',justifyContent: 'center',alignItems:'center'}}>
                 <img src={processImgSrc} alt="process"/>
             </Modal>
 
-            <Modal title="回退" visible={rebackVisible} onCancel={closeRebackModeler} onOk={sureRebackModeler}
-                bodyStyle={{ display: 'flex',justifyContent: 'center',alignItems:'center'}}>
-                <Input type="text" ref={backRef}></Input>   
+            <Modal title="回退" visible={rebackVisible} onCancel={closeRebackModeler} onOk={sureRebackModeler} width={650}
+                bodyStyle={{ display: 'flex',flexDirection: 'column',justifyContent: 'center'}}>
+                    <Table dataSource={goBacktableData} pagination={false} rowClassName="rowClassName" style={{width:'100%'}}>
+                        <Column title="操作步骤" dataIndex="TaskName" key="TaskName" />
+                        <Column title="开始时间" dataIndex="STime" key="STime" />
+                        <Column title="结束时间" dataIndex="ETime" key="ETime" />
+                        <Column title="操作人账号" dataIndex="OperationMan" key="OperationMan" />
+                        <Column
+                            title="流程状态"
+                            key="state"
+                            render={(text, record) => (
+                                <Space size="middle">
+                                    {
+                                        record.DeleteReason !== "" ?
+                                        <span>回退</span>
+                                        :
+                                        <span style={{color: record.State === '进行中'? '#096dd9' : ''}}>{record.State === "提交" ? "已完成": record.State}</span>
+                                    }
+                                </Space>
+                            )}
+                        />
+                    </Table>
+                    <p className="inputBackReason">请输入回退意见</p>
+                    <Input type="text" placeholder="请输入回退意见" ref={backRef}></Input>
             </Modal>
 
-            <Modal title="催办" visible={urgentVisible} onCancel={closeUrgentModeler} onOk={sureUrgentModeler}
-            bodyStyle={{ display: 'flex',justifyContent: 'center',alignItems:'center'}}>
-                <Input type="text" ref={urgentRef}></Input>   
+            <Modal title="催办" visible={urgentVisible} onCancel={closeUrgentModeler} onOk={sureUrgentModeler} width={650}
+            bodyStyle={{ display: 'flex',justifyContent: 'center',flexDirection: 'column'}}>
+                <Table dataSource={urgentTableData} pagination={false} rowClassName="rowClassName" style={{width:'100%'}}>
+                        <Column title="操作步骤" dataIndex="TaskName" key="TaskName" />
+                        <Column title="开始时间" dataIndex="STime" key="STime" />
+                        <Column title="结束时间" dataIndex="ETime" key="ETime" />
+                        <Column title="操作人账号" dataIndex="OperationMan" key="OperationMan" />
+                        <Column
+                            title="流程状态"
+                            key="state"
+                            render={(text, record) => (
+                                <Space size="middle">
+                                    {
+                                        record.DeleteReason !== "" ?
+                                        <span>回退</span>
+                                        :
+                                        <span style={{color: record.State === '进行中'? '#096dd9' : ''}}>{record.State === "提交" ? "已完成": record.State}</span>
+                                    }
+                                </Space>
+                            )}
+                        />
+                    </Table>
+                    <p className="inputBackReason">请输入催办意见</p>
+                    <Input type="text" placeholder="请输入催办意见" ref={urgentRef}></Input>
             </Modal>
 
             <Modal title="流转信息" visible={flowVisible} onCancel={closeFlow} onOk={sureFlow} width={900}
@@ -548,7 +701,7 @@ const NeedToDeal = (props) => {
                                     record.DeleteReason !== "" ?
                                     <span>回退</span>
                                     :
-                                    <span>已完成</span>
+                                    <span style={{color: record.State === '进行中'? '#096dd9' : ''}}>{record.State === "提交" ? "已完成": record.State}</span>
                                 }
                             </Space>
                         )}

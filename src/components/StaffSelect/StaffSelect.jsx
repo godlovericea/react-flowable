@@ -1,4 +1,4 @@
-// 自定义Form Render组件,人员选择器
+// 台账的人员选择器组件（非FormRender自定义组件）
 import React, { useState, useEffect } from 'react'
 import { Modal, Button, Radio, Input } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
@@ -80,7 +80,7 @@ const StaffSelect =(props)=> {
                         return(
                             <form key={index} className="fieldset-class">
                                 <fieldset className="person-select">
-                                    <legend className="personheader">{item.OUName}</legend>
+                                    <legend className="personheader" style={{fontSize: '16px'}}>{item.OUName}</legend>
                                     <Radio.Group className="person-radio" name="person" onChange={handleChange} value={person}>
                                         {
                                             item.userList.map((child,childIndex)=>{

@@ -1,3 +1,4 @@
+// 查看台账表单
 import React, { Component } from 'react'
 import { Button } from 'antd';
 import './transform.less'
@@ -15,13 +16,14 @@ export default class Transform extends Component {
     componentDidMount(){
         this.getData()
     }
+    // 拉取数据
     getData = ()=>{
         const tableName = this.props.location.state.name
         this.setState({
-            tableName: tableName
+            tableName: tableName // 台账名称
         })
     }
-    
+    // 返回列表
     handleClickReback=()=>{
         this.props.history.push({
             pathname: '/home'

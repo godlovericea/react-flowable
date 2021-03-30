@@ -1,26 +1,24 @@
-// 自定义Form Render组件
-import React, { useState, useEffect, useRef } from 'react'
+// 给用户配置流程权限
+import React from 'react'
 import { Button, Input, Form, Row, Col, Checkbox, message } from 'antd';
-import { ToolFilled } from '@ant-design/icons';
-import { getUserListForRole, GetWorkflowBaseInfo, UpdateWorkFlowRight } from '../../apis/process';
+import { GetWorkflowBaseInfo, UpdateWorkFlowRight } from '../../apis/process';
 import StaffSelect from '../../components/StaffSelect/StaffSelect';
 import './FlowPermission.less';
-const { Search } = Input;
-
 class FlowPermission extends React.Component {
     state={
-        userName: '',
-        flowName: '',
-        flowArr: [],
-        defaultVal: [],
-        keyList: []
+        userName: '',// 用户名
+        flowName: '',// 流程名称
+        flowArr: [],// 流程数组
+        defaultVal: [],// 默认值
+        keyList: [] // 流程key数组
     }
+    // 与StaffSelect子组件绑定事件传值交互
     handleStaff=async (val)=>{
         this.setState({
             userName: val
         })
     }
-    
+    // 获取点击选中的checkbox值
     onChange=(event)=>{
         const value = event.target.value;
         let updateData = []
@@ -35,19 +33,20 @@ class FlowPermission extends React.Component {
             flowArr: updateData
         })
     }
-
+    // 获取输入框的值
     getInput=(e)=>{
         this.setState({
             flowName: e.target.value
         })
     }
-    
+    // 拉取数据
     getData=()=>{
-        console.log(this.state.userName)
+        // console.log(this.state.userName)
         let arr =[]
         let name =  ''
         GetWorkflowBaseInfo(name, this.state.userName, '', '', 1, 1000)
         .then((res)=>{
+            // 处理获取AccessRight为1的，有权限的值
             res.data.getMe.forEach((item)=>{
                 arr.push({
                     label: item.WorkflowName,
@@ -61,6 +60,7 @@ class FlowPermission extends React.Component {
             })
         })
     }
+    // 把流程挂接到某人身上，分配流程发起的权限
     linkToModeler=()=>{
         let keyList = []
         this.state.flowArr.forEach((item)=>{
@@ -78,18 +78,20 @@ class FlowPermission extends React.Component {
             }
         })
     }
+    // 处理web4路由传递过来的值
     handleRouteParams=()=>{
         const search = window.location.search.slice(1)
-        console.log(search)
+        // console.log(search)
         const searchArr = search.split("=")
-        console.log(searchArr)
+        // console.log(searchArr)
         this.setState({
             userName:decodeURI(searchArr[1])
         },()=>{
-            console.log(this.state.userName)
+            // console.log(this.state.userName)
             this.getData()
         })
     }
+    // 前一个版本配置字段的默认值以及属性，此版本废弃
     routeGo=(id, label)=>{
         return ()=>{
             this.props.history.push({
@@ -130,7 +132,7 @@ class FlowPermission extends React.Component {
                                 return(
                                     <Col span={6} key={index}>
                                         <Checkbox value={item.value} checked={item.checked} onChange={this.onChange} className="lableclass">{item.label}</Checkbox>
-                                        <ToolFilled title="点击配置表单字段" className="set-form-class" onClick={this.routeGo(item.id, item.label)}/>
+                                        {/* <ToolFilled title="点击配置表单字段" className="set-form-class" onClick={this.routeGo(item.id, item.label)}/> */}
                                     </Col>
                                 )
                             })

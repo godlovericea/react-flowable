@@ -1,3 +1,4 @@
+// BPMN.JS加载
 import React from "react";
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import propertiesPanelModule from 'bpmn-js-properties-panel';

@@ -1,10 +1,8 @@
-// 自定义Form Render组件,人员选择器
+// 自定义FormRender组件——台账选择器
 import React from 'react';
-import { Modal, Button, Radio, Input, Table, Space } from 'antd';
-import { UserAddOutlined } from '@ant-design/icons';
+import { Modal, Button, Input, Table } from 'antd';
 import { GetAccountConfigInfo, GetAccountPageList } from '../../apis/process';
 import './TableAccount.less';
-const { Column } = Table;
 const { Search } = Input;
 
 class TableAccount extends React.Component {
@@ -28,6 +26,7 @@ class TableAccount extends React.Component {
         this.getData()
     }
     getData = () => {
+        // 处理传递过来的参数
         let arr1 = this.props.name.split('.')
         let accountName = arr1[0]
         let rowkey = ""
@@ -125,7 +124,7 @@ class TableAccount extends React.Component {
                     <Button type="primary" size="small" shape="round" onClick={this.hanldeInputClick}>台账选择器</Button>
                     {/* <Input type="text" id="tableAccountInput" onChange={this.hanldeInputChange} defaultValue={this.state.tableAccountValue} onClick={this.hanldeInputClick}></Input> */}
                 </div>
-                <Modal title="流转信息" visible={this.state.visible} onCancel={this.onCancel} onOk={this.onOk} width={900}
+                <Modal title="选择台账" visible={this.state.visible} onCancel={this.onCancel} onOk={this.onOk} width={900}
                     bodyStyle={{ height: '500px', overflowY: 'auto' }} wrapClassName="personModalClass">
                     <Search
                         placeholder="请输入姓名"

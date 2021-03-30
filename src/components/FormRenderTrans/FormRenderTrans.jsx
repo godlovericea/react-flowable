@@ -1,3 +1,4 @@
+// 查看表单组件
 import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
 import { Button, message } from 'antd';
@@ -33,6 +34,7 @@ const FormRenderTrans=(props)=>{
 
     const getData = ()=>{
         console.log(props)
+        // 台账的名称
         const {tableName} = props
         getTableName(tableName)
         .then(async(res)=>{

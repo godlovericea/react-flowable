@@ -1,4 +1,4 @@
-// 自定义Form Render组件,人员选择器
+// 自定义FormRender组件——人员选择器
 import React, { useState, useEffect } from 'react'
 import { Modal, Button, Radio, Input } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';

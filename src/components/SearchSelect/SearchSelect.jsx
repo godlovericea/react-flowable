@@ -1,4 +1,4 @@
-// 自定义Form Render组件
+// 自定义FormRender组件——下拉搜索组件
 import React, { useState, useEffect, useRef } from 'react'
 import { Select } from 'antd';
 import { getSelectName } from '../../apis/process';
@@ -25,12 +25,13 @@ const SearchSelect =(myOptions)=> {
         getData()
     }, [])
     return (
-        <div className="fileupload-wrapper">
+        <div className="select-search-wrapper" style={{width:'100%'}}>
             <Select
                 showSearch
                 optionFilterProp="children"
                 onChange={hanldeChange}
                 onSearch={onSearch}
+                style={{width:'100%'}}
                 defaultValue={myOptions.value}
                 filterOption={(input, option) =>option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
             >

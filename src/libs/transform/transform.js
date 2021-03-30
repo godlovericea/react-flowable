@@ -3,17 +3,22 @@ class FormTransfer {
     constructor(dataArr){
         // 实例化时候传递过来的表单数据对象
         this.dataArr = dataArr
+        // 默认配置一行三列
         this.column = 3
+        // 需要导出的schema
         this.schema = {}
     }
-    // 处理数组数据
+
+    // 处理传递过来的dataArr数组数据
     async handleGroup(){
         let obj = {}
         let key = ""
         for(let i = 0; i< this.dataArr.length; i++) {
+            // 对象的key值
             key = `object_${i}`
+            // 处理每一种台账的数据类型
             let objData =await this.handleEveryGroup(this.dataArr[i].Schema)
-            console.log(objData)
+            // 对象的value值
             obj[key] = {
                 type:"object",
                 title: this.dataArr[i].GroupName,
@@ -156,6 +161,10 @@ class FormTransfer {
             pattern: required ?  `^.{${minLength || 0},${maxLength || 255}}$` : "",
             message:{
                 pattern: required ? '此项必填': ""
+            },
+            "ui:options": {
+                addonBefore: "",
+                addonAfter: dataObj.Unit
             }
         }
     }
@@ -177,15 +186,18 @@ class FormTransfer {
     }
     // 数字输入框
     handleNumberInput(dataObj){
-        const { minLength, maxLength, required } = this.handlePattern(dataObj.ValidateRule)
+        const { required } = this.handlePattern(dataObj.ValidateRule)
         return {
             title:dataObj.Alias,
             type: "number",
-            minLength: minLength || 0,
-            maxLength: maxLength || 13,
-            pattern: required ?  `^.{${minLength || 0},${maxLength || 13}}$` : "",
+            default: dataObj.PresetValue || 0,
+            pattern: required ?  `^.{0,13}$` : "",
             message: {
                 pattern: "请输入数字"
+            },
+            "ui:options": {
+                addonBefore: "",
+                addonAfter: dataObj.Unit
             }
         }
     }

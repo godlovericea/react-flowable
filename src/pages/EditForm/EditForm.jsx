@@ -1,9 +1,10 @@
+// 编辑form render表单
 import React from 'react';
 import Generator from 'fr-generator';
-import { CreateModel,GetFormJson, UpdateFormDef } from '../../apis/process'
-import {Modal, Form, Input, Button, message} from 'antd'
-// import FormTransfer from '../../libs/transform/transform'
+import { GetFormJson, UpdateFormDef } from '../../apis/process'
+import {Modal, Form, Input, message} from 'antd'
 
+// 默认模板
 const templates = [
   {
     text: '模板1',
@@ -36,15 +37,21 @@ const templates = [
 class EditForm extends React.Component{
     constructor(props){
         super(props);
+        // 表单编辑器的ref
         this.genRef = React.createRef();
+        // 表单名称
         this.formNameRef = React.createRef();
+        // 表单的key标识
         this.formKeyRef = React.createRef();
+        // 表单的描述
         this.formDescRef = React.createRef();
+
         this.state = {
-            isModalVisible: false,
-            defaultValue: {},
-            templates: []
+            isModalVisible: false, // 保存表单的Modal
+            defaultValue: {},// 表单编辑器的默认值
+            templates: [] // 模板
         }
+        // 配置自定义button
         this.extraButtons = [
             true, true, false, true, 
             { 
@@ -73,19 +80,23 @@ class EditForm extends React.Component{
               }
           })
     }
+    // 确定修改
     handleScheam = ()=>{
       this.handleOk()
     }
+    // 取消修改
     handleCancel= ()=>{
         this.setState({
             isModalVisible: false
         })
     }
+    // 返回列表
     goBackToHome=()=>{
         this.props.history.push({
             pathname: '/home'
         })
     }
+    // 判断表单中是否有重复名称的字段
     hanldeDeepObject = (properties) => {
         let BaseTypeList = []
         for(let key in properties) {
@@ -103,9 +114,12 @@ class EditForm extends React.Component{
                 })
             }
         }
+        // 表单名称的数组
         const names = BaseTypeList.map((items)=> items.Name)
-        console.log(names)
+        // console.log(names)
+        // 表单名称去重之后的数组
         const nameSet = new Set(names);
+        // 如果二者相等，则没有重复的，否则有重复
         if (names.length === nameSet.size) {
             return BaseTypeList
         } else {
@@ -113,7 +127,9 @@ class EditForm extends React.Component{
             return false
         }
     }
+    // 确定保存表单
     handleOk=()=>{
+        // Generator的值
         const FormInfo = this.genRef.current && this.genRef.current.getValue()
         let {properties} = FormInfo.schema
         const params = {
@@ -128,7 +144,7 @@ class EditForm extends React.Component{
             message.error("您提交的表单组件不可有重名，请检查！")
             return false
         }
-        UpdateFormDef(this.props.location.state.id,params)
+        UpdateFormDef(this.props.location.state.id, params)
         .then(res=>{
             alert("修改成功")
         })

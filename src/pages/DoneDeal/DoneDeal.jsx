@@ -1,30 +1,44 @@
+// 已办查询
 import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
-import { Button, message, Modal, Radio } from 'antd';
-import { GetFormList, SaveFormInfo, TaskSave, GetTaskBaseInfo } from '../../apis/process'
+import { Button, Modal } from 'antd';
+import { GetFormList, GetTaskBaseInfo } from '../../apis/process'
 import './DoneDeal.less'
 
-const NeedToDeal = (props) => {
+const DoneDeal = (props) => {
+    // FormRender的FormData
     const [formData, setFormData] = useState({});
+    // FormRender的schema
     const [schema, setSchema] = useState({})
+    // flowable-engine鉴权的cookie
     const [cookie, setCookie] = useState("")
+    // 当前节点的任务ID
     const [taskId, setTaskId] = useState("")
+    // 当前节点的流程定义ID
     const [processDefinitionId, setProcessDefinitionId] = useState("")
+    // 用户ID
     const [userId, setUserId] = useState("")
+    // 表单ID
     const [formId, setFormId] = useState("")
-    const [visible, setVisible] = useState(false)
+    // 查看流程图的Modal
     const [modelerVisible, setModelerVisible] = useState(false)
-    const [transValue, setTransValue] = useState(null)
+    // 流程图图片
     const [processImgSrc, setProcessImgSrc] = useState(null)
+
     // 流程详细信息
     const [Assignee, setAssignee] = useState(null)
     const [ETime, setETime] = useState(null)
     const [STime, setSTime] = useState(null)
     const [TaskName, setTaskName] = useState(null)
+
+    // FormRender的ref
     const formRef = useRef();
+
+    // 拉取数据
     const getData =()=>{
         let cookieScope = ""
         let taskIdScope = ""
+        // 处理cookie
         let winCookie = window.document.cookie
         let winCookieArr = winCookie.split(";")
         winCookieArr.forEach((item)=>{
@@ -50,6 +64,7 @@ const NeedToDeal = (props) => {
                 let schemaConfig =  JSON.parse(fieldData.Config)
                 let fieldConfig = schemaConfig.schema.properties
                 let formValObj = JSON.parse(fieldData.formId).values
+                // 根据配置文件以及表单提交时候的values，给表单加默认值
                 for(let skey in fieldConfig){
                     for(let val in formValObj) {
                         if (skey === val) {
@@ -83,7 +98,7 @@ const NeedToDeal = (props) => {
             }
         })
 
-        // 处理任务ID
+        // 处理任务ID，用户ID
         const search = window.location.search.slice(1)
         const searchArr = search.split("&")
         searchArr.forEach((item)=>{
@@ -138,8 +153,8 @@ const NeedToDeal = (props) => {
     }, [])
 
     return (
-        <div className="needWrap">
-            <div className="deal-headerbox">
+        <div className="doneneedWrap">
+            <div className="donedeal-headerbox">
                 <h2 className="dealheaders">{TaskName}</h2>
                 <div className="dealdetails">
                     <p className="detail-items">当前处理人：{Assignee}</p>
@@ -147,11 +162,13 @@ const NeedToDeal = (props) => {
                     <p className="detail-items">截止时间：{ETime}</p>
                 </div>
             </div>
+            <div className="divider-box"></div>
             <div className="btnGroups">
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={uploadFile}>附件</Button>
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={showTransFlow}>流转信息</Button>
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={showModeler}>流程图</Button>
             </div>
+            <div className="divider-box"></div>
             <Modal title="流程图" visible={modelerVisible} onOk={handleModelerOK} onCancel={handleModelerCancel}>
                 <img src={processImgSrc} alt="process"/>
             </Modal>
@@ -165,4 +182,4 @@ const NeedToDeal = (props) => {
     );
 };
 
-export default NeedToDeal;
+export default DoneDeal;

@@ -1,36 +1,33 @@
-// 自定义Form Render组件
-import React, { useState, useEffect, useRef } from 'react';
-import { Button, Input, Form, Row, Col, Checkbox, message } from 'antd';
-import { getUserListForRole, GetWorkflowBaseInfo, UpdateWorkFlowRight } from '../../apis/process';
-import StaffSelect from '../../components/StaffSelect/StaffSelect';
-import { PartitionOutlined, ArrowRightOutlined } from '@ant-design/icons';
+// 流程发起权限页面
+import React from 'react';
+import { Button, Input, Form, Row, Col } from 'antd';
+import { GetWorkflowBaseInfo } from '../../apis/process';
 import './StartPermission.less';
 import flowIcon from "../../assets/flow-icon.png"
 import flowArrowIcon from "../../assets/flow-arrow-right.png"
-const { Search } = Input;
-
 class StartPermission extends React.Component {
     state={
-        userName: '',
-        flowName: '',
-        flowArr: [],
-        defaultVal: [],
-        keyList: [],
-        userId: ''
+        userName: '', // web4登录的用户名
+        flowName: '', // 流程名称
+        flowArr: [], // isRight为1的流程数组 
+        defaultVal: [], // 默认值
+        keyList: [], // 选中的数组
+        userId: '', // web4登录的用户ID
+        userDepart: '' // web4登录的用户所在部门
     }
-    
+    // 处理监听选中的值
     onChange=(val)=>{
         this.setState({
             keyList: val
         })
     }
-
+    // 获取输入框输入的值
     getInput=(e)=>{
         this.setState({
             flowName: e.target.value
         })
     }
-    
+    // 拉取数据
     getData=()=>{
         let deArr = []
         let name =  this.state.flowName || ''
@@ -38,6 +35,7 @@ class StartPermission extends React.Component {
         GetWorkflowBaseInfo(name, this.state.userName, '', '', 1, 1000)
         .then((res)=>{
             res.data.getMe.forEach((item)=>{
+                // AccessRight为1时，说明有此流程权限
                 if (item.AccessRight === '1') {
                     deArr.push(item)
                 }
@@ -47,25 +45,36 @@ class StartPermission extends React.Component {
             })
         })
     }
+    // 处理从web4的路由传递过来的参数
     handleRouteParams=()=>{
+        // 用户ID
         let userId = ""
-        let userName = ''
+        // 用户名
+        let userName = ""
+        // 用户部门
+        let userDepart = ""
+        // 路由的search
         const search = window.location.search.slice(1)
         const searchArr = search.split("&")
+        // 循环接续值
         searchArr.forEach((item)=>{
             if (item.indexOf("userId") > -1) {
                 userId = item.split("=")[1]
             } else if (item.indexOf("userName") > -1) {
                 userName = decodeURI(item.split("=")[1])
-            }
+            } else if (item.indexOf("userDepart") > -1) {
+                userDepart = decodeURI(item.split("=")[1])
+            } 
         })
         this.setState({
             userId: userId,
-            userName: userName
+            userName: userName,
+            userDepart: userDepart
         },()=>{
             this.getData()
         })
     }
+    // 点击发起
     handleStart=(flowName, FlowDefID)=>{
         return ()=>{
             this.props.history.push({
@@ -73,7 +82,9 @@ class StartPermission extends React.Component {
                 state:{
                     flowName: flowName,
                     FlowDefID: FlowDefID,
-                    userId: this.state.userId
+                    userId: this.state.userId,
+                    userName: this.state.userName,
+                    userDepart: this.state.userDepart
                 }
             })
         }

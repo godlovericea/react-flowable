@@ -1,3 +1,4 @@
+// 表单管理的列表
 import React from "react";
 import { GetWorkflowBaseInfo, UpdateStatus, CreateModel, flowableLogin, GetFormListInfo, DeleteFormLogic } from '../../apis/process'
 // import Modeler from "../../components/Modeler";
@@ -19,35 +20,34 @@ class Process extends React.Component{
         processName: '',// 新增流程名称
         processKey: '',// 新增流程标识
         processDesc: '',// 新增流程描述
-        cookieData: '',
+        cookieData: '', // flowable-engine鉴权的cookie
         formId: '', // 表单ID
     }
+    // 流程名称
     handleProName = (e)=>{
         this.setState({
             name: e.target.value
         })
     }
+    // 获取流程创建的日期
     handleDateChange =(date, dateString)=>{
-        console.log(date)
-        console.log(dateString)
         this.setState({
             startDate: !dateString[0] ? '' : dateString[0] + ' ' + '00:00:00',
             endDate: !dateString[1]? '' : dateString[1] + ' ' +'23:59:59',
         })
     }
+    // 翻页
     handlePageChange =(curPage, pageSize) => {
         this.setState({
             curPage: curPage,
             pageSize: pageSize
         },()=>{
-            console.log(this.state.curPage,this.state.pageSize)
             this.getData()
         })
         
     }
+    // 改变页码大小
     handlePageSizeChange=(page, size)=>{
-        console.log(page)
-        console.log(size)
     }
     // 拉取数据
     getData = ()=> {
@@ -77,6 +77,7 @@ class Process extends React.Component{
             })
         }
     }
+    // 删除流程（逻辑删除）
     handleOk=()=>{
         DeleteFormLogic('', this.state.formId)
         .then((res)=>{
@@ -91,31 +92,37 @@ class Process extends React.Component{
             }
         })
     }
+    // 取消按钮
     handleCancel=()=>{
         this.setState({
             visible: false
         })
     }
+    // 创建流程按钮
     handleCreateProcessName=(e)=>{
         this.setState({
             processName: e.target.value
         })
     }
+    // 处理流程标识
     handleCreateProcessKey=(e)=>{
         this.setState({
             processKey: e.target.value
         })
     }
+    // 处理流程描述
     handleCreateProcessDesc=(e)=>{
         this.setState({
             processDesc: e.target.value
         })
     }
+    // 打开对话框
     openModal=()=>{
         this.props.history.push({
             pathname: '/new'
         })
     }
+    // 编辑流程
     goEdit=(id,name,key,desc)=>{
         return ()=>{
             this.props.history.push({
@@ -129,6 +136,7 @@ class Process extends React.Component{
             })
         }
     }
+    // 查看流程
     goShow=(id)=>{
         // console.log(id)
         return ()=>{
