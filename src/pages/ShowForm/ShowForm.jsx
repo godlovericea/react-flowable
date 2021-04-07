@@ -3,6 +3,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
 import { Button } from 'antd';
 import { GetFormJson } from '../../apis/process'
+import TreeCascader from '../../components/TreeCascader/TreeCascader'
+import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
+import TableAccount from '../../components/TableAccount/TableAccount'
+import UploadFile from '../../components/UploadFile/UploadFile'
+import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
+import SearchSelect from '../../components/SearchSelect/SearchSelect'
 
 const ShowForm = (props) => {
     // FormRender的formData
@@ -49,6 +55,7 @@ const ShowForm = (props) => {
                 formData={formData}
                 onChange={setFormData}
                 onValidate={onValidate}
+                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
             />
             <Button type="primary" style={{ marginLeft: 30 }} onClick={handleClickReback}>
                 返回列表

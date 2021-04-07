@@ -84,7 +84,7 @@ const StaffSelectWidget =(props)=> {
                                         {
                                             item.userList.map((child,childIndex)=>{
                                                 return(
-                                                    <Radio value={child.userName}>{child.userName}</Radio>
+                                                    <Radio key={childIndex} value={child.userName}>{child.userName}</Radio>
                                                 )
                                             })
                                         }

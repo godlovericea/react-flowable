@@ -2,8 +2,10 @@
 import React from 'react';
 // 表单生成器（可视化）
 import Generator from 'fr-generator';
+// import Generator from '../../libs/frGenerator';
 import { CreateModel } from '../../apis/process'
 import {Modal, Form, Input, message} from 'antd'
+import './NewForm.less'
 
 // 默认配置
 const defaultValue = {

@@ -14,8 +14,12 @@ const SearchSelect =(myOptions)=> {
         console.log(e)
     }
     const getData = ()=>{
-        let arr1 =  myOptions.name.split('_')
-        let str = arr1[arr1.length-1]
+        let str = ""
+        if (myOptions.options && myOptions.options.value) {
+            str = myOptions.options.value
+        } else {
+            return
+        }
         getSelectName(str)
         .then((res)=>{
             setOptionList(res.data)

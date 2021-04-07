@@ -149,12 +149,15 @@ class Process extends React.Component{
         }
     }
     // 跳转到台账
-    goShowAccount=(name)=>{
+    goShowAccount=(name, key, id, type)=>{
         return ()=>{
             this.props.history.push({                              
                 pathname: '/trans',
                 state:{
-                    name: name
+                    name: name,
+                    key: key,
+                    id: id,
+                    type: type
                 }
             })
         }
@@ -198,7 +201,7 @@ class Process extends React.Component{
                                     :
                                     <div>
                                         <Button className="localBtnClass" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.delForm(record.id)}>删除</Button>
-                                        <Button className="localBtnClass" size="small" type="primary" onClick={this.goShowAccount(record.TableName)}>查看</Button>
+                                        <Button className="localBtnClass" size="small" type="primary" onClick={this.goShowAccount(record.TableName, record.key, record.id, record.IsUpdateOrAdd)}>查看</Button>
                                     </div>
                                 }
                             </Space>

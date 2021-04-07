@@ -13,6 +13,7 @@ import FlowPermission from './pages/FlowPermission/FlowPermission'
 import StartPermission from './pages/StartPermission/StartPermission'
 import EditbleSelct from './components/EditbleSelct/EditbleSelct'
 import SetFlowForm from './pages/SetFlowForm/SetFlowForm'
+import TestFrGenerator from './pages/TestFrGenerator/TestFrGenerator'
 import {Switch, Route, Redirect} from 'react-router-dom'
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
             <Route exact path="/stpermis" component={StartPermission}/>
             <Route exact path="/cascader" component={EditbleSelct}/>
             <Route exact path="/setform" component={SetFlowForm}/>
+            <Route exact path="/testfr" component={TestFrGenerator}/>
             <Redirect to="/home"></Redirect>
         </Switch>
     </div>

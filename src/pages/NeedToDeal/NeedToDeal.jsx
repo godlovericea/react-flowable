@@ -228,9 +228,32 @@ const NeedToDeal = (props) => {
             setUserNameArr(res.data.getMe)
         })
     }
+    // 处理FormRenderBaseType
+    const handleFormRenderBaseType = (formData, configSchema)=>{
+        let arr = []
+        const { properties } = JSON.parse(configSchema).schema
+        for (const key in properties) {
+            for(const fkey in formData) {
+                if (key === fkey) {
+                    for(const ckey in properties[key].properties){
+                        for(const cfkey in formData[fkey]) {
+                            if (ckey === cfkey) {
+                                arr.push({
+                                    Type: properties[key].properties[ckey].type,
+                                    Name: properties[key].properties[ckey].title,
+                                    Value: formData[fkey][cfkey]
+                                })
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return arr;
+    }
     // 保存
     const saveTask=()=>{
-        console.log(formData)
+        // console.log(formData)
         if (valid.length > 0) {
             message.error("提交失败,请按照提示填写表单")
             return
@@ -250,7 +273,8 @@ const NeedToDeal = (props) => {
                 values: formData
             }),
             Config: configSchema,
-            FormKey: FormKey
+            FormKey: FormKey,
+            FormRenderBaseList: handleFormRenderBaseType(formData, configSchema)
         }
 
         TaskSave(cookie, taskId, userId, myData)
@@ -279,7 +303,8 @@ const NeedToDeal = (props) => {
                 values: formData
             }),
             Config: configSchema,
-            FormKey: FormKey
+            FormKey: FormKey,
+            FormRenderBaseList: handleFormRenderBaseType(formData, configSchema)
         }
         GetTransferList(taskId, userId, cookie, myData)
         .then((res)=>{
@@ -327,7 +352,8 @@ const NeedToDeal = (props) => {
                 values: formData
             }),
             Config: configSchema,
-            FormKey: FormKey
+            FormKey: FormKey,
+            FormRenderBaseList: handleFormRenderBaseType(formData, configSchema)
         }
         SaveFormInfoTransfer(taskId, userId, cookie, workCode, myData)
         .then(res=>{

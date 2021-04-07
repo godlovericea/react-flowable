@@ -14,26 +14,10 @@ import SearchSelect from '../../components/SearchSelect/SearchSelect'
 const FormRenderTrans=(props)=>{
     const [formData, setFormData] = useState({});
     const [schema, setSchema] = useState({})
-    const [FormKey, setFormKey] = useState('')
-    const [formId, setFormId] = useState('')
     const [valid, setValid] = useState([])
-    const [column, setColumn] = useState(3)
     const formRef = useRef();
-    
-    const judgeFormType=()=>{
-        console.log(props)
-        const { formType, schemaStr } = props
-        if (formType === "台账") {
-            getData()
-        } else {
-            console.log(schemaStr)
-            let schemaData = `${schemaStr}`
-            setSchema(JSON.parse(schemaData))
-        }
-    }
 
     const getData = ()=>{
-        console.log(props)
         // 台账的名称
         const {tableName} = props
         getTableName(tableName)
@@ -49,8 +33,11 @@ const FormRenderTrans=(props)=>{
         setValid(valid)
     }
 
+    const transfer = () => {
+        props.handleSchema(schema)
+    }
+
     useEffect(()=>{
-        // judgeFormType()
         getData()
     }, [])
 
@@ -65,6 +52,7 @@ const FormRenderTrans=(props)=>{
                 showValidate={false}
                 widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
             />
+            <Button type="primary" shape="round" style={{marginLeft:'10px'}} onClick={transfer}>转换</Button>
         </div>
     );
 }

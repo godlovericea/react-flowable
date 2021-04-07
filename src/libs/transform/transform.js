@@ -93,14 +93,17 @@ class FormTransfer {
                 objKey = `selecValtName_${i}`
                 obj[objKey] = await this.hanldeValueSelect(itemObj)
             } else if (shape === "搜索选择器") {
-                objKey = `selectSearchName_${i}_${ConfigInfo}`
+                objKey = `selectSearchName_${i}}`
                 obj[objKey] = await this.hanldeSearchSelect(itemObj)
             } else if (shape === "台账选择器") {
-                objKey = `accountName_${i}_${ConfigInfo}`
+                objKey = `accountName_${i}`
                 obj[objKey] = await this.handleTableAccount(itemObj)
             } else if (shape === "可编辑值选择器") {
                 objKey = `editble_${i}`
                 obj[objKey] = await this.handleEditBle(itemObj)
+            } else {
+                objKey =  `unrecognized_${i}`
+                obj[objKey] = await this.handleUnrecognized(itemObj)
             }
         }
         return obj
@@ -278,7 +281,11 @@ class FormTransfer {
         const { required } = this.handlePattern(dataObj.ValidateRule)
         return {
             title: dataObj.Alias,
+            type: "string",
             "ui:widget": "search",
+            "ui:options": {
+                value: dataObj.ConfigInfo
+            },
             pattern: required ? "^.{1,100}$" : "",
             message: {
                 pattern: "必填项"
@@ -290,6 +297,7 @@ class FormTransfer {
         const { required } = this.handlePattern(dataObj.ValidateRule)
         return {
             title: dataObj.Alias,
+            type: "string",
             "ui:widget": "editSearch",
             "ui:options": {
                 value: dataObj.ConfigInfo
@@ -324,6 +332,7 @@ class FormTransfer {
         return {
             title: dataObj.Alias,
             "ui:widget": "staff",
+            type: "string",
             pattern: required ? "^.{1,100}$" : "",
             message: {
                 pattern: "必填项"
@@ -336,6 +345,7 @@ class FormTransfer {
         return {
             title: dataObj.Alias,
             "ui:widget": "file",
+            type: "string",
             pattern: required ? "^.{1,100}$" : "",
             message: {
                 pattern: "必填项"
@@ -344,10 +354,15 @@ class FormTransfer {
     }
     // 台账选择器
     handleTableAccount(dataObj){
+        console.log(dataObj)
         const { required } = this.handlePattern(dataObj.ValidateRule)
         return {
             title: dataObj.Alias,
+            type: "string",
             "ui:widget": "table",
+            "ui:options": {
+                value: dataObj.ConfigInfo
+            },
             pattern: required ? "^.{1,100}$" : "",
             message: {
                 pattern: "必填项"
@@ -397,7 +412,28 @@ class FormTransfer {
     hanldeSelectTreeNode(name){
         return {
             title: name,
+            type: "string",
             "ui:widget": "cascader"
+        }
+    }
+
+    // 未识别对象
+    handleUnrecognized(dataObj) {
+        const { minLength, maxLength, required } = this.handlePattern(dataObj.ValidateRule)
+        return {
+            title:dataObj.Alias,
+            type: 'string',
+            default: dataObj.PresetValue,
+            minLength: minLength || 0,
+            maxLength: maxLength || 255,
+            pattern: required ?  `^.{${minLength || 0},${maxLength || 255}}$` : "",
+            message:{
+                pattern: required ? '此项必填': ""
+            },
+            "ui:options": {
+                addonBefore: "",
+                addonAfter: dataObj.Unit
+            }
         }
     }
 }

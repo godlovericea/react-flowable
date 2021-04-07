@@ -1,6 +1,6 @@
 // 自定义FormRender组件——台账选择器
 import React from 'react';
-import { Modal, Button, Input, Table } from 'antd';
+import { Modal, Button, Input, Table, message } from 'antd';
 import { GetAccountConfigInfo, GetAccountPageList } from '../../apis/process';
 import './TableAccount.less';
 const { Search } = Input;
@@ -10,7 +10,7 @@ class TableAccount extends React.Component {
         visible: false,
         columns: [],
         tableData: [],
-        tableAccountValue: this.props.name,
+        tableAccountValue: this.props.options && this.props.options.value || "",
         searchVal: '',
         rowSelection: {
             onChange: (selectedRowKeys) => {
@@ -27,14 +27,19 @@ class TableAccount extends React.Component {
     }
     getData = () => {
         // 处理传递过来的参数
-        let arr1 = this.props.name.split('.')
-        let accountName = arr1[0]
+        // console.log(this.props)
+        let arr1 = []
+        let accountName = ""
         let rowkey = ""
-        if (arr1[1].inedxOf('|')> -1) {
-            let keyArr = arr1[1].split('|')
-            rowkey = keyArr[0]
-        } else {
-            rowkey = arr1[1]
+        if (this.props.options && this.props.options.value) {
+            arr1 = this.props.name.split('.')
+            accountName = arr1[0]
+            if (arr1[1].inedxOf('|')> -1) {
+                let keyArr = arr1[1].split('|')
+                rowkey = keyArr[0]
+            } else {
+                rowkey = arr1[1]
+            }
         }
         let info = this.state.searchVal || ''
         // let accountName = '项目信息台账简略版'
@@ -42,6 +47,10 @@ class TableAccount extends React.Component {
         // let rowkey = '项目流水号'
         GetAccountConfigInfo(accountName)
             .then((res) => {
+                if (res.data.say.statusCode !== "0000") {
+                    message.error(res.data.say.errMsg)
+                    return
+                }
                 let colArr = []
                 let arr = res.data.getMe[0].WebShowFieldGroup.split(',')
                 arr.forEach(item => {
@@ -127,7 +136,7 @@ class TableAccount extends React.Component {
                 <Modal title="选择台账" visible={this.state.visible} onCancel={this.onCancel} onOk={this.onOk} width={900}
                     bodyStyle={{ height: '500px', overflowY: 'auto' }} wrapClassName="personModalClass">
                     <Search
-                        placeholder="请输入姓名"
+                        placeholder="请输入台账名称"
                         allowClear
                         onSearch={this.onSearch}
                         enterButton

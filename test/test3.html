@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        var config = {
+            "schema": {
+                "type": "object",
+                "ui:displayType": "row",
+                "ui:showDescIcon": true,
+                "properties": {
+                    "object_-UvCWr": {
+                        "title": "工单信息",
+                        "type": "object",
+                        "properties": {
+                            "input_tzkvpC": {
+                                "title": "超时记录",
+                                "type": "string",
+                                "ui:options": {}
+                            },
+                            "input_Uo6WRF": {
+                                "title": "工单编号",
+                                "type": "string",
+                                "ui:options": {}
+                            }
+                        }
+                    },
+                    "object_Ic4XnA": {
+                        "title": "派单信息",
+                        "type": "object",
+                        "properties": {
+                            "date_O9YUWZ": {
+                                "title": "派单时间",
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "input_aCUJ0c": {
+                                "title": "派单信息",
+                                "type": "string",
+                                "ui:options": {}
+                            },
+                            "select_fnxK9n": {
+                                "title": "处理时限",
+                                "type": "string",
+                                "enum": ["8", "24"],
+                                "enumNames": ["8小时", "24小时"]
+                            }
+                        }
+                    },
+                    "object_s3nPPO": {
+                        "title": "接单信息",
+                        "type": "object",
+                        "properties": {
+                            "date_Mu9mZD": {
+                                "title": "接单时间",
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "input_4r9Nsv": {
+                                "title": "处理人员",
+                                "type": "string",
+                                "ui:options": {}
+                            },
+                            "input_UCumQ1": {
+                                "title": "承办科室",
+                                "type": "string",
+                                "ui:options": {}
+                            },
+                            "input_p-C7Ag": {
+                                "title": "水表编号",
+                                "type": "string",
+                                "ui:options": {}
+                            },
+                            "input_09XpIU": {
+                                "title": "维修内容",
+                                "type": "string",
+                                "ui:options": {}
+                            },
+                            "date_NT8w8m": {
+                                "title": "维修时间",
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "image_BoKhol": {
+                                "title": "现场图标",
+                                "type": "string",
+                                "format": "image",
+                                "ui:options": {}
+                            },
+                            "image_9WetPr": {
+                                "title": "完工图标",
+                                "type": "string",
+                                "format": "image",
+                                "ui:options": {}
+                            },
+                            "textarea_ng7GLp": {
+                                "title": "备注",
+                                "type": "string",
+                                "format": "textarea",
+                                "ui:options": {},
+                                "ui:width": "300%"
+                            }
+                        }
+                    },
+                    "object_du_rtb": {
+                        "title": "部门审核",
+                        "type": "object",
+                        "properties": {
+                            "input_yYqJ0L": {
+                                "title": "审核人",
+                                "type": "string",
+                                "ui:options": {}
+                            },
+                            "input_Q_wnkN": {
+                                "title": "审核部门",
+                                "type": "string",
+                                "ui:options": {}
+                            },
+                            "date_PkYqQS": {
+                                "title": "部门审核时间",
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "textarea_Qmsa4s": {
+                                "title": "审核意见",
+                                "type": "string",
+                                "format": "textarea",
+                                "ui:options": {},
+                                "ui:width": "300%"
+                            }
+                        }
+                    },
+                    "object_WNdEdt": {
+                        "title": "工程科审核",
+                        "type": "object",
+                        "properties": {
+                            "input_PQ3Khh": {
+                                "title": "工程科审核人",
+                                "type": "string",
+                                "ui:options": {}
+                            },
+                            "date_gyH3V-": {
+                                "title": "工程科审核时间",
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "textarea_F3ahcF": {
+                                "title": "工程科审核意见",
+                                "type": "string",
+                                "format": "textarea",
+                                "ui:options": {},
+                                "ui:width": "300%"
+                            }
+                        }
+                    },
+                    "object_yVmzxn": {
+                        "title": "复核",
+                        "type": "object",
+                        "properties": {
+                            "input_OlbjAL": {
+                                "title": "复核人",
+                                "type": "string",
+                                "ui:options": {}
+                            },
+                            "input_LYiawW": {
+                                "title": "复核部门",
+                                "type": "string",
+                                "ui:options": {}
+                            },
+                            "date_3fobcq": {
+                                "title": "复核时间",
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "textarea_4ZWJaB": {
+                                "title": "复核意见",
+                                "type": "string",
+                                "format": "textarea",
+                                "ui:options": {},
+                                "ui:width": "300%"
+                            }
+                        }
+                    }
+                },
+                "ui:column": 3
+            },
+            "displayType": "row",
+            "showDescIcon": true,
+            "column": 3
+        }
+        var formdata = {
+            "object_-UvCWr": {
+                "input_tzkvpC": "业务平台组",
+                "input_Uo6WRF": "王万里"
+            },
+            "object_Ic4XnA": {
+                "date_O9YUWZ": "王万里",
+                "input_aCUJ0c": "王万里",
+                "select_fnxK9n": "业务平台组"
+            },
+            "object_s3nPPO": {
+                "date_Mu9mZD": "",
+                "input_4r9Nsv": "",
+                "input_UCumQ1": "业务平台组",
+                "input_p-C7Ag": "",
+                "input_09XpIU": "ddd",
+                "date_NT8w8m": "",
+                "image_BoKhol": "",
+                "image_9WetPr": "",
+                "textarea_ng7GLp": ""
+            },
+            "object_du_rtb": {
+                "input_yYqJ0L": "业务平台组",
+                "input_Q_wnkN": "ddd",
+                "date_PkYqQS": "2021-04-28",
+                "textarea_Qmsa4s": ""
+            },
+            "object_WNdEdt": {
+                "input_PQ3Khh": "ddd",
+                "date_gyH3V-": "2021-04-28",
+                "textarea_F3ahcF": ""
+            },
+            "object_yVmzxn": {
+                "input_OlbjAL": "ddd",
+                "input_LYiawW": "ddd",
+                "date_3fobcq": "2021-04-06",
+                "textarea_4ZWJaB": "ddddd"
+            }
+        }
+
+        var arr = []
+
+        const { properties } = config.schema
+
+        for (const key in properties) {
+            for(const fkey in formdata) {
+                if (key === fkey) {
+                    for(const ckey in properties[key].properties){
+                        for(const cfkey in formdata[fkey]) {
+                            if (ckey === cfkey) {
+                                arr.push({
+                                    Type: properties[key].properties[ckey].type,
+                                    Name: properties[key].properties[ckey].title,
+                                    Value: formdata[fkey][cfkey]
+                                })
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        console.log(arr)
+
+    </script>
+</body>
+
+</html>
