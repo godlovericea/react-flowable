@@ -14,6 +14,7 @@ import StartPermission from './pages/StartPermission/StartPermission'
 import EditbleSelct from './components/EditbleSelct/EditbleSelct'
 import SetFlowForm from './pages/SetFlowForm/SetFlowForm'
 import TestFrGenerator from './pages/TestFrGenerator/TestFrGenerator'
+import LedgerAccount from './components/LedgerAccount/LedgerAccount'
 import {Switch, Route, Redirect} from 'react-router-dom'
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
             <Route exact path="/cascader" component={EditbleSelct}/>
             <Route exact path="/setform" component={SetFlowForm}/>
             <Route exact path="/testfr" component={TestFrGenerator}/>
+            <Route exact path="/ledger" component={LedgerAccount}/>
             <Redirect to="/home"></Redirect>
         </Switch>
     </div>

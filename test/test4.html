@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        var schema = {
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "object_ftUhaH": {
+                        "title": "对象",
+                        "type": "object",
+                        "properties": {
+                            "object_Lq01tl": {
+                                "title": "对象",
+                                "type": "object",
+                                properties:{
+                                    
+                                }
+                            }
+                        }
+                    }
+                },
+                "ui:displayType": "row",
+                "ui:showDescIcon": true
+            },
+            "displayType": "row",
+            "showDescIcon": true
+        }
+        const {
+            properties
+        } = schema.schema
+        for (let key in properties) {
+            for (let ckey in properties[key].properties) {
+                // console.log(ckey)
+                // console.log(properties[key].hasOwnProperty("properties"))
+                console.log(properties[key].properties[ckey].hasOwnProperty("properties"))
+            }
+        }
+    </script>
+</body>
+
+</html>

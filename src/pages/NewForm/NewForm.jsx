@@ -85,6 +85,13 @@ class NewForm extends React.Component{
     }
     // 自定义保存
     handleScheam = ()=>{
+        const FormInfo = this.genRef.current && this.genRef.current.getValue()
+        // 判断用户是否使用布局组件Object包围子组件
+        let flag = this.handleObject(FormInfo)
+        if (!flag) {
+            // message.error("请使用布局组件Object包围子组件！")
+            return
+        }
         this.setState({
             isModalVisible: true
         })
@@ -100,6 +107,33 @@ class NewForm extends React.Component{
         this.setState({
             isModalVisible: false
         })
+    }
+    // 判断是否是分组类型的表单——>格式保持与台账一致
+    handleObject=(formData)=>{
+        let flag = false
+        // console.log(JSON.stringify(formData))
+        const {properties} = formData.schema
+        for (let key in properties) {
+            if (!properties[key].hasOwnProperty('properties')) {
+                if (key.indexOf('object') > -1) {
+                    message.error("请勿使用空的分组对象！")
+                } else {
+                    message.error("请使用布局组件Object包围子组件！")
+                }
+                return false
+            }
+            for (let ckey in properties[key].properties) {
+                // console.log(properties[key].properties[ckey].hasOwnProperty("properties"))
+                // console.log(properties[key].properties[ckey].type)
+                if (properties[key].properties[ckey].type === "object" || properties[key].properties[ckey].hasOwnProperty("properties")) {
+                    message.error("目前仅支持2层对象嵌套，请勿使用多层！")
+                    return
+                } else {
+                    flag = true
+                }
+            }
+        }
+        return flag
     }
     // 遍历生成的schema
     hanldeDeepObject = (properties) => {
@@ -135,6 +169,7 @@ class NewForm extends React.Component{
     handleOk=()=>{
         // 获取表单生成器得值
         const FormInfo = this.genRef.current && this.genRef.current.getValue()
+        // 判断用户是否使用布局组件Object包围子组件
         // 拿cookie
         var cookies = document.cookie
         // 处理cookie

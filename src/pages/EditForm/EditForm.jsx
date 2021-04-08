@@ -145,6 +145,33 @@ const EditForm = (props) => {
             pathname: '/home'
         })
     }
+    // 判断是否是分组类型的表单——>格式保持与台账一致
+    const handleObject=(formData)=>{
+        let flag = false
+        // console.log(JSON.stringify(formData))
+        const {properties} = formData.schema
+        for (let key in properties) {
+            if (!properties[key].hasOwnProperty('properties')) {
+                if (key.indexOf('object') > -1) {
+                    message.error("请勿使用空的分组对象！")
+                } else {
+                    message.error("请使用布局组件Object包围子组件！")
+                }
+                return false
+            }
+            for (let ckey in properties[key].properties) {
+                // console.log(properties[key].properties[ckey].hasOwnProperty("properties"))
+                // console.log(properties[key].properties[ckey].type)
+                if (properties[key].properties[ckey].type === "object" || properties[key].properties[ckey].hasOwnProperty("properties")) {
+                    message.error("目前仅支持2层对象嵌套，请勿使用多层！")
+                    return
+                } else {
+                    flag = true
+                }
+            }
+        }
+        return flag
+    }
     // 判断表单中是否有重复名称的字段
     const hanldeDeepObject = (properties) => {
         let BaseTypeList = []
@@ -180,6 +207,9 @@ const EditForm = (props) => {
     const handleOk=()=>{
         // Generator的值
         const FormInfo = genRef.current && genRef.current.getValue()
+        if (!handleObject(FormInfo)) {
+            return
+        }
         let {properties} = FormInfo.schema
         const params = {
             FormInfo: JSON.stringify(FormInfo),
@@ -193,7 +223,7 @@ const EditForm = (props) => {
             message.error("您提交的表单组件不可有重名，请检查！")
             return false
         }
-        UpdateFormDef(this.props.location.state.id, params)
+        UpdateFormDef(props.location.state.id, params)
         .then(res=>{
             alert("修改成功")
         })

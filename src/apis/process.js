@@ -270,3 +270,10 @@ export function GetAccountPageList(pageIndex, pageSize, accountName, info){
         method: 'get'
     })
 }
+// 查询台账列表
+export function GetLedgerAccountList(){
+    return request({
+        url: `http://localhost:8089/Cityinterface/rest/services/OMS.svc/CM_Ledger_LoadLedgers?_version=9999`,
+        method: 'get'
+    })
+}
