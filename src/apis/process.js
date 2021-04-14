@@ -68,9 +68,9 @@ export function UpdateFormDef (id, data) {
 }
 
 // 任务发起
-export function WorkflowStart (cookie, userId, data) {
+export function WorkflowStart (cookie, userId, EVENTCODE, USERCODE, data) {
     return request({
-        url: `/WorkflowStart?Cookie=${cookie}&UserID=${userId}`,
+        url: `/WorkflowStart?Cookie=${cookie}&UserID=${userId}&EventCode=${EVENTCODE}&UserCode=${USERCODE}`,
         method: 'post',
         data
     })
@@ -212,6 +212,73 @@ export function SaveFormInfoTransfer (TASKID, USERID, COOKIE, WORKCODE, data) {
         url: `/SaveFormInfoTransfer?TaskID=${TASKID}&UserID=${USERID}&Cookie=${COOKIE}&WorkCode=${WORKCODE}`,
         method: 'post',
         data
+    })
+}
+
+// 事件中心——新增事件接口
+export function SaveEvent (EVENTJSON, TABLENAME, CODE, EVENTNAME, data) {
+    return request({
+        url: `/SaveEvent?EventJson=${EVENTJSON}&TableName=${TABLENAME}&Code=${CODE}&EventName=${EVENTNAME}`,
+        method: 'post',
+        data
+    })
+}
+
+// 事件中心——查询事件列表接口
+export function GetEventList (EVENTNAME) {
+    return request({
+        url: `/GetEventList?EventName=${EVENTNAME}&pageIndex=1&pageSize=${1000}&sortFields=&direction=`,
+        method: 'get'
+    })
+}
+
+// 事件中心——事件挂接流程
+export function SaveEventConfig (EVENTNAME, data) {
+    return request({
+        url: `/SaveEventConfig?EventName=${EVENTNAME}`,
+        method: 'post',
+        data
+    })
+}
+
+// 事件中心——删除事件
+export function EventOperate (EVENTNAME, OPERTYPE, EVENTCODE) {
+    return request({
+        url: `/EventOperate?EventName=${EVENTNAME}&OperType=${OPERTYPE}&EventCode=${EVENTCODE}`,
+        method: 'get'
+    })
+}
+
+// 事件中心——查看事件详情
+export function GetEvent (EVENTNAME) {
+    return request({
+        url: `/GetEvent?EventName=${EVENTNAME}`,
+        method: 'get'
+    })
+}
+
+// 事件中心——发起事件
+export function CreateEvent (EVENTNAME, TABLENAME, EVENTJSON, EVENTCODE, NAME, data) {
+    return request({
+        url: `/CreateEvent?EventName=${EVENTNAME}&TableName=${TABLENAME}&EventJson=${EVENTJSON}&EventCode=${EVENTCODE}&Name=${NAME}`,
+        method: 'post',
+        data
+    })
+}
+
+// 事件中心——查询在办事件列表接口
+export function GetEventDoingList (EVENTNAME, TYPE) {
+    return request({
+        url: `/GetEventDoingList?EventName=${EVENTNAME}&Type=${TYPE}&pageIndex=1&pageSize=${1000}&sortFields=&direction=`,
+        method: 'get'
+    })
+}
+
+// 事件中心——通过流程的key去查流程的ID
+export function GetFlowIdByFlowKey (FLOWKEY) {
+    return request({
+        url: `/GetFlowIdByFlowKey?FlowKey=${FLOWKEY}`,
+        method: 'get'
     })
 }
 

@@ -24,7 +24,7 @@ class LedgerAccount extends React.Component {
     }
     getData = async() => {
         let result = await GetLedgerAccountList()
-        console.log(result.data.root)
+        // console.log(result.data.root)
         const columnsArr = [
             {
               title: '台账名称',

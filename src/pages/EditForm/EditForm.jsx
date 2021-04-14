@@ -9,10 +9,10 @@ import { GetFormJson, UpdateFormDef } from '../../apis/process'
 import {Modal, Form, Input, message} from 'antd'
 import TreeCascader from '../../components/TreeCascader/TreeCascader'
 import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
-import TableAccount from '../../components/TableAccount/TableAccount'
 import UploadFile from '../../components/UploadFile/UploadFile'
 import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
 import SearchSelect from '../../components/SearchSelect/SearchSelect'
+import LedgerAccount from '../../components/LedgerAccount/LedgerAccount'
 
 const customizeSetting = {
     title: '自定义组件',
@@ -37,7 +37,6 @@ const customizeSetting = {
                 title: '人员选择器',
                 type: 'string',
                 'ui:widget': 'staff',
-                properties: {},
             },
             widget: 'staff',
             setting: {},
@@ -49,7 +48,6 @@ const customizeSetting = {
                 title: '台账选择器',
                 type: 'string',
                 'ui:widget': 'table',
-                properties: {},
             },
             widget: 'table',
             setting: {},
@@ -61,7 +59,6 @@ const customizeSetting = {
                 title: '可编辑值选择器',
                 type: 'string',
                 'ui:widget': 'editSearch',
-                properties: {},
             },
             widget: 'editSearch',
             setting: {},
@@ -73,7 +70,6 @@ const customizeSetting = {
                 title: '搜索选择器',
                 type: 'string',
                 'ui:widget': 'search',
-                properties: {},
             },
             widget: 'search',
             setting: {},
@@ -85,7 +81,6 @@ const customizeSetting = {
                 title: '级联选择器',
                 type: 'string',
                 'ui:widget': 'cascader',
-                properties: {},
             },
             widget: 'cascader',
             setting: {},
@@ -231,7 +226,7 @@ const EditForm = (props) => {
     return(
         <div style={{ height: '100vh' }}>
             <Generator 
-                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }} 
+                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: LedgerAccount, file:UploadFile, editSearch: EditbleSelct }} 
                 ref={genRef} 
                 defaultValue={defaultValue} 
                 templates={templates} 

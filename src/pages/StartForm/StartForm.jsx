@@ -96,10 +96,17 @@ const StartForm = (props) => {
         }
         // 流程定义ID
         let processDefinitionId = props.location.state.FlowDefID
+
+        let arr = processDefinitionId.split(":")
+
         // 流程名称
-        let flowName = props.location.state.flowName
+        let flowName = arr[0]
         // 用户ID
         let userId = props.location.state.userId
+        // 事件编号
+        let evCode = props.location.state.evCode
+        // 登录名
+        let loginName = props.location.state.loginName
         // flowable-engine内部鉴权使用的cookie
         let cookie = ""
         let winCookie = window.document.cookie
@@ -122,7 +129,7 @@ const StartForm = (props) => {
             name: `${flowName} - ${date.getDate()} ${date.getMonth() + 1} ${date.getFullYear()}`,
             FormKey: FormKey
         }
-        WorkflowStart(cookie, userId, myData)
+        WorkflowStart(cookie, userId, evCode, loginName, myData)
         .then((res)=>{
             message.success("提交成功")
         })
