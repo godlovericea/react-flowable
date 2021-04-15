@@ -141,6 +141,12 @@ const StartForm = (props) => {
         });
     };
 
+    const handleGoBack=()=>{
+        props.history.push({
+            pathname: '/stpermis'
+        })
+    }
+
     return (
         <div className="startwrap">
             <FormRender
@@ -152,12 +158,11 @@ const StartForm = (props) => {
                 showValidate={false}
                 widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
             />
-            <Button style={{ marginLeft: 30 }} onClick={handleClick}>
-                重置
-            </Button>
-            <Button type="primary" onClick={handleSubmit}>
-                发起
-            </Button>
+            <div className="btngroups">
+                <Button type="primary" style={{ marginLeft: 30 }} shape="round" onClick={handleSubmit}>发起</Button>
+                <Button style={{ marginLeft: 30 }} shape="round" onClick={handleClick}>重置</Button>
+                <Button style={{ marginLeft: 30 }} shape="round" onClick={handleGoBack}>返回</Button>
+            </div>
         </div>
     );
 };

@@ -1,9 +1,10 @@
 // 流程发起权限页面
 import React from 'react';
 import { Button, Input, Form, Row, Col } from 'antd';
-import { GetWorkflowBaseInfo, GetEventList } from '../../apis/process';
+import { GetEventList } from '../../apis/process';
 import './EventStartPage.less';
 import flowIcon from "../../assets/flow-icon.png"
+import { FileDoneOutlined } from '@ant-design/icons';
 import flowArrowIcon from "../../assets/flow-arrow-right.png"
 class EventStartPage extends React.Component {
     state={
@@ -72,7 +73,8 @@ class EventStartPage extends React.Component {
                 pathname: '/eventform',
                 state:{
                     name: name,
-                    userName: this.state.userName
+                    userName: this.state.userName,
+                    userId: this.state.userId
                 }
             })
         }
@@ -82,11 +84,11 @@ class EventStartPage extends React.Component {
     }
     render(){
         return (
-            <div className="flowpermiss-wrapper">
+            <div className="EventStartPage-wrapper">
                 <div className="form-headerbox">
                     <Form layout="inline">
-                        <Form.Item label="流程名称">
-                            <Input type="text" placeholder="请输入流程名称" size="small" allowClear onChange={this.getInput}></Input>
+                        <Form.Item label="事件名称">
+                            <Input type="text" placeholder="请输入事件名称" size="small" allowClear onChange={this.getInput}></Input>
                         </Form.Item>
                         <Form.Item>
                             <Button className="localBtnClass" size="small" type="primary" onClick={this.getData}>查询</Button>
@@ -101,7 +103,7 @@ class EventStartPage extends React.Component {
                                     <Col span={6} key={index}>
                                         <div className="card-wrapper" onClick={this.handleStart(item.EventName)}>
                                             <div className="left-card">
-                                                <img src={flowIcon} alt="" className="flow-icon"/>
+                                                <FileDoneOutlined className="fileiconstyle"/>
                                                 <span>{item.EventName}</span>
                                             </div>
                                             <div className="arrow-class">

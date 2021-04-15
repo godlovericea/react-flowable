@@ -3,8 +3,9 @@
 // 展示表单类型
 import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
-import { Button, Row, Col, message } from 'antd';
+import { Button, Row, Col, message, Divider } from 'antd';
 import { GetEvent, GetFlowIdByFlowKey, EventOperate } from '../../apis/process'
+import { FileDoneOutlined, ArrowRightOutlined} from '@ant-design/icons';
 import LoginNameSelect from '../../components/LoginNameSelect/LoginNameSelect';
 import TreeCascader from '../../components/TreeCascader/TreeCascader'
 import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
@@ -47,12 +48,13 @@ const EventOperation = (props) => {
         .then((res)=>{
             setFlowInfoList(res.data.getMe[0].FlowInfoList)
             setSchema(evJson)
+            setUserId(props.location.state.userId)
         })
     }
 
     const handleStaff=(loginName, userId)=>{
         setLoginName(loginName)
-        setUserId(userId)
+        // setUserId(userId)
     }
     
     useEffect(()=>{
@@ -79,6 +81,10 @@ const EventOperation = (props) => {
     // 打开人员选择器弹框
     const openStaffModal=(FlowName)=>{
         return ()=>{
+            if (!loginName) {
+                message.error("请选择流程承办人！")
+                return
+            }
             GetFlowIdByFlowKey(FlowName)
             .then((res)=>{
                 setstaffVisible(true)
@@ -117,7 +123,7 @@ const EventOperation = (props) => {
     return (
         <div className="eventoperation-wrapper">
             <Row justify="start">
-                <Col span={18}>
+                <Col span={24}>
                     <FormRender
                         ref={formRef}
                         {...schema}
@@ -127,21 +133,30 @@ const EventOperation = (props) => {
                         widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
                     />
                 </Col>
-                <Col span={6}>
-                    <div>
-                        <p className="ev-title">{evName}关联的流程</p>
-                    </div>
-                    <div>
+            </Row>
+            <div className="btngroups">
+                <Button type="primary" shape="round" style={{ marginLeft: 30 }} onClick={handleClickReback}>
+                    返回列表
+                </Button>
+                <Button type="primary" shape="round" style={{ marginLeft: 30 }} onClick={closeCurrentEvent}>
+                    关闭事件
+                </Button>
+            </div>
+            <Divider orientation="left" plain>{evName}关联的流程</Divider>
+            <Row>
+                <Col span={24} className="eventflow-box">
+                    <div className="eventflow-content">
                         {
                             FlowInfoList.map((item,index)=>{
                                 return(
                                     <div key={index} className="flowNameList-box">
-                                        <div>
-                                            <span>{item.FlowName}</span>
+                                        <div className="iconwrapper">
+                                            <FileDoneOutlined className="fileDoneIcon"/>
+                                            <span style={{marginLeft:'10px'}}>{item.FlowName}</span>
                                         </div>
                                         <div className="flowNameList-operBox">
                                             <LoginNameSelect handleStaff={handleStaff}></LoginNameSelect>
-                                            <Button type="primary" shape="round" size="small" onClick={openStaffModal(item.FlowName)}>发起</Button>
+                                            <Button type="primary" shape="round" size="small" style={{marginLeft:"10px"}} onClick={openStaffModal(item.FlowName)}>发起</Button>
                                         </div>
                                     </div>
                                 )
@@ -150,15 +165,6 @@ const EventOperation = (props) => {
                     </div>
                 </Col>
             </Row>
-            {/* <Modal visible={staffVisible} onOk={handleRouterGoStart} onCancel={closeModal}>
-                <LoginNameSelect handleStaff={handleStaff}></LoginNameSelect>
-            </Modal> */}
-            <Button type="primary" style={{ marginLeft: 30 }} onClick={handleClickReback}>
-                返回列表
-            </Button>
-            <Button type="primary" style={{ marginLeft: 30 }} onClick={closeCurrentEvent}>
-                关闭事件
-            </Button>
         </div>
     );
 };

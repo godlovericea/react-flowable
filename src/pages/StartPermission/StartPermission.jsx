@@ -31,8 +31,8 @@ class StartPermission extends React.Component {
     getData=()=>{
         let deArr = []
         let name =  this.state.flowName || ''
-        // GetWorkflowBaseInfo(name, '王万里', '', '', 1, 1000)
-        GetWorkflowBaseInfo(name, this.state.userName, '', '', 1, 1000)
+        GetWorkflowBaseInfo(name, '王万里', '', '', 1, 1000)
+        // GetWorkflowBaseInfo(name, this.state.userName, '', '', 1, 1000)
         .then((res)=>{
             res.data.getMe.forEach((item)=>{
                 // AccessRight为1时，说明有此流程权限
@@ -101,7 +101,7 @@ class StartPermission extends React.Component {
                             <Input type="text" placeholder="请输入流程名称" size="small" allowClear onChange={this.getInput}></Input>
                         </Form.Item>
                         <Form.Item>
-                            <Button className="localBtnClass" size="small" type="primary" onClick={this.getData}>查询</Button>
+                            <Button className="localBtnClass" size="small" shape="round" type="primary" onClick={this.getData}>查询</Button>
                         </Form.Item>
                     </Form>
                 </div>

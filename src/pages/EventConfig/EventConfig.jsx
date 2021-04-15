@@ -4,6 +4,7 @@ import { Button, Input, Form, Row, Col, Checkbox, message, Modal, Radio } from '
 import { GetWorkflowBaseInfo, SaveEventConfig, GetEvent } from '../../apis/process';
 import { ToolFilled } from '@ant-design/icons';
 import StaffSelect from '../../components/StaffSelect/StaffSelect';
+import './EventConfig.less'
 class EventConfig extends React.Component {
     state={
         eventName: '',
@@ -15,6 +16,7 @@ class EventConfig extends React.Component {
         visible: false, // Modal
         EndType: "0", // 流程结束标志
         curFlowId: '',
+        configedFlowArr: [], // 已经配置过的流程数组
     }
     // 与StaffSelect子组件绑定事件传值交互
     handleStaff=async (val)=>{
@@ -32,7 +34,6 @@ class EventConfig extends React.Component {
             }
             updateData.push(item)
         })
-        console.log(updateData)
         this.setState({
             flowArr: updateData
         })
@@ -60,7 +61,6 @@ class EventConfig extends React.Component {
             })
             GetEvent(this.props.location.state.name)
             .then((response)=>{
-                console.log(response.data)
                 let dataArr = response.data.getMe[0].FlowInfoList
                 arr.forEach((item)=>{
                     dataArr.forEach((cItem)=>{
@@ -81,11 +81,13 @@ class EventConfig extends React.Component {
         // console.log(this.state.flowArr)
         // console.log(this.state.EndType)
         let arr = []
+        console.log(this.state.flowArr, "flowArr")
         this.state.flowArr.forEach((item)=>{
             if (item.id === this.state.curFlowId) {
                 arr.push({
                     label: item.label,
                     value: item.value,
+                    checked:item.checked,
                     id: item.id,
                     EndType: this.state.EndType
                 })
@@ -93,8 +95,10 @@ class EventConfig extends React.Component {
                 arr.push(item)
             }
         })
+        console.log(arr, "arr")
         this.setState({
             flowArr: arr,
+            configedFlowArr: arr,
             visible: false
         })
     }
@@ -122,7 +126,7 @@ class EventConfig extends React.Component {
     // 把流程挂接到某人身上，分配流程发起的权限
     linkToEvent=()=>{
         let keyList = []
-        this.state.flowArr.forEach((item)=>{
+        this.state.configedFlowArr.forEach((item)=>{
             if (item.checked) {
                 keyList.push({
                     EventName: this.state.eventName,
@@ -131,6 +135,10 @@ class EventConfig extends React.Component {
                 })
             }
         })
+        if (keyList.length === 0) {
+            message.error("请配置流程");
+            return
+        }
         SaveEventConfig(this.state.eventName, keyList)
         .then((res)=>{
             if (res.data.statusCode === "0000") {
@@ -186,21 +194,26 @@ class EventConfig extends React.Component {
                             <Input type="text" placeholder="请输入流程名称" size="small" allowClear onChange={this.getInput}></Input>
                         </Form.Item>
                         <Form.Item>
-                            <Button className="localBtnClass" size="small" type="primary" onClick={this.getData}>查询</Button>
+                            <Button className="localBtnClass" size="small" type="primary" shape="round" onClick={this.getData}>查询</Button>
                         </Form.Item>
                         <Form.Item>
-                            <Button className="localBtnClass" size="small" type="primary" onClick={this.linkToEvent}>挂接</Button>
+                            <Button className="localBtnClass" size="small" type="primary" shape="round" onClick={this.linkToEvent}>挂接</Button>
                         </Form.Item>
                     </Form>
                 </div>
                 <div className="EventConfig-contentbox">
-                    <Row gutter={[20, 10]}>
+                    <Row gutter={[20, 20]}>
                         {
                             this.state.flowArr.map((item,index)=>{
                                 return(
-                                    <Col span={6} key={index}>
+                                    <Col span={4} key={index} className="colstyle">
                                         <Checkbox value={item.value} checked={item.checked} onChange={this.onChange} className="lableclass">{item.label}</Checkbox>
-                                        <ToolFilled title="点击配置流程结束之后配置" className="set-form-class" onClick={this.openModal(item.id)}/>
+                                        {
+                                            item.checked ?
+                                            <ToolFilled title="点击配置流程结束之后事项" className="set-form-class" onClick={this.openModal(item.id)}/>
+                                            :
+                                            null
+                                        }
                                     </Col>
                                 )
                             })

@@ -1,21 +1,40 @@
 .eventoperation-wrapper{
-    .ev-title{
-        font-weight: bold;
+    .btngroups{
+        text-align: right;
+        margin-right: 30px;
     }
-    .flowNameList-box{
-        background: #ddd;
-        height: 40px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        width: 80%;
-        margin: 5px 0;
-        padding: 0 20px;
-        cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        .flowNameList-operBox{
+    .eventflow-box{
+        padding: 30px;
+        .ev-title{
+            font-weight: bold;
+        }
+        .eventflow-content{
             display: flex;
+        }
+        .flowNameList-box{
+            background: #F7F7F7;
+            height: 60px;
+            border: 1px solid #F0F0F0;
+            border-radius: 8px;
+            width: 400px;
+            margin: 10px 20px;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .flowNameList-operBox{
+                display: flex;
+            }
+            .iconwrapper{
+                display: flex;
+                align-items: center;
+                .fileDoneIcon{
+                    color:#03b298;
+                    font-size: 22px;
+                }
+            }
+            
         }
     }
 }

@@ -9,6 +9,8 @@ const { Option } = Select;
 
 
 const EventOnDealList = (props) => {
+    // 用户ID
+    const [userId, setUserId] = useState('')
     // 事件列表
     const [data, setData] = useState([])
     // 事件名称
@@ -64,12 +66,14 @@ const EventOnDealList = (props) => {
     // 操作事件
     const handleOperate=(name, evJson, evCode)=>{
         return ()=>{
+            console.log(userId)
             props.history.push({
                 pathname: '/eventoper',
                 state: {
                     name: name,
                     evJson: evJson,
-                    code: evCode
+                    code: evCode,
+                    userId: userId
                 }
             })
         }
@@ -115,6 +119,7 @@ const EventOnDealList = (props) => {
     const getData =async(eventName = '', type = '')=>{
         let result = await GetEventDoingList(eventName, type)
         result.data.getMe.forEach((item, index)=>{
+            item.EventIndex = index + 1
             item.key = index
         })
         setData(result.data.getMe)
@@ -126,6 +131,17 @@ const EventOnDealList = (props) => {
     }
 
     useEffect(()=>{
+        // 用户ID
+        let userId = ""
+        const search = window.location.search.slice(1)
+        const searchArr = search.split("&")
+        // 循环接续值
+        searchArr.forEach((item)=>{
+            if (item.indexOf("userId") > -1) {
+                userId = item.split("=")[1]
+                setUserId(userId)
+            }
+        })
         getData()
     }, [])
 
@@ -149,6 +165,7 @@ const EventOnDealList = (props) => {
                 <Button type="dashed" onClick={goToNewEventForm}>新增</Button>
             </div>
             <Table dataSource={data} pagination={pagination}>
+                <Column title="序号" width={60} dataIndex="EventIndex" key="EventIndex" />
                 <Column title="事件名称" dataIndex="EventName" key="EventName" />
                 <Column title="事件表" dataIndex="EventTable" key="EventTable" />
                 <Column title="事件编码" dataIndex="EventCode" key="EventCode" />

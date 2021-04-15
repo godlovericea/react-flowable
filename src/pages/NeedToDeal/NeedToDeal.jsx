@@ -5,7 +5,9 @@ import FormTransfer from '../../libs/transform/transform'
 import ConfigSchemaClass from '../../libs/configSchema/configSchema'
 import configData from '../../utils/config'
 import { Button, message, Modal, Radio, Input, Table, Space} from 'antd';
-import { getTableName, GetFormList, GetTransferList, SaveFormInfoTransfer, TaskSave, GetTaskBaseInfo, getUserName, UpdateTaskInfo, TaskGoBack, WorkflowUrging, GetFlowProcessInfo, WorkflowFileOperation, uploadToService} from '../../apis/process'
+import { getTableName, GetFormList, GetTransferList, SaveFormInfoTransfer, TaskSave, 
+    GetTaskBaseInfo, getUserName, UpdateTaskInfo, TaskGoBack, WorkflowUrging, GetFlowProcessInfo, 
+    WorkflowFileOperation, uploadToService, WorkflowDelete} from '../../apis/process'
 import './NeedToDeal.less'
 import TreeCascader from '../../components/TreeCascader/TreeCascader'
 import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
@@ -79,6 +81,8 @@ const NeedToDeal = (props) => {
     const [fileVisible, setFileVisible] = useState(false)
     // 上传附件Modal
     const [uploadVisible, setUploadVisible] = useState(false)
+    // 流程作废Modal
+    const [abolishVisible, setAbolishVisible] = useState(false)
     // 上传附件文件的名字
     const [upFileName, setUpFileName] = useState([])
     // 会签点击完成按钮，选择下一个完成人
@@ -587,6 +591,26 @@ const NeedToDeal = (props) => {
     const handleSetTrans=(e)=>{
         setTransValue(e.target.value)
     }
+    // 打开作废弹窗
+    const openAbolishModal=()=>{
+        setAbolishVisible(true)
+    }
+    // 取消作废
+    const closeAbolishVisible=()=>{
+        setAbolishVisible(false)
+    }
+    // 确定作废
+    const sureAbolishVisible=()=>{
+        WorkflowDelete(processDefinitionId,cookie)
+        .then((res)=>{
+            if(res.data.statusCode === "0000") {
+                message.success("该流程已作废！")
+                setAbolishVisible(false)
+            } else {
+                message.error(res.data.errMsg)
+            }
+        })
+    }
     
     useEffect(()=>{
         getData()
@@ -609,6 +633,7 @@ const NeedToDeal = (props) => {
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={completeTask}>完成</Button>
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={transferTo}>移交</Button>
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={goBack}>回退</Button>
+                <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={openAbolishModal}>作废</Button>
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={urgentTask}>催办</Button>
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={uploadFile}>附件</Button>
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={showTransFlow}>流转信息</Button>
@@ -778,6 +803,10 @@ const NeedToDeal = (props) => {
             <Modal title="上传附件" visible={uploadVisible} onCancel={closeUploadVisible} onOk={sureUploadVisible}
             bodyStyle={{ display: 'flex',justifyContent: 'center',alignItems:'center'}}>
                 <Input type="file" onChange={hanldeFileUpload}></Input>
+            </Modal>
+            <Modal title="流程作废" visible={abolishVisible} onCancel={closeAbolishVisible} onOk={sureAbolishVisible}
+            bodyStyle={{ display: 'flex',justifyContent: 'center',alignItems:'center'}}>
+                确定要作废该流程吗？
             </Modal>
             <FormRender
                 ref={formRef}

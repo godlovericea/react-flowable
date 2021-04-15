@@ -57,9 +57,9 @@ const ShowForm = (props) => {
                 onValidate={onValidate}
                 widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
             />
-            <Button type="primary" style={{ marginLeft: 30 }} onClick={handleClickReback}>
-                返回列表
-            </Button>
+            <div style={{textAlign: 'right',marginRight: '20px',padding: '30px 0'}}>
+                <Button type="primary" style={{ marginLeft: 30 }} shape="round" onClick={handleClickReback}>返回列表</Button>
+            </div>
         </div>
     );
 };

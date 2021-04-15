@@ -126,11 +126,11 @@ class FlowPermission extends React.Component {
                     </Form>
                 </div>
                 <div className="contentbox">
-                    <Row gutter={[20, 10]}>
+                    <Row gutter={[20, 20]}>
                         {
                             this.state.flowArr.map((item,index)=>{
                                 return(
-                                    <Col span={6} key={index}>
+                                    <Col span={4} key={index} className="permission-contentbox" style={{overflow: 'hidden'}}>
                                         <Checkbox value={item.value} checked={item.checked} onChange={this.onChange} className="lableclass">{item.label}</Checkbox>
                                         {/* <ToolFilled title="点击配置表单字段" className="set-form-class" onClick={this.routeGo(item.id, item.label)}/> */}
                                     </Col>

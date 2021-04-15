@@ -151,7 +151,7 @@ const EventList = (props) => {
                             <Button type="primary" size="small" onClick={handleShow(record.EventName)}>事件表单</Button>
                             <Button type="primary" size="small" onClick={handleDel(record.EventName, record.EventCode)}>删除</Button>
                             <Button type="primary" size="small" onClick={handleConfig(record.EventName)}>流程配置</Button>
-                            <Button type="primary" size="small" onClick={handleEventConfig(record.EventName)}>事件权限配置</Button>
+                            {/* <Button type="primary" size="small" onClick={handleEventConfig(record.EventName)}>事件权限配置</Button> */}
                         </Space>
                     )}
                 />
