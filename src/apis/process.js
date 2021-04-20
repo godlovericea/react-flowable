@@ -1,7 +1,7 @@
 import request from '../utils/request'
 // 拉取web4的地址
-const address = window.location.ancestorOrigins.item(0) || "http://localhost:8089"
-
+const address = window.location.ancestorOrigins.item(0) || "http://localhost:9080"
+console.log(address)
 
 // 流程列表
 export function GetWorkflowBaseInfo (WorkflowName, userName, STime, ETime, pageIndex, pageSize) {
@@ -296,7 +296,7 @@ export function GetFlowIdByFlowKey (FLOWKEY) {
 // 新增流程  
 export function getAssetsList(){
     return request({
-        // url: `http://localhost:8089/CityInterface/rest/services/CountyProduct.svc/AccountManage/GetTableGroupMetaV3?tableName=资产管理_资产明细表&columnName=设备状态`,
+        // url: `http://localhost:9080/CityInterface/rest/services/CountyProduct.svc/AccountManage/GetTableGroupMetaV3?tableName=资产管理_资产明细表&columnName=设备状态`,
         url: `${address}/CityInterface/rest/services/CountyProduct.svc/AccountManage/GetTableGroupMetaV3?tableName=资产管理_资产明细表&columnName=设备状态`,
         method: 'get'
     })
@@ -305,7 +305,7 @@ export function getAssetsList(){
 // 台账查询
 export function getTableName(name){
     return request({
-        // url: `http://localhost:8089/CityInterface/rest/services/CountyProduct.svc/AccountManage/GetTableGroupMetaV3?tableName=${name}`,
+        // url: `http://localhost:9080/CityInterface/rest/services/CountyProduct.svc/AccountManage/GetTableGroupMetaV3?tableName=${name}`,
         url: `${address}/CityInterface/rest/services/CountyProduct.svc/AccountManage/GetTableGroupMetaV3?tableName=${name}`,
         method: 'get'
     })
@@ -314,7 +314,7 @@ export function getTableName(name){
 // 选择器选项的值查询
 export function getSelectName(nodeName){
     return request({
-        // url: `http://localhost:8089/CityInterface/Services/CityServer_WorkFlow/REST/WorkFlowREST.svc/WorkFlow/175/?nodeName=${nodeName}`,
+        // url: `http://localhost:9080/CityInterface/Services/CityServer_WorkFlow/REST/WorkFlowREST.svc/WorkFlow/175/?nodeName=${nodeName}`,
         url: `${address}/CityInterface/Services/CityServer_WorkFlow/REST/WorkFlowREST.svc/WorkFlow/175/?nodeName=${nodeName}`,
         method: 'get'
     })
@@ -323,7 +323,7 @@ export function getSelectName(nodeName){
 // 姓名查询
 export function getUserName(name){
     return request({
-        // url: `http://localhost:8089/CityInterface/rest/services/OA.svc/GetAllPerson_PandaWisdom?UserName=${name}`,
+        // url: `http://localhost:9080/CityInterface/rest/services/OA.svc/GetAllPerson_PandaWisdom?UserName=${name}`,
         url: `${address}/CityInterface/rest/services/OA.svc/GetAllPerson_PandaWisdom?UserName=${name}`,
         method: 'get'
     })
@@ -332,7 +332,7 @@ export function getUserName(name){
 // 人员选择器查询
 export function getUserListForRole(){
     return request({
-        // url: `http://localhost:8089/Cityinterface/rest/services/CountyProduct.svc/AccountManage/getUserListForRole?_version=9999`,
+        // url: `http://localhost:9080/Cityinterface/rest/services/CountyProduct.svc/AccountManage/getUserListForRole?_version=9999`,
         url: `${address}/Cityinterface/rest/services/CountyProduct.svc/AccountManage/getUserListForRole?_version=9999`,
         method: 'get'
     })
@@ -341,7 +341,7 @@ export function getUserListForRole(){
 // 台账的表查询
 export function GetAccountConfigInfo(accountName){
     return request({
-        // url: `http://localhost:8089/CityInterface/Services/CityServer_CaseManage/REST/CaseManageREST.svc/GetAccountConfigInfo?accountName=${accountName}`,
+        // url: `http://localhost:9080/CityInterface/Services/CityServer_CaseManage/REST/CaseManageREST.svc/GetAccountConfigInfo?accountName=${accountName}`,
         url: `${address}/CityInterface/Services/CityServer_CaseManage/REST/CaseManageREST.svc/GetAccountConfigInfo?accountName=${accountName}`,
         method: 'get'
     })
@@ -350,7 +350,7 @@ export function GetAccountConfigInfo(accountName){
 // 台账的表查询
 export function GetAccountPageList(pageIndex, pageSize, accountName, info){
     return request({
-        // url: `http://localhost:8089/CityInterface/Services/CityServer_CaseManage/REST/CaseManageREST.svc/GetAccountPageList?pageIndex=${pageIndex}&pageSize=${pageSize}&sortFields=录入时间&direction=desc&accountName=${accountName}&info=${info}`,
+        // url: `http://localhost:9080/CityInterface/Services/CityServer_CaseManage/REST/CaseManageREST.svc/GetAccountPageList?pageIndex=${pageIndex}&pageSize=${pageSize}&sortFields=录入时间&direction=desc&accountName=${accountName}&info=${info}`,
         url: `${address}/CityInterface/Services/CityServer_CaseManage/REST/CaseManageREST.svc/GetAccountPageList?pageIndex=${pageIndex}&pageSize=${pageSize}&sortFields=录入时间&direction=desc&accountName=${accountName}&info=${info}`,
         method: 'get'
     })
@@ -358,7 +358,7 @@ export function GetAccountPageList(pageIndex, pageSize, accountName, info){
 // 查询台账列表
 export function GetLedgerAccountList(){
     return request({
-        // url: `http://localhost:8089/Cityinterface/rest/services/OMS.svc/CM_Ledger_LoadLedgers?_version=9999`,
+        // url: `http://localhost:9080/Cityinterface/rest/services/OMS.svc/CM_Ledger_LoadLedgers?_version=9999`,
         url: `${address}/Cityinterface/rest/services/OMS.svc/CM_Ledger_LoadLedgers?_version=9999`,
         method: 'get'
     })

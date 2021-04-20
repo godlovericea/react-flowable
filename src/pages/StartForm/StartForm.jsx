@@ -104,9 +104,9 @@ const StartForm = (props) => {
         // 用户ID
         let userId = props.location.state.userId
         // 事件编号
-        let evCode = props.location.state.evCode
+        let evCode = props.location.state.evCode || ""
         // 登录名
-        let loginName = props.location.state.loginName
+        let loginName = props.location.state.loginName || ""
         // flowable-engine内部鉴权使用的cookie
         let cookie = ""
         let winCookie = window.document.cookie
@@ -117,16 +117,27 @@ const StartForm = (props) => {
                 cookie = itemArr[1]
             }
         })
+        const dateEn = ["January","February","March","April","May","June", "July", "August", "September", "October", "November","December"]
+        let monthName = ""
+        const date = new Date()
+        const month = date.getMonth()
+        dateEn.forEach((item,index)=>{
+            if (index === month) {
+                monthName = item
+            }
+        })
+        const day = date.getDate()
+        const year = date.getFullYear()
         var FormInfo=JSON.stringify({
             formId,
             values: formData
         })
-        var date = new Date()
         const myData = {
+            formId,
             FormInfo,
             Config: configSchema,
             processDefinitionId,
-            name: `${flowName} - ${date.getDate()} ${date.getMonth() + 1} ${date.getFullYear()}`,
+            name: `${flowName} - ${monthName} ${day}th ${year}`,
             FormKey: FormKey
         }
         WorkflowStart(cookie, userId, evCode, loginName, myData)

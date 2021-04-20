@@ -1,32 +1,120 @@
-// 查看信息流转历史节点
+// 在办
 import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
-import { Button } from 'antd';
-import { GetFormList, GetTaskBaseInfo } from '../../apis/process'
+import FormTransfer from '../../libs/transform/transform'
+import ConfigSchemaClass from '../../libs/configSchema/configSchema'
+import configData from '../../utils/config'
+import { Button, message, Modal, Radio, Input, Table, Space} from 'antd';
+import { getTableName, GetFormList, GetTransferList, SaveFormInfoTransfer, TaskSave, 
+    GetTaskBaseInfo, getUserName, UpdateTaskInfo, TaskGoBack, WorkflowUrging, GetFlowProcessInfo, 
+    WorkflowFileOperation, uploadToService, WorkflowDelete} from '../../apis/process'
 import './HistoryFlow.less'
-import StaffSelect from '../../components/StaffSelect/StaffSelect'
 import TreeCascader from '../../components/TreeCascader/TreeCascader'
-import SearchSelect from '../../components/SearchSelect/SearchSelect'
+import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
 import TableAccount from '../../components/TableAccount/TableAccount'
 import UploadFile from '../../components/UploadFile/UploadFile'
 import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
+import SearchSelect from '../../components/SearchSelect/SearchSelect'
+const { Search } = Input;
+const { Column } = Table;
 
 const NeedToDeal = (props) => {
+    // FormRender提交表单校验
+    const [valid, setValid] = useState([])
+    // 表单得标识key
+    const [FormKey, setFormKey] = useState([])
+    // FormRender的formData
     const [formData, setFormData] = useState({});
+    // FormRender的schema
     const [schema, setSchema] = useState({})
+    // cookie
     const [cookie, setCookie] = useState("")
+    // 当前节点的任务ID
+    const [taskId, setTaskId] = useState("")
+    // 当前节点的流程定义ID
+    const [processDefinitionId, setProcessDefinitionId] = useState("")
+    // 用户ID
+    const [userId, setUserId] = useState("")
+    // 表单ID
     const [formId, setFormId] = useState("")
+    // 任务移交Modal
+    const [visible, setVisible] = useState(false)
+    // 会签选择候选人Modal
+    const [nextPersonVisible, setNextPersonVisible] = useState(false)
+    // 流程图Modal
+    const [modelerVisible, setModelerVisible] = useState(false)
+    // 回退Modal
+    const [rebackVisible, setRebackVisible] = useState(false)
+    // 催办Modal
+    const [urgentVisible, setUrgentVisible] = useState(false)
+    // 候选人
+    const [transValue, setTransValue] = useState(null)
+    // 候选移交人数组
+    const [userNameArr, setUserNameArr] = useState([])
+    // 用户名
+    const [userName, setUserName] = useState('')
+    // 用户所在部门
+    const [userDepart, setUserDepart] = useState('')
+    // 流程图图片地址
+    const [processImgSrc, setProcessImgSrc] = useState(null)
 
     // 流程详细信息
+    // 分配人
     const [Assignee, setAssignee] = useState(null)
+    // 截至时间
     const [ETime, setETime] = useState(null)
+    // 开始时间
     const [STime, setSTime] = useState(null)
+    // 任务名称
     const [TaskName, setTaskName] = useState(null)
+    // 流转信息数据表格
+    const [tableData, setTableData] = useState([])
+    // 回退时候查询节点流转信息
+    const [goBacktableData, setGoBacktableData] = useState([])
+    // 催办时候，查询节点流转信息
+    const [urgentTableData, setUrgentTableData] = useState([])
+    // 附件数组
+    const [fileTableData, setFileTableData] = useState([])
+    // 流转信息Modal
+    const [flowVisible, setFlowVisible] = useState(false)
+    // 附件Modal
+    const [fileVisible, setFileVisible] = useState(false)
+    // 上传附件Modal
+    const [uploadVisible, setUploadVisible] = useState(false)
+    // 流程作废Modal
+    const [abolishVisible, setAbolishVisible] = useState(false)
+    // 上传附件文件的名字
+    const [upFileName, setUpFileName] = useState([])
+    // 会签点击完成按钮，选择下一个完成人
+    const [nextPerson, setNextPerson] = useState('')
+    // 会签时候，点击完成，候选人列表
+    const [assigneeList, setAssigneeList] = useState([])
+    // 下一个移交人
+    const [workCode, setWorkCode] = useState("")
+    // 配置schema，传递给下一个节点
+    const [configSchema, setConfigSchema] = useState('')
+    // 前一个节点带过来的values值
+    const [prevSchemaValues, setPrevSchemaValues] = useState({})
+    // 表单类型：台账或者表单
+    const [formType, setFormType] = useState("")
+    // FormRender的ref
     const formRef = useRef();
+    // 回退的ref
+    const backRef = useRef();
+    // 催办的ref
+    const urgentRef = useRef();
 
+    // FormRender提交表单校验
+    const onValidate=(valid)=>{
+        setValid(valid)
+    }
+    // 拉取数据
     const getData =()=>{
+        // cookie
         let cookieScope = ""
-        let taskIdScope = ""
+        // 任务ID
+        let taskIdScope = props.location.state.taskId
+        // 处理cookie
         let winCookie = window.document.cookie
         let winCookieArr = winCookie.split(";")
         winCookieArr.forEach((item)=>{
@@ -36,29 +124,37 @@ const NeedToDeal = (props) => {
                 setCookie(cookieScope)
             }
         })
-        // 处理任务ID
-        taskIdScope = props.location.state.taskId
         GetFormList(cookieScope, taskIdScope)
         .then((res)=>{
+            console.log(res)
             if (res.status === 200) {
                 let fieldData = res.data
-                let schemaConfig =  JSON.parse(fieldData.Config)
-                let fieldConfig = schemaConfig.schema.properties
-                let formValObj = JSON.parse(fieldData.formId).values
-                // 遍历表单配置与提交的values，并赋值
-                for(let skey in fieldConfig){
-                    for(let val in formValObj) {
-                        if (skey === val) {
-                            fieldConfig[skey].default = formValObj[val]
-                        }
+                setFormType(fieldData.Type)
+                if(fieldData.Type === "台账") {
+                    // 台账类型
+                    const tableName = fieldData.Config
+                    getTableName(tableName)
+                    .then(async(response)=>{
+                        const dataArr = response.data.getMe[0].Groups
+                        let formTransfer = new FormTransfer(dataArr)
+                        let schemadata =await formTransfer.handleGroup()
+                        setSchema(schemadata)
+                        setConfigSchema(JSON.stringify(schemadata))
+                    })
+                } else {
+                    // 表单类型
+                    setConfigSchema(fieldData.Config)
+                    const web4Config = {
+                        userName: props.location.state.userName,
+                        userDepart: props.location.state.userDepart
                     }
+                    // 上一个节点带过来的values
+                    let values = JSON.parse(fieldData.formId).values
+                    const testData = new ConfigSchemaClass(fieldData.ColumnConfig, fieldData.Config, web4Config, values)
+                    setSchema(testData.schema)
                 }
-                schemaConfig.schema.properties = fieldConfig
-                setFormId(JSON.parse(fieldData.formId).formId)
-                setSchema(schemaConfig)
             }
         })
-        // 获取当前节点信息
         GetTaskBaseInfo(taskIdScope)
         .then((response)=>{
             let data = response.data
@@ -67,15 +163,6 @@ const NeedToDeal = (props) => {
             setSTime(data.STime)
             setETime(data.ETime)
         })
-    }
-    const handleClick = () => {
-        formRef.current.resetData({}).then(res => {
-        alert(JSON.stringify(res, null, 2));
-        });
-    };
-
-    const handleClickReback = ()=>{
-        props.history.go(-1)
     }
     useEffect(()=>{
         getData()
@@ -96,9 +183,10 @@ const NeedToDeal = (props) => {
                 {...schema}
                 formData={formData}
                 onChange={setFormData}
-                widgets={{ staff: StaffSelect, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file: UploadFile, editSearch: EditbleSelct }}
+                onValidate={onValidate}
+                showValidate={false}
+                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file: UploadFile, editSearch: EditbleSelct }}
             />
-            <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={handleClickReback}>返回</Button>
         </div>
     );
 };

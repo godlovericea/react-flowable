@@ -164,7 +164,7 @@ const EventOnDealList = (props) => {
                 />
                 <Button type="dashed" onClick={goToNewEventForm}>新增</Button>
             </div>
-            <Table dataSource={data} pagination={pagination}>
+            <Table dataSource={data} pagination={pagination} rowClassName="rowClassName">
                 <Column title="序号" width={60} dataIndex="EventIndex" key="EventIndex" />
                 <Column title="事件名称" dataIndex="EventName" key="EventName" />
                 <Column title="事件表" dataIndex="EventTable" key="EventTable" />

@@ -548,7 +548,9 @@ const NeedToDeal = (props) => {
             props.history.push({
                 pathname: '/hisflow',
                 state:{
-                    taskId: taskId
+                    taskId: taskId,
+                    userName: userName,
+                    userDepart: userDepart
                 }
             })
         }
