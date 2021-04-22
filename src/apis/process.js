@@ -332,8 +332,8 @@ export function getUserName(name){
 // 人员选择器查询
 export function getUserListForRole(){
     return request({
-        // url: `http://localhost:9080/Cityinterface/rest/services/CountyProduct.svc/AccountManage/getUserListForRole?_version=9999`,
-        url: `${address}/Cityinterface/rest/services/CountyProduct.svc/AccountManage/getUserListForRole?_version=9999`,
+        url: `http://192.168.19.105:8055/Cityinterface/rest/services/CountyProduct.svc/AccountManage/getUserListForRole?_version=9999`,
+        // url: `${address}/Cityinterface/rest/services/CountyProduct.svc/AccountManage/getUserListForRole?_version=9999`,
         method: 'get'
     })
 }

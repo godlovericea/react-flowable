@@ -6,7 +6,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import zhCN from 'antd/es/locale/zh_CN';
 import 'antd/dist/antd.css';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, HashRouter } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 
 import moment from 'moment';
@@ -17,11 +17,11 @@ moment.locale('zh-cn');
 
 
 ReactDOM.render(
-  <BrowserRouter>
+  <HashRouter>
       <ConfigProvider locale={zhCN}>
               <App />
       </ConfigProvider>
-  </BrowserRouter>,
+  </HashRouter>,
   document.getElementById('root')
 );
 

@@ -24,10 +24,9 @@ const EventOperation = (props) => {
     const [evName, setEvName] = useState(props.location.state.name)
     // 事件编号
     const [evCode, setEvCode] = useState(props.location.state.code)
+    const [loginName, setLoginName] = useState(props.location.state.loginName)
     // 流程的ID
     const [FlowDefID, setFlowDefID] = useState('')
-    // 登陆名（工号）
-    const [loginName, setLoginName] = useState('')
     // 用户ID
     const [userId, setUserId] = useState('')
     // 事件挂接的流程
@@ -87,7 +86,7 @@ const EventOperation = (props) => {
             }
             GetFlowIdByFlowKey(FlowName)
             .then((res)=>{
-                setstaffVisible(true)
+                // setstaffVisible(true)
                 setFlowDefID(res.data)
                 props.history.push({
                     pathname: '/start',
@@ -95,7 +94,8 @@ const EventOperation = (props) => {
                         FlowDefID: res.data,
                         loginName: loginName,
                         evCode: evCode,
-                        userId: userId
+                        userId: userId,
+                        loginName: loginName
                     }
                 })
             })

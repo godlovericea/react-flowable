@@ -9,6 +9,7 @@ import flowArrowIcon from "../../assets/flow-arrow-right.png"
 class EventStartPage extends React.Component {
     state={
         userName: '', // web4登录的用户名
+        loginName: '', // 登录名
         flowName: '', // 流程名称
         flowArr: [], // isRight为1的流程数组 
         defaultVal: [], // 默认值
@@ -45,10 +46,12 @@ class EventStartPage extends React.Component {
         let userName = ""
         // 用户部门
         let userDepart = ""
+        let loginName= ""
         // 路由的search
         const search = window.location.search.slice(1)
         const searchArr = search.split("&")
         // 循环接续值
+        // ?userId=${userId}&loginName=${loginName}&userName=${userName}" 
         searchArr.forEach((item)=>{
             if (item.indexOf("userId") > -1) {
                 userId = item.split("=")[1]
@@ -56,12 +59,15 @@ class EventStartPage extends React.Component {
                 userName = decodeURI(item.split("=")[1])
             } else if (item.indexOf("userDepart") > -1) {
                 userDepart = decodeURI(item.split("=")[1])
-            } 
+            } else if (item.indexOf("loginName") > -1) {
+                loginName = item.split("=")[1]
+            }
         })
         this.setState({
             userId: userId,
             userName: userName,
-            userDepart: userDepart
+            userDepart: userDepart,
+            loginName: loginName
         },()=>{
             this.getData()
         })
@@ -74,7 +80,8 @@ class EventStartPage extends React.Component {
                 state:{
                     name: name,
                     userName: this.state.userName,
-                    userId: this.state.userId
+                    userId: this.state.userId,
+                    loginName: this.state.loginName
                 }
             })
         }

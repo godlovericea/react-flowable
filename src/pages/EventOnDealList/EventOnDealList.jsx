@@ -15,6 +15,11 @@ const EventOnDealList = (props) => {
     const [data, setData] = useState([])
     // 事件名称
     const [eventName, setEventName] = useState('')
+
+    const [userName, setUserName] = useState("")
+    
+    const [userDepart, setUserDepart] = useState("")
+    const [loginName,setLoginName] = useState("")
     // 事件类型的名称输入框
     const eventNameRef = useRef()
     // 事件类型描述输入框
@@ -73,7 +78,9 @@ const EventOnDealList = (props) => {
                     name: name,
                     evJson: evJson,
                     code: evCode,
-                    userId: userId
+                    userId: userId,
+                    loginName: loginName,
+                    userName: userName
                 }
             })
         }
@@ -133,6 +140,9 @@ const EventOnDealList = (props) => {
     useEffect(()=>{
         // 用户ID
         let userId = ""
+        let userName = ""
+        let userDepart = ""
+        let loginName = ""
         const search = window.location.search.slice(1)
         const searchArr = search.split("&")
         // 循环接续值
@@ -140,6 +150,15 @@ const EventOnDealList = (props) => {
             if (item.indexOf("userId") > -1) {
                 userId = item.split("=")[1]
                 setUserId(userId)
+            } else if (item.indexOf("userName") > -1) {
+                userName = decodeURI(item.split("=")[1])
+                setUserName(userName)
+            } else if (item.indexOf("userDepart") > -1) {
+                userDepart = decodeURI(item.split("=")[1])
+                setUserDepart(userDepart)
+            } else if (item.indexOf("loginName") > -1) {
+                loginName = item.split("=")[1]
+                setLoginName(loginName)
             }
         })
         getData()
