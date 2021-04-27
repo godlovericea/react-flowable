@@ -130,7 +130,16 @@ class EventConfig extends React.Component {
     }
     // 处理web4路由传递过来的值
     handleRouteParams=()=>{
-        const search = window.location.search.slice(1)
+        let hashData = ""
+        let searchData = ""
+        let search = ""
+        if (window.location.hash) {
+            hashData = window.location.hash
+            searchData = hashData.split("?")
+            search = searchData[1]
+        } else {
+            search = window.location.search.slice(1)
+        }
         // console.log(search)
         const searchArr = search.split("=")
         // console.log(searchArr)
@@ -145,7 +154,7 @@ class EventConfig extends React.Component {
     routeGo=(id, label)=>{
         return ()=>{
             this.props.history.push({
-                pathname: '/setform',
+                pathname: '/form-render/setform',
                 state:{
                     id: id,
                     label: label

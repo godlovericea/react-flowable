@@ -110,6 +110,7 @@ const StartForm = (props) => {
         // flowable-engine内部鉴权使用的cookie
         let cookie = ""
         let winCookie = window.document.cookie
+        console.log(winCookie)
         let winCookieArr = winCookie.split(";")
         winCookieArr.forEach((item)=>{
             if (item.indexOf("FLOWABLE_REMEMBER_ME") > -1) {
@@ -154,7 +155,7 @@ const StartForm = (props) => {
 
     const handleGoBack=()=>{
         props.history.push({
-            pathname: '/stpermis'
+            pathname: '/form-render/stpermis'
         })
     }
 

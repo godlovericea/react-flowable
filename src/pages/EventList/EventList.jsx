@@ -35,7 +35,7 @@ const EventList = (props) => {
     const handleEventConfig=(name)=>{
         return ()=>{
             props.history.push({
-                pathname: '/eventper',
+                pathname: '/form-render/eventper',
                 state:{
                     name: name
                 }
@@ -45,7 +45,7 @@ const EventList = (props) => {
     // 打开新增事件
     const goToNewEventForm=()=>{
         props.history.push({
-            pathname: '/newevform'
+            pathname: '/form-render/newevform'
         })
         setIsModalVisible(true)
     }
@@ -66,7 +66,7 @@ const EventList = (props) => {
     const handleShow=(name)=>{
         return ()=>{
             props.history.push({
-                pathname: '/eventshow',
+                pathname: '/form-render/eventshow',
                 state: {
                     name: name
                 }
@@ -102,7 +102,7 @@ const EventList = (props) => {
     const handleConfig=(name) =>{
         return ()=>{
             props.history.push({
-                pathname: '/eventconfig',
+                pathname: '/form-render/eventconfig',
                 state: {
                     name: name
                 }
@@ -113,7 +113,8 @@ const EventList = (props) => {
     // 拉取数据
     const getData =async(eventName = '')=>{
         let result = await GetEventList(eventName)
-        result.data.getMe.forEach((item)=>{
+        result.data.getMe.forEach((item, index)=>{
+            item.index = index+ 1
             item.key = item.ID
         })
         setData(result.data.getMe)
@@ -126,6 +127,7 @@ const EventList = (props) => {
     return (
         <div className="eventList-wrapper">
             <div className="eventList-header">
+                <span>事件名称：</span>
                 <Search
                     placeholder="请输入事件名称"
                     allowClear
@@ -136,6 +138,7 @@ const EventList = (props) => {
                 <Button type="dashed" onClick={goToNewEventForm}>新增</Button>
             </div>
             <Table dataSource={data} pagination={pagination} rowClassName="rowClassName">
+                <Column title="序号" dataIndex="index" key="index" width={60} align="center"></Column>
                 <Column title="事件名称" dataIndex="EventName" key="EventName" />
                 <Column title="事件表" dataIndex="EventTable" key="EventTable" />
                 <Column title="事件编码" dataIndex="EventCode" key="EventCode" />
@@ -156,6 +159,7 @@ const EventList = (props) => {
                     )}
                 />
             </Table>
+            
             <Modal title="新增事件" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                 <Form layout="vertical">
                     <Form.Item label="事件名称">

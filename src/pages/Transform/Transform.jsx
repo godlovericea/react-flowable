@@ -30,7 +30,7 @@ export default class Transform extends Component {
     // 返回列表
     handleClickReback=()=>{
         this.props.history.push({
-            pathname: '/home'
+            pathname: '/form-render/home'
         })
     }
     handleSchema = (data) => {

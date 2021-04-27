@@ -98,7 +98,7 @@ class NewEventForm extends React.Component{
     // 自定义返回列表按钮
     goBackToList=()=>{
         this.props.history.push({
-            pathname: '/eventlist'
+            pathname: '/form-render/eventlist'
         })
     }
     // 取消

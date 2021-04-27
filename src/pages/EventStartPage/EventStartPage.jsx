@@ -48,7 +48,16 @@ class EventStartPage extends React.Component {
         let userDepart = ""
         let loginName= ""
         // 路由的search
-        const search = window.location.search.slice(1)
+        let hashData = ""
+        let searchData = ""
+        let search = ""
+        if (window.location.hash) {
+            hashData = window.location.hash
+            searchData = hashData.split("?")
+            search = searchData[1]
+        } else {
+            search = window.location.search.slice(1)
+        }
         const searchArr = search.split("&")
         // 循环接续值
         // ?userId=${userId}&loginName=${loginName}&userName=${userName}" 
@@ -76,7 +85,7 @@ class EventStartPage extends React.Component {
     handleStart=(name)=>{
         return ()=>{
             this.props.history.push({
-                pathname: '/eventform',
+                pathname: '/form-render/eventform',
                 state:{
                     name: name,
                     userName: this.state.userName,

@@ -67,7 +67,7 @@ const EventTypeList = (props) => {
     const handleFlow = (id, name) => {
         return ()=>{
             props.history.push({
-                pathname: '/eventconfig',
+                pathname: '/form-render/eventconfig',
                 state:{
                     id: id,
                     name: name

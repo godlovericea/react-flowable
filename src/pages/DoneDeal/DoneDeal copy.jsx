@@ -50,7 +50,16 @@ const DoneDeal = (props) => {
             }
         })
         // 处理任务ID
-        const search = window.location.search.slice(1)
+        let hashData = ""
+        let searchData = ""
+        let search = ""
+        if (window.location.hash) {
+            hashData = window.location.hash
+            searchData = hashData.split("?")
+            search = searchData[1]
+        } else {
+            search = window.location.search.slice(1)
+        }
         const searchArr = search.split("&")
         searchArr.forEach((item)=>{
             if (item.indexOf("taskId") > -1) {
@@ -100,7 +109,16 @@ const DoneDeal = (props) => {
         })
 
         // 处理任务ID，用户ID
-        const search = window.location.search.slice(1)
+        let hashData = ""
+        let searchData = ""
+        let search = ""
+        if (window.location.hash) {
+            hashData = window.location.hash
+            searchData = hashData.split("?")
+            search = searchData[1]
+        } else {
+            search = window.location.search.slice(1)
+        }
         const searchArr = search.split("&")
         searchArr.forEach((item)=>{
             if (item.indexOf("processDefinitionId") > -1) {
@@ -118,7 +136,7 @@ const DoneDeal = (props) => {
 
     const handleClickReback = ()=>{
         props.history.push({
-            pathname: '/home'
+            pathname: '/form-render/home'
         })
     }
     // 附件

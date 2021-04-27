@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
 import { Button } from 'antd';
+import './EventShow.less'
 import { GetFormJson, GetEvent } from '../../apis/process'
 import TreeCascader from '../../components/TreeCascader/TreeCascader'
 import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
@@ -36,7 +37,7 @@ const ShowForm = (props) => {
     // 返回列表
     const handleClickReback = ()=>{
         props.history.push({
-            pathname: '/eventlist'
+            pathname: '/form-render/eventlist'
         })
     }
 
@@ -46,7 +47,7 @@ const ShowForm = (props) => {
     }
 
     return (
-        <div>
+        <div className="eventshow-wrapper">
             <FormRender
                 ref={formRef}
                 {...schema}
@@ -55,9 +56,11 @@ const ShowForm = (props) => {
                 onValidate={onValidate}
                 widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
             />
-            <Button type="primary" style={{ marginLeft: 30 }} onClick={handleClickReback}>
-                返回列表
-            </Button>
+            <div className="btngroups">
+                <Button type="primary" shape="round" style={{ marginLeft: 30 }} onClick={handleClickReback}>
+                    返回列表
+                </Button>
+            </div>
         </div>
     );
 };

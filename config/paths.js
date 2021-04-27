@@ -65,7 +65,8 @@ module.exports = {
   proxySetup: resolveApp('src/setupProxy.js'),
   appNodeModules: resolveApp('node_modules'),
   swSrc: resolveModule(resolveApp, 'src/service-worker'),
-  publicUrlOrPath,
+  publicUrlOrPath: './', // 打包到tomcat环境
+  // publicUrlOrPath // 本地调试环境
 };
 
 

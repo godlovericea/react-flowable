@@ -38,7 +38,7 @@ const ShowForm = (props) => {
     // 返回列表
     const handleClickReback = ()=>{
         props.history.push({
-            pathname: '/home'
+            pathname: '/form-render/home'
         })
     }
 

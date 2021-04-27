@@ -62,9 +62,7 @@ const EventOperation = (props) => {
 
     // 返回列表
     const handleClickReback = ()=>{
-        props.history.push({
-            pathname: '/eventondeal'
-        })
+        props.history.go(-1)
     }
     // 关闭事件
     const closeCurrentEvent=()=>{
@@ -72,6 +70,9 @@ const EventOperation = (props) => {
         .then((res)=>{
             if (res.data.statusCode === "0000") {
                 message.success("事件关闭成功")
+                props.history.push({
+                    pathname: '/form-render/eventondeal'
+                })
             }else {
                 message.error(res.data.errMsg)
             }
@@ -89,7 +90,7 @@ const EventOperation = (props) => {
                 // setstaffVisible(true)
                 setFlowDefID(res.data)
                 props.history.push({
-                    pathname: '/start',
+                    pathname: '/form-render/start',
                     state:{
                         FlowDefID: res.data,
                         loginName: loginName,
@@ -104,7 +105,7 @@ const EventOperation = (props) => {
 
     const handleRouterGoStart=()=>{
         props.history.push({
-            pathname: '/start',
+            pathname: '/form-render/start',
             state:{
                 FlowDefID: FlowDefID
             }
@@ -134,37 +135,40 @@ const EventOperation = (props) => {
                     />
                 </Col>
             </Row>
-            <div className="btngroups">
-                <Button type="primary" shape="round" style={{ marginLeft: 30 }} onClick={handleClickReback}>
-                    返回列表
-                </Button>
-                <Button type="primary" shape="round" style={{ marginLeft: 30 }} onClick={closeCurrentEvent}>
-                    关闭事件
-                </Button>
+            
+            <div className="linked-flow-box">
+                <div className="btngroups">
+                    <Button type="primary" shape="round" style={{ marginLeft: 30 }} onClick={handleClickReback}>
+                        返回列表
+                    </Button>
+                    <Button type="primary" shape="round" style={{ marginLeft: 30 }} onClick={closeCurrentEvent}>
+                        关闭事件
+                    </Button>
+                </div>
+                <Divider orientation="left" plain>{evName}关联的流程</Divider>
+                <Row>
+                    <Col span={24} className="eventflow-box">
+                        <div className="eventflow-content">
+                            {
+                                FlowInfoList.map((item,index)=>{
+                                    return(
+                                        <div key={index} className="flowNameList-box">
+                                            <div className="iconwrapper">
+                                                <FileDoneOutlined className="fileDoneIcon"/>
+                                                <span style={{marginLeft:'10px'}}>{item.FlowName}</span>
+                                            </div>
+                                            <div className="flowNameList-operBox">
+                                                <LoginNameSelect handleStaff={handleStaff}></LoginNameSelect>
+                                                <Button type="primary" shape="round" size="small" style={{marginLeft:"10px"}} onClick={openStaffModal(item.FlowName)}>发起</Button>
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    </Col>
+                </Row>
             </div>
-            <Divider orientation="left" plain>{evName}关联的流程</Divider>
-            <Row>
-                <Col span={24} className="eventflow-box">
-                    <div className="eventflow-content">
-                        {
-                            FlowInfoList.map((item,index)=>{
-                                return(
-                                    <div key={index} className="flowNameList-box">
-                                        <div className="iconwrapper">
-                                            <FileDoneOutlined className="fileDoneIcon"/>
-                                            <span style={{marginLeft:'10px'}}>{item.FlowName}</span>
-                                        </div>
-                                        <div className="flowNameList-operBox">
-                                            <LoginNameSelect handleStaff={handleStaff}></LoginNameSelect>
-                                            <Button type="primary" shape="round" size="small" style={{marginLeft:"10px"}} onClick={openStaffModal(item.FlowName)}>发起</Button>
-                                        </div>
-                                    </div>
-                                )
-                            })
-                        }
-                    </div>
-                </Col>
-            </Row>
         </div>
     );
 };

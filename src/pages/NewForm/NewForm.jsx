@@ -99,7 +99,7 @@ class NewForm extends React.Component{
     // 自定义返回列表按钮
     goBackToList=()=>{
         this.props.history.push({
-            pathname: '/home'
+            pathname: '/form-render/home'
         })
     }
     // 取消

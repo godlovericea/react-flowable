@@ -1,10 +1,10 @@
 // 表单管理的列表
 import React from "react";
-import { GetWorkflowBaseInfo, UpdateStatus, CreateModel, flowableLogin, GetFormListInfo, DeleteFormLogic } from '../../apis/process'
+import { UpdateStatus, GetFormListInfo, DeleteFormLogic } from '../../apis/process'
 // import Modeler from "../../components/Modeler";
 import { Table, Space, Button, Form, Input, Pagination, Modal, message } from 'antd';
 import './process.less'
-const { TextArea } = Input;
+import moment from 'moment';
 const { Column } = Table;
 class Process extends React.Component{
     state={
@@ -53,6 +53,11 @@ class Process extends React.Component{
     getData = ()=> {
         GetFormListInfo(this.state.name,this.state.curPage, this.state.pageSize)
         .then(res=>{
+            res.data.getMe.forEach((item,index)=>{
+                item.index = index + 1
+                item.created = moment(item.created).format("YYYY-MM-DD HH:mm:ss")
+                item.lastUpdated = moment(item.lastUpdated).format("YYYY-MM-DD HH:mm:ss")
+            })
             this.setState({
                 tableData: res.data.getMe,
                 total: res.data.totalRcdNum
@@ -119,14 +124,14 @@ class Process extends React.Component{
     // 打开对话框
     openModal=()=>{
         this.props.history.push({
-            pathname: '/new'
+            pathname: '/form-render/new'
         })
     }
     // 编辑流程
     goEdit=(id,name,key,desc)=>{
         return ()=>{
             this.props.history.push({
-                pathname: '/edit',
+                pathname: '/form-render/edit',
                 state:{
                     id: id,
                     name: name,
@@ -141,7 +146,7 @@ class Process extends React.Component{
         // console.log(id)
         return ()=>{
             this.props.history.push({
-                pathname: '/show',
+                pathname: '/form-render/show',
                 state:{
                     id: id
                 }
@@ -152,7 +157,7 @@ class Process extends React.Component{
     goShowAccount=(name, key, id, type)=>{
         return ()=>{
             this.props.history.push({                              
-                pathname: '/trans',
+                pathname: '/form-render/trans',
                 state:{
                     name: name,
                     key: key,
@@ -169,20 +174,21 @@ class Process extends React.Component{
         return(
             <div className="modeler-wrapper">
                 {/* <Modeler></Modeler> */}
-                <Form layout="inline" >
-                    <Form.Item label="流程名称">
+                <Form layout="inline" className="form-header-box">
+                    <Form.Item label="表单名称">
                         <Input placeholder="请输入表单名称" allowClear onChange={this.handleProName}/>
                     </Form.Item>
                     <Form.Item>
-                        <Button className="localBtnClass" size="small" type="primary" onClick={this.getData}>查询</Button>
+                        <Button className="localBtnClass" type="primary" onClick={this.getData}>查询</Button>
                     </Form.Item>
                     <Form.Item>
-                        <Button className="localBtnClass" size="small" type="primary" onClick={this.openModal}>新增</Button>
+                        <Button className="localBtnClass" type="primary" onClick={this.openModal}>新增</Button>
                     </Form.Item>
                 </Form>
                 <Table dataSource={this.state.tableData} pagination={false} rowClassName="rowClassName">
-                    <Column title="流程名称" dataIndex="name" key="WorkflowName" />
-                    <Column title="流程标识" dataIndex="key" key="Key" />
+                    <Column title="序号" dataIndex="index" key="index" width={60} align="center"/>
+                    <Column title="表单名称" dataIndex="name" key="WorkflowName" />
+                    <Column title="表单标识" dataIndex="key" key="Key" />
                     <Column title="创建人" dataIndex="createdBy" key="createdBy" />
                     <Column title="创建时间" dataIndex="created" key="created" />
                     <Column title="最后修改时间" dataIndex="lastUpdated" key="lastUpdated" />

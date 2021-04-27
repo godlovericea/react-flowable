@@ -54,7 +54,16 @@ class StartPermission extends React.Component {
         // 用户部门
         let userDepart = ""
         // 路由的search
-        const search = window.location.search.slice(1)
+        let hashData = ""
+        let searchData = ""
+        let search = ""
+        if (window.location.hash) {
+            hashData = window.location.hash
+            searchData = hashData.split("?")
+            search = searchData[1]
+        } else {
+            search = window.location.search.slice(1)
+        }
         const searchArr = search.split("&")
         // 循环接续值
         searchArr.forEach((item)=>{
@@ -78,7 +87,7 @@ class StartPermission extends React.Component {
     handleStart=(flowName, FlowDefID)=>{
         return ()=>{
             this.props.history.push({
-                pathname: '/start',
+                pathname: '/form-render/start',
                 state:{
                     flowName: flowName,
                     FlowDefID: FlowDefID,

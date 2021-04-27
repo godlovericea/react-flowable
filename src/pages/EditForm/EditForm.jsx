@@ -137,7 +137,7 @@ const EditForm = (props) => {
     // 返回列表
     const goBackToHome=()=>{
         props.history.push({
-            pathname: '/home'
+            pathname: '/form-render/home'
         })
     }
     // 判断是否是分组类型的表单——>格式保持与台账一致

@@ -94,7 +94,7 @@ class EditForm extends React.Component{
     // 返回列表
     goBackToHome=()=>{
         this.props.history.push({
-            pathname: '/home'
+            pathname: '/form-render/home'
         })
     }
     // 判断表单中是否有重复名称的字段

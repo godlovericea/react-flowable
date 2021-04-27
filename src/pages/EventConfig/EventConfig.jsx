@@ -108,6 +108,11 @@ class EventConfig extends React.Component {
             EndType: e.target.value
         });
     }
+    handleClickReback=()=>{
+        this.props.history.push({
+            pathname: '/form-render/eventlist'
+        })
+    }
     // 打开Modal
     openModal=(id)=>{
         return ()=> {
@@ -150,7 +155,16 @@ class EventConfig extends React.Component {
     }
     // 处理web4路由传递过来的值
     handleRouteParams=()=>{
-        const search = window.location.search.slice(1)
+        let hashData = ""
+        let searchData = ""
+        let search = ""
+        if (window.location.hash) {
+            hashData = window.location.hash
+            searchData = hashData.split("?")
+            search = searchData[1]
+        } else {
+            search = window.location.search.slice(1)
+        }
         // console.log(search)
         const searchArr = search.split("=")
         // console.log(searchArr)
@@ -165,7 +179,7 @@ class EventConfig extends React.Component {
     routeGo=(id, label)=>{
         return ()=>{
             this.props.history.push({
-                pathname: '/setform',
+                pathname: '/form-render/setform',
                 state:{
                     id: id,
                     label: label
@@ -219,6 +233,11 @@ class EventConfig extends React.Component {
                             })
                         }
                     </Row>
+                </div>
+                <div className="btngroups">
+                    <Button type="primary" shape="round" style={{ marginLeft: 30 }} onClick={this.handleClickReback}>
+                        返回列表
+                    </Button>
                 </div>
                 <Modal title="流程结束之后" visible={this.state.visible} onOk={this.saveEndType} onCancel={this.closeModal}>
                     <Radio.Group onChange={this.handleChangeSelect} value={this.state.EndType}>

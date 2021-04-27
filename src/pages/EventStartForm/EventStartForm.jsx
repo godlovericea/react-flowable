@@ -110,7 +110,7 @@ const StartForm = (props) => {
     // 返回
     const handleGoBack=()=>{
         props.history.push({
-            pathname: '/eventstart'
+            pathname: '/form-render/eventstart'
         })
     }
 

@@ -126,7 +126,16 @@ const NeedToDeal = (props) => {
             }
         })
         // 处理任务ID，用户名称，用户所在部门
-        const search = window.location.search.slice(1)
+        let hashData = ""
+        let searchData = ""
+        let search = ""
+        if (window.location.hash) {
+            hashData = window.location.hash
+            searchData = hashData.split("?")
+            search = searchData[1]
+        } else {
+            search = window.location.search.slice(1)
+        }
         const searchArr = search.split("&")
         searchArr.forEach((item)=>{
             if (item.indexOf("taskId") > -1) {
@@ -197,8 +206,16 @@ const NeedToDeal = (props) => {
         })
 
         // 处理任务ID，用户ID，用户名称，用户所在部门
-        const search = window.location.search.slice(1)
-        console.log(search)
+        let hashData = ""
+        let searchData = ""
+        let search = ""
+        if (window.location.hash) {
+            hashData = window.location.hash
+            searchData = hashData.split("?")
+            search = searchData[1]
+        } else {
+            search = window.location.search.slice(1)
+        }
         const searchArr = search.split("&")
         searchArr.forEach((item)=>{
             if (item.indexOf("processInstanceId") > -1) {
@@ -222,7 +239,7 @@ const NeedToDeal = (props) => {
     // 返回
     const handleClickReback = ()=>{
         props.history.push({
-            pathname: '/home'
+            pathname: '/form-render/home'
         })
     }
     // 任务移交时候搜索框
@@ -281,7 +298,7 @@ const NeedToDeal = (props) => {
             FormRenderBaseList: handleFormRenderBaseType(formData, configSchema)
         }
 
-        TaskSave(cookie, taskId, userId, myData)
+        TaskSave(cookie, taskId, myData)
         .then((res)=>{
             message.success('保存成功');
         })
@@ -548,7 +565,7 @@ const NeedToDeal = (props) => {
     const goShowHistoryForm=(taskId)=>{
         return ()=>{
             props.history.push({
-                pathname: '/hisflow',
+                pathname: '/form-render/hisflow',
                 state:{
                     taskId: taskId,
                     userName: userName,
@@ -559,7 +576,7 @@ const NeedToDeal = (props) => {
     }
     // 获取流程图
     const showModeler=()=>{
-        const imgSrc =  document.referrer + configData.baseURL + '/GetWorkflowDiagram?processInstanceId=' + processDefinitionId + '&t=' + (new Date()).getTime()
+        const imgSrc =  configData.baseURL + '/rest/Services/PandaWorkflow.svc/GetWorkflowDiagram?processInstanceId=' + processDefinitionId + '&t=' + (new Date()).getTime()
         setProcessImgSrc(imgSrc)
         setModelerVisible(true)
     }
