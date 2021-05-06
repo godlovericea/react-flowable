@@ -4,8 +4,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
 import { Button, Row, Col, message, Divider } from 'antd';
-import { GetEvent, GetFlowIdByFlowKey, EventOperate } from '../../apis/process'
-import { FileDoneOutlined, ArrowRightOutlined} from '@ant-design/icons';
+import reactCookie from 'react-cookies'
+import { GetEvent, GetFlowIdByFlowKey, EventOperate, flowableLogin } from '../../apis/process'
+import { FileDoneOutlined} from '@ant-design/icons';
 import LoginNameSelect from '../../components/LoginNameSelect/LoginNameSelect';
 import TreeCascader from '../../components/TreeCascader/TreeCascader'
 import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
@@ -16,8 +17,6 @@ import SearchSelect from '../../components/SearchSelect/SearchSelect'
 import './EventOperation.less'
 
 const EventOperation = (props) => {
-
-    // <Modal visible={staffVisible} onOk={handleRouterGoStart} onCancel={closeModal}></Modal>
     // 人员选择器modal
     const [staffVisible, setstaffVisible] = useState(false)
     // 事件名称
@@ -53,11 +52,40 @@ const EventOperation = (props) => {
 
     const handleStaff=(loginName, userId)=>{
         setLoginName(loginName)
-        // setUserId(userId)
+        setUserId(userId)
+    }
+
+    // 登录到Flowable
+    const LoginToFlowable = ()=>{
+        const myData = {
+            _spring_security_remember_me:true,
+            j_password:"test",
+            j_username: loginName,
+            submit:"Login"
+        }
+        flowableLogin(myData)
+        .then((res)=>{
+            if (res.data.indexOf('FLOWABLE_REMEMBER_ME') < 0) {
+                message.error("流程引擎服务不可用，请联系管理员")
+                return
+            }
+            let resArr = res.data.split(';')
+            let cookieKeyVal = resArr[0]
+            let cookieArr = cookieKeyVal.split('=')
+            reactCookie.save(
+                cookieArr[0],
+                cookieArr[1],
+                { 
+                    path: '/',
+                    expires: new Date(new Date().getTime() + 30*24 * 3600 * 1000)
+                }
+            )
+        })
     }
     
     useEffect(()=>{
         getData()
+        LoginToFlowable()
     },[])
 
     // 返回列表
@@ -87,7 +115,6 @@ const EventOperation = (props) => {
             }
             GetFlowIdByFlowKey(FlowName)
             .then((res)=>{
-                // setstaffVisible(true)
                 setFlowDefID(res.data)
                 props.history.push({
                     pathname: '/form-render/start',
@@ -95,25 +122,11 @@ const EventOperation = (props) => {
                         FlowDefID: res.data,
                         loginName: loginName,
                         evCode: evCode,
-                        userId: userId,
-                        loginName: loginName
+                        userId: userId
                     }
                 })
             })
         }
-    }
-
-    const handleRouterGoStart=()=>{
-        props.history.push({
-            pathname: '/form-render/start',
-            state:{
-                FlowDefID: FlowDefID
-            }
-        })
-    }
-
-    const closeModal=()=>{
-        setstaffVisible(false)
     }
 
     // 提交校验

@@ -1,12 +1,14 @@
 // 给用户配置流程权限
 import React from 'react'
 import { Button, Input, Form, Row, Col, Checkbox, message } from 'antd';
-import { GetWorkflowBaseInfo, UpdateWorkFlowRight } from '../../apis/process';
+import { GetWorkflowBaseInfo, UpdateWorkFlowRight, flowableLogin } from '../../apis/process';
 import StaffSelect from '../../components/StaffSelect/StaffSelect';
+import reactCookie from 'react-cookies'
 import './FlowPermission.less';
 class FlowPermission extends React.Component {
     state={
         userName: '',// 用户名
+        loginName: '', // 登录名
         flowName: '',// 流程名称
         flowArr: [],// 流程数组
         defaultVal: [],// 默认值
@@ -78,11 +80,40 @@ class FlowPermission extends React.Component {
             }
         })
     }
+    // 登录到Flowable
+    LoginToFlowable = ()=>{
+        const myData = {
+            _spring_security_remember_me:true,
+            j_password:"test",
+            j_username: this.state.loginName,
+            submit:"Login"
+        }
+        flowableLogin(myData)
+        .then((res)=>{
+            if (res.data.indexOf('FLOWABLE_REMEMBER_ME') < 0) {
+                message.error("流程引擎服务不可用，请联系管理员")
+                return
+            }
+            let resArr = res.data.split(';')
+            let cookieKeyVal = resArr[0]
+            let cookieArr = cookieKeyVal.split('=')
+            reactCookie.save(
+                cookieArr[0],
+                cookieArr[1],
+                { 
+                    path: '/',
+                    expires: new Date(new Date().getTime() + 30*24 * 3600 * 1000)
+                }
+            )
+        })
+    }
     // 处理web4路由传递过来的值
     handleRouteParams=()=>{
         let hashData = ""
         let searchData = ""
         let search = ""
+        let loginName = ""
+        let userName = ""
         if (window.location.hash) {
             hashData = window.location.hash
             searchData = hashData.split("?")
@@ -92,11 +123,19 @@ class FlowPermission extends React.Component {
         }
         // console.log(search)
         const searchArr = search.split("=")
-        // console.log(searchArr)
+        searchArr.forEach((item)=>{
+            if (item.indexOf("userName") > -1) {
+                userName = decodeURI(item.split("=")[1])
+            } else if (item.indexOf("loginName") > -1) {
+                loginName = item.split("=")[1]
+            }
+        })
         this.setState({
-            userName:decodeURI(searchArr[1])
+            userName:userName,
+            loginName: loginName
         },()=>{
             // console.log(this.state.userName)
+            this.LoginToFlowable()
             this.getData()
         })
     }

@@ -22,6 +22,7 @@ class Process extends React.Component{
         processDesc: '',// 新增流程描述
         cookieData: '', // flowable-engine鉴权的cookie
         formId: '', // 表单ID
+        clientHeight: 0,
     }
     // 流程名称
     handleProName = (e)=>{
@@ -168,7 +169,14 @@ class Process extends React.Component{
         }
     }
     componentDidMount() {
+        this.computeHeight()
         this.getData()
+    }
+    computeHeight(){
+        var height = document.documentElement.clientHeight;
+        this.setState({
+            clientHeight: height - 180
+        })
     }
     render() {
         return(
@@ -185,7 +193,7 @@ class Process extends React.Component{
                         <Button className="localBtnClass" type="primary" onClick={this.openModal}>新增</Button>
                     </Form.Item>
                 </Form>
-                <Table dataSource={this.state.tableData} pagination={false} rowClassName="rowClassName">
+                <Table dataSource={this.state.tableData} pagination={false} rowClassName="rowClassName" scroll={{y: this.state.clientHeight}}>
                     <Column title="序号" dataIndex="index" key="index" width={60} align="center"/>
                     <Column title="表单名称" dataIndex="name" key="WorkflowName" />
                     <Column title="表单标识" dataIndex="key" key="Key" />
@@ -200,14 +208,14 @@ class Process extends React.Component{
                                 {
                                     record.Type === '表单' ?
                                     <div>
-                                        <Button className="localBtnClass" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.goEdit(record.id, record.name, record.key, record.description)}>编辑</Button>
-                                        <Button className="localBtnClass" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.delForm(record.id)}>删除</Button>
-                                        <Button className="localBtnClass" size="small" type="primary" onClick={this.goShow(record.id)}>查看</Button>
+                                        <Button className="table-oper-btn" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.goEdit(record.id, record.name, record.key, record.description)}>编辑</Button>
+                                        <Button className="table-oper-btn" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.delForm(record.id)}>删除</Button>
+                                        <Button className="table-oper-btn" size="small" type="primary" onClick={this.goShow(record.id)}>查看</Button>
                                     </div>
                                     :
                                     <div>
-                                        <Button className="localBtnClass" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.delForm(record.id)}>删除</Button>
-                                        <Button className="localBtnClass" size="small" type="primary" onClick={this.goShowAccount(record.TableName, record.key, record.id, record.IsUpdateOrAdd)}>查看</Button>
+                                        <Button className="table-oper-btn" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.delForm(record.id)}>删除</Button>
+                                        <Button className="table-oper-btn" size="small" type="primary" onClick={this.goShowAccount(record.TableName, record.key, record.id, record.IsUpdateOrAdd)}>查看</Button>
                                     </div>
                                 }
                             </Space>

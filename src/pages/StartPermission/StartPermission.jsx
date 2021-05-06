@@ -1,13 +1,15 @@
 // 流程发起权限页面
 import React from 'react';
-import { Button, Input, Form, Row, Col } from 'antd';
-import { GetWorkflowBaseInfo } from '../../apis/process';
+import { Button, Input, Form, Row, Col, message, Divider } from 'antd';
+import { GetWorkflowBaseInfo, flowableLogin } from '../../apis/process';
 import './StartPermission.less';
+import reactCookie from 'react-cookies'
 import flowIcon from "../../assets/flow-icon.png"
 import flowArrowIcon from "../../assets/flow-arrow-right.png"
 class StartPermission extends React.Component {
     state={
         userName: '', // web4登录的用户名
+        loginName: '', // 登录名
         flowName: '', // 流程名称
         flowArr: [], // isRight为1的流程数组 
         defaultVal: [], // 默认值
@@ -27,12 +29,43 @@ class StartPermission extends React.Component {
             flowName: e.target.value
         })
     }
+    // 登录到Flowable
+    LoginToFlowable = ()=>{
+        let obj = reactCookie.loadAll()
+        if (obj.FLOWABLE_REMEMBER_ME) {
+            return
+        }
+        const myData = {
+            _spring_security_remember_me:true,
+            j_password:"test",
+            j_username: this.state.loginName,
+            submit:"Login"
+        }
+        flowableLogin(myData)
+        .then((res)=>{
+            if (res.data.indexOf('FLOWABLE_REMEMBER_ME') < 0) {
+                message.error("流程引擎服务不可用，请联系管理员")
+                return
+            }
+            let resArr = res.data.split(';')
+            let cookieKeyVal = resArr[0]
+            let cookieArr = cookieKeyVal.split('=')
+            reactCookie.save(
+                cookieArr[0],
+                cookieArr[1],
+                {
+                    path: '/',
+                    expires: new Date(new Date().getTime() + 30*24 * 3600 * 1000)
+                }
+            )
+        })
+    }
     // 拉取数据
     getData=()=>{
         let deArr = []
         let name =  this.state.flowName || ''
-        GetWorkflowBaseInfo(name, '王万里', '', '', 1, 1000)
-        // GetWorkflowBaseInfo(name, this.state.userName, '', '', 1, 1000)
+        // GetWorkflowBaseInfo(name, '王万里', '', '', 1, 1000)
+        GetWorkflowBaseInfo(name, this.state.userName, '', '', 1, 1000)
         .then((res)=>{
             res.data.getMe.forEach((item)=>{
                 // AccessRight为1时，说明有此流程权限
@@ -53,6 +86,7 @@ class StartPermission extends React.Component {
         let userName = ""
         // 用户部门
         let userDepart = ""
+        let loginName = ""
         // 路由的search
         let hashData = ""
         let searchData = ""
@@ -73,14 +107,18 @@ class StartPermission extends React.Component {
                 userName = decodeURI(item.split("=")[1])
             } else if (item.indexOf("userDepart") > -1) {
                 userDepart = decodeURI(item.split("=")[1])
-            } 
+            } else if (item.indexOf("loginName") > -1) {
+                loginName = item.split("=")[1]
+            }
         })
         this.setState({
             userId: userId,
             userName: userName,
-            userDepart: userDepart
+            userDepart: userDepart,
+            loginName: loginName
         },()=>{
             this.getData()
+            this.LoginToFlowable()
         })
     }
     // 点击发起
@@ -107,13 +145,14 @@ class StartPermission extends React.Component {
                 <div className="form-headerbox">
                     <Form layout="inline">
                         <Form.Item label="流程名称">
-                            <Input type="text" placeholder="请输入流程名称" size="small" allowClear onChange={this.getInput}></Input>
+                            <Input type="text" placeholder="请输入流程名称" size="small" className="header-search" style={{padding:'2px 0'}} allowClear onChange={this.getInput}></Input>
                         </Form.Item>
                         <Form.Item>
-                            <Button className="localBtnClass" size="small" shape="round" type="primary" onClick={this.getData}>查询</Button>
+                            <Button className="localBtnClass" size="small"  type="primary" onClick={this.getData}>查询</Button>
                         </Form.Item>
                     </Form>
                 </div>
+                <Divider />
                 <div className="contentbox">
                     <Row gutter={[20, 10]}>
                         {

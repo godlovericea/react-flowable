@@ -18,6 +18,8 @@ import SearchSelect from '../../components/SearchSelect/SearchSelect'
 const { Search } = Input;
 const { Column } = Table;
 
+let actArr = []
+
 const NeedToDeal = (props) => {
     // FormRender提交表单校验
     const [valid, setValid] = useState([])
@@ -97,6 +99,8 @@ const NeedToDeal = (props) => {
     const [prevSchemaValues, setPrevSchemaValues] = useState({})
     // 表单类型：台账或者表单
     const [formType, setFormType] = useState("")
+    // 
+    const [chooseArr, setChooseArr] = useState([])
     // FormRender的ref
     const formRef = useRef();
     // 回退的ref
@@ -178,7 +182,9 @@ const NeedToDeal = (props) => {
                         userDepart: userDepartScope
                     }
                     // 上一个节点带过来的values
+                    
                     let values = JSON.parse(fieldData.formId).values
+                    // let values = {}
                     const testData = new ConfigSchemaClass(fieldData.ColumnConfig, fieldData.Config, web4Config, values)
                     setSchema(testData.schema)
                 }
@@ -311,13 +317,6 @@ const NeedToDeal = (props) => {
             message.error("提交失败,请按照提示填写表单")
             return
         }
-        // let obj = {}
-        // for(let pkey in prevSchemaValues) {
-        //     for(let fkey in formData) {
-        //         obj[pkey] = prevSchemaValues[pkey]
-        //         obj[fkey] = formData[fkey]
-        //     }
-        // }
         const myData = {
             formId:JSON.stringify({
                 formId,
@@ -335,6 +334,7 @@ const NeedToDeal = (props) => {
                     // 打开Modal
                     setNextPersonVisible(true)
                     // 拿去候选人数组
+                    console.log(res.data.getMe)
                     setAssigneeList(res.data.getMe)
                 } else {
                     message.success("当前节点已完成")
@@ -347,7 +347,19 @@ const NeedToDeal = (props) => {
     }
     // 选择候选人
     const hanldeAssignChange=(e)=>{
-        setWorkCode(e.target.value)
+        console.log(e, "e")
+        console.log(assigneeList, "assigneeList")
+        actArr.push({
+            ActID: e.target.actid,
+            UserID: e.target.value
+        })
+        actArr.forEach((item)=>{
+            if (item.ActID === e.target.actid) {
+                item.UserID = e.target.value
+            }
+        })
+        setChooseArr(actArr)
+        // setWorkCode(e.target.value)
     }
     // 完成关闭
     const closeNextPersonModeler=()=>{
@@ -356,18 +368,28 @@ const NeedToDeal = (props) => {
 
     // 选择候选人之后，完成确定
     const sureNextPersonModeler=()=>{
-        
-        if (!workCode){
+        let assignArr = []
+        assigneeList.forEach((item)=>{
+            if (item.PersonInfoList.length > 0) {
+                assignArr.push(item)
+            }
+        })
+        if (actArr.length === 0){
             message.error("请选择移交人！")
             return
         }
-        // let obj = {}
-        // for(let pkey in prevSchemaValues) {
-        //     for(let fkey in formData) {
-        //         obj[pkey] = prevSchemaValues[pkey]
-        //         obj[fkey] = formData[fkey]
-        //     }
-        // }
+        var result = [];
+        var obj = {};
+        for(var i =0; i<chooseArr.length; i++){
+            if(!obj[chooseArr[i].ActID]){
+                result.push(chooseArr[i]);
+                obj[chooseArr[i].ActID] = true;
+            }
+        }
+        if (result.length !== assignArr.length) {
+            message.error("请给每个节点选择移交人")
+            return
+        }
         const myData = {
             formId:JSON.stringify({
                 formId,
@@ -376,17 +398,39 @@ const NeedToDeal = (props) => {
             formId_Post: formId,
             Config: configSchema,
             FormKey: FormKey,
-            FormRenderBaseList: handleFormRenderBaseType(formData, configSchema)
+            FormRenderBaseList: handleFormRenderBaseType(formData, configSchema),
+            TranserSaveModelList: result
         }
         SaveFormInfoTransfer(taskId, userId, cookie, workCode, myData)
         .then(res=>{
             if (res.data.statusCode === "0000") {
-                setNextPersonVisible(true)
+                setNextPersonVisible(false)
                 message.success("任务移交成功！")
             } else {
                 message.error(res.data.errMsg)
             }
         })
+    }
+    // 搜索移交人
+    const onTransferSearch=(e)=>{
+        let listArr = []
+        var ename = e
+        assigneeList.map((item) => {
+            let list = {
+                ActID: item.ActID,
+                PersonInfoList: [],
+                PointName: item.PointName
+            }
+            item.PersonInfoList.map((user) => {
+                if (user.UserName.indexOf(ename) > -1 || user.UserID.indexOf(ename) > -1) {
+                    list.PersonInfoList.push(user);
+                }
+            })
+            if (list.PersonInfoList.length) {
+                listArr.push(list);
+            }
+        })
+        setAssigneeList(listArr)
     }
 
     // 移交按钮
@@ -457,7 +501,7 @@ const NeedToDeal = (props) => {
         return filename
     }
     // 附件上传
-    const uploadFile = ()=> {
+    const openUploadFile = ()=> {
         WorkflowFileOperation(taskId)
         .then((res)=>{
             if (res.data.statusCode === "0000") {
@@ -479,7 +523,6 @@ const NeedToDeal = (props) => {
                             state: "上传成功"
                         })
                     }
-                    console.log(arr)
                     setFileTableData(arr)
                 }
                 setFileVisible(true)
@@ -656,21 +699,41 @@ const NeedToDeal = (props) => {
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={goBack}>回退</Button>
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={openAbolishModal}>作废</Button>
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={urgentTask}>催办</Button>
-                <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={uploadFile}>附件</Button>
+                <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={openUploadFile}>附件</Button>
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={showTransFlow}>流转信息</Button>
                 <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={showModeler}>流程图</Button>
             </div>
             <div className="divider-box"></div>
             <Modal title="请选择候选人" visible={nextPersonVisible} onCancel={closeNextPersonModeler} onOk={sureNextPersonModeler} width={650}>
-                <Radio.Group name="assigngroup" onChange={hanldeAssignChange}>
+                <div>
+                    <Search placeholder="请输入姓名" onSearch={onTransferSearch} enterButton />
                     {
-                        assigneeList.map((item,index)=>{
+                        assigneeList.map((item, index)=>{
                             return(
-                                <Radio key={index} value={item.UserID}>{item.UserName}</Radio>
+                                <div key={index} className="radio-wrapper">
+                                    {
+                                        item.PersonInfoList.length > 0 ?
+                                            <div className="radio-content">
+                                                <div className="radio-title">{item.PointName}</div>
+                                                <Radio.Group name="assigngroup" onChange={hanldeAssignChange}>
+                                                    {
+                                                        item.PersonInfoList.map((cItem,cIndex)=>{
+                                                            return(
+                                                                <Radio key={cIndex} actid={item.ActID} value={cItem.UserID}>{cItem.UserName}</Radio>
+                                                            )
+                                                        })
+                                                    }
+                                                </Radio.Group>
+                                            </div>
+                                            :
+                                            null
+                                    }
+                                </div>
                             )
                         })
                     }
-                </Radio.Group>
+                </div>
+                
             </Modal>
             <Modal title="任务移交" visible={visible} onOk={handleOK} onCancel={handleCancel}
                 bodyStyle={{height:'500px',overflowY:'auto'}}>

@@ -16,7 +16,7 @@ export function UpdateStatus (id, type) {
     })
 }
 
-// 登录
+// 登录到flowable
 export function flowableLogin (data) {
     return request({
         url: `/rest/services/PandaWorkflow.svc/Flowable_Login`,

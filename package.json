@@ -160,6 +160,7 @@
     ]
   },
   "devDependencies": {
+    "react-cookies": "^0.1.1",
     "webpack-plugin-fr-theme": "^0.2.0"
   }
 }

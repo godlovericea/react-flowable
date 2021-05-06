@@ -1,8 +1,9 @@
 // 流程发起权限页面
 import React from 'react';
-import { Button, Input, Form, Row, Col } from 'antd';
-import { GetEventList } from '../../apis/process';
+import { Button, Input, Form, Row, Col, message } from 'antd';
+import { GetEventList, flowableLogin } from '../../apis/process';
 import './EventStartPage.less';
+import reactCookie from 'react-cookies'
 import flowIcon from "../../assets/flow-icon.png"
 import { FileDoneOutlined } from '@ant-design/icons';
 import flowArrowIcon from "../../assets/flow-arrow-right.png"
@@ -27,6 +28,33 @@ class EventStartPage extends React.Component {
     getInput=(e)=>{
         this.setState({
             flowName: e.target.value
+        })
+    }
+    // 登录到Flowable
+    LoginToFlowable = ()=>{
+        const myData = {
+            _spring_security_remember_me:true,
+            j_password:"test",
+            j_username: this.state.loginName || this.props.location.state.loginName,
+            submit:"Login"
+        }
+        flowableLogin(myData)
+        .then((res)=>{
+            if (res.data.indexOf('FLOWABLE_REMEMBER_ME') < 0) {
+                message.error("流程引擎服务不可用，请联系管理员")
+                return
+            }
+            let resArr = res.data.split(';')
+            let cookieKeyVal = resArr[0]
+            let cookieArr = cookieKeyVal.split('=')
+            reactCookie.save(
+                cookieArr[0],
+                cookieArr[1],
+                { 
+                    path: '/',
+                    expires: new Date(new Date().getTime() + 30*24 * 3600 * 1000)
+                }
+            )
         })
     }
     // 拉取数据
@@ -79,6 +107,7 @@ class EventStartPage extends React.Component {
             loginName: loginName
         },()=>{
             this.getData()
+            this.LoginToFlowable()
         })
     }
     // 点击发起

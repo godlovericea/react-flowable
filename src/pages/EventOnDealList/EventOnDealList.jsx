@@ -1,9 +1,10 @@
 // 事件中心——在办事件列表
 import React, { useState, useEffect, useRef } from 'react';
 import { Table, Space, Input, Button, Modal, Form, message, Select } from 'antd';
-import { GetEventDoingList, EventOperate, GetProcInstByEventCode, GetFlowProcessInfo } from '../../apis/process'
+import { GetEventDoingList, EventOperate, GetProcInstByEventCode, GetFlowProcessInfo, flowableLogin} from '../../apis/process'
 import './EventOnDealList.less'
 import configData from '../../utils/config'
+import reactCookie from 'react-cookies'
 import moment from 'moment'
 const { Column } = Table;
 const { Search } = Input;
@@ -118,7 +119,9 @@ const EventOnDealList = (props) => {
             .then((res)=>{
                 res.data.getMe.forEach((item,index)=>{
                     item.STime = moment(item.STime).format("YYYY-MM-DD HH:mm:ss")
-                    item.ETime = moment(item.ETime).format("YYYY-MM-DD HH:mm:ss")
+                    if (item.ETime) {
+                        item.ETime = moment(item.ETime).format("YYYY-MM-DD HH:mm:ss")
+                    }
                     item.key = index
                     item.index = index +1
                 })
@@ -142,8 +145,8 @@ const EventOnDealList = (props) => {
                 pathname: '/form-render/hisflow',
                 state:{
                     taskId: taskId,
-                    userName: 'userName',
-                    userDepart: 'userDepart'
+                    userName: userName,
+                    userDepart: userDepart
                 }
             })
         }
@@ -218,6 +221,34 @@ const EventOnDealList = (props) => {
         setEventType(e)
         getData(eventName, eventType)
     }
+    // 登录到Flowable
+    const LoginToFlowable = (userLoginName)=>{
+        const myData = {
+            _spring_security_remember_me:true,
+            j_password:"test",
+            j_username: userLoginName,
+            submit:"Login"
+        }
+        flowableLogin(myData)
+        .then((res)=>{
+            if (res.data.indexOf('FLOWABLE_REMEMBER_ME') < 0) {
+                message.error("流程引擎服务不可用，请联系管理员")
+                return
+            }
+            let inFifteenMinutes = new Date(new Date().getTime() + 30*24 * 3600 * 1000);//30天
+            let resArr = res.data.split(';')
+            let cookieKeyVal = resArr[0]
+            let cookieArr = cookieKeyVal.split('=')
+            reactCookie.save(
+                cookieArr[0],
+                cookieArr[1],
+                {
+                    path: '/',
+                    expires: inFifteenMinutes
+                }
+            )
+        })
+    }
 
     useEffect(()=>{
         // 用户ID
@@ -249,10 +280,12 @@ const EventOnDealList = (props) => {
                 setUserDepart(userDepart)
             } else if (item.indexOf("loginName") > -1) {
                 loginName = item.split("=")[1]
+                console.log(loginName, "loginName")
                 setLoginName(loginName)
             }
         })
         getData()
+        LoginToFlowable(loginName)
     }, [])
 
     return (
@@ -366,7 +399,7 @@ const EventOnDealList = (props) => {
                             </Space>
                         )}
                     />
-                    {/* <Column
+                    <Column
                         title="操作"
                         key="action"
                         render={(text, record) => (
@@ -383,7 +416,7 @@ const EventOnDealList = (props) => {
                                 }
                             </Space>
                         )}
-                    /> */}
+                    />
                 </Table>
             </Modal>
         </div>
