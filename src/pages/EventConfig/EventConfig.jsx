@@ -205,13 +205,13 @@ class EventConfig extends React.Component {
                             <StaffSelect handleStaff={this.handleStaff}></StaffSelect>
                         </Form.Item>
                         <Form.Item label="流程名称">
-                            <Input type="text" placeholder="请输入流程名称" size="small" allowClear onChange={this.getInput}></Input>
+                            <Input type="text" placeholder="请输入流程名称" className="input-text-content" allowClear onChange={this.getInput}></Input>
                         </Form.Item>
                         <Form.Item>
-                            <Button className="localBtnClass" size="small" type="primary" shape="round" onClick={this.getData}>查询</Button>
+                            <Button className="localBtnClass" size="small" type="primary" className="table-oper-btn" onClick={this.getData}>查询</Button>
                         </Form.Item>
                         <Form.Item>
-                            <Button className="localBtnClass" size="small" type="primary" shape="round" onClick={this.linkToEvent}>挂接</Button>
+                            <Button className="localBtnClass" size="small" type="primary" className="table-oper-btn" onClick={this.linkToEvent}>挂接</Button>
                         </Form.Item>
                     </Form>
                 </div>
@@ -235,7 +235,7 @@ class EventConfig extends React.Component {
                     </Row>
                 </div>
                 <div className="btngroups">
-                    <Button type="primary" shape="round" style={{ marginLeft: 30 }} onClick={this.handleClickReback}>
+                    <Button type="primary" className="table-oper-btn" style={{ marginLeft: 30 }} onClick={this.handleClickReback}>
                         返回列表
                     </Button>
                 </div>

@@ -184,13 +184,13 @@ class Process extends React.Component{
                 {/* <Modeler></Modeler> */}
                 <Form layout="inline" className="form-header-box">
                     <Form.Item label="表单名称">
-                        <Input placeholder="请输入表单名称" allowClear onChange={this.handleProName}/>
+                        <Input placeholder="请输入表单名称" className="input-text-content" allowClear onChange={this.handleProName}/>
                     </Form.Item>
                     <Form.Item>
-                        <Button className="localBtnClass" type="primary" onClick={this.getData}>查询</Button>
+                        <Button className="localBtnClass" size="small" type="primary" onClick={this.getData}>查询</Button>
                     </Form.Item>
                     <Form.Item>
-                        <Button className="localBtnClass" type="primary" onClick={this.openModal}>新增</Button>
+                        <Button className="localBtnClass" size="small" type="primary" onClick={this.openModal}>新增</Button>
                     </Form.Item>
                 </Form>
                 <Table dataSource={this.state.tableData} pagination={false} rowClassName="rowClassName" scroll={{y: this.state.clientHeight}}>

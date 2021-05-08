@@ -1,6 +1,6 @@
 // 流程发起权限页面
 import React from 'react';
-import { Button, Input, Form, Row, Col, message } from 'antd';
+import { Button, Input, Form, Row, Col, message, Divider } from 'antd';
 import { GetEventList, flowableLogin } from '../../apis/process';
 import './EventStartPage.less';
 import reactCookie from 'react-cookies'
@@ -32,6 +32,10 @@ class EventStartPage extends React.Component {
     }
     // 登录到Flowable
     LoginToFlowable = ()=>{
+        let obj = reactCookie.loadAll()
+        if (obj.FLOWABLE_REMEMBER_ME) {
+            return
+        }
         const myData = {
             _spring_security_remember_me:true,
             j_password:"test",
@@ -52,7 +56,7 @@ class EventStartPage extends React.Component {
                 cookieArr[1],
                 { 
                     path: '/',
-                    expires: new Date(new Date().getTime() + 30*24 * 3600 * 1000)
+                    expires: new Date(new Date().getTime() + 7*24 * 3600 * 1000)
                 }
             )
         })
@@ -133,13 +137,14 @@ class EventStartPage extends React.Component {
                 <div className="form-headerbox">
                     <Form layout="inline">
                         <Form.Item label="事件名称">
-                            <Input type="text" placeholder="请输入事件名称" size="small" allowClear onChange={this.getInput}></Input>
+                            <Input type="text" placeholder="请输入事件名称" allowClear onChange={this.getInput}></Input>
                         </Form.Item>
                         <Form.Item>
                             <Button className="localBtnClass" size="small" type="primary" onClick={this.getData}>查询</Button>
                         </Form.Item>
                     </Form>
                 </div>
+                <Divider className="header-content-divider"/>
                 <div className="contentbox">
                     <Row gutter={[20, 10]}>
                         {

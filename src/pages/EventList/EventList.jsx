@@ -14,6 +14,8 @@ const EventList = (props) => {
     const [eventName, setEventName] = useState('')
     // 事件编号
     const [EventCode, setEventCode] = useState('')
+    // 滚动高度
+    const [clientHeight, setClientHeight] = useState(0)
     // 事件类型的名称输入框
     const eventNameRef = useRef()
     // 事件类型描述输入框
@@ -120,7 +122,14 @@ const EventList = (props) => {
         setData(result.data.getMe)
     }
 
+    const computeHeight=()=>{
+        var height = document.documentElement.clientHeight;
+        console.log(height)
+        setClientHeight(height - 180)
+    }
+
     useEffect(()=>{
+        computeHeight()
         getData()
     }, [])
 
@@ -137,7 +146,7 @@ const EventList = (props) => {
                 />
                 <Button type="dashed" onClick={goToNewEventForm}>新增</Button>
             </div>
-            <Table dataSource={data} pagination={pagination} rowClassName="rowClassName" scroll={{ y: 840 }}>
+            <Table dataSource={data} pagination={pagination} rowClassName="rowClassName" scroll={{y: clientHeight}}>
                 <Column title="序号" dataIndex="index" key="index" width={60} align="center"></Column>
                 <Column title="事件名称" dataIndex="EventName" key="EventName" />
                 <Column title="事件表" dataIndex="EventTable" key="EventTable" />
@@ -151,9 +160,9 @@ const EventList = (props) => {
                     key="action"
                     render={(text, record) => (
                         <Space size="middle">
-                            <Button type="primary" size="small" onClick={handleShow(record.EventName)}>事件表单</Button>
-                            <Button type="primary" size="small" onClick={handleDel(record.EventName, record.EventCode)}>删除</Button>
-                            <Button type="primary" size="small" onClick={handleConfig(record.EventName)}>流程配置</Button>
+                            <Button type="primary" size="small" className="table-oper-btn" onClick={handleShow(record.EventName)}>事件表单</Button>
+                            <Button type="primary" size="small" className="table-oper-btn" onClick={handleDel(record.EventName, record.EventCode)}>删除</Button>
+                            <Button type="primary" size="small" className="table-oper-btn" onClick={handleConfig(record.EventName)}>流程配置</Button>
                             {/* <Button type="primary" size="small" onClick={handleEventConfig(record.EventName)}>事件权限配置</Button> */}
                         </Space>
                     )}

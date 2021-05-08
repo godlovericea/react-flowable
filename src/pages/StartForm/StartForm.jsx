@@ -154,9 +154,10 @@ const StartForm = (props) => {
     };
 
     const handleGoBack=()=>{
-        props.history.push({
-            pathname: '/form-render/stpermis'
-        })
+        // props.history.push({
+        //     pathname: '/form-render/stpermis'
+        // })
+        props.history.go(-1)
     }
 
     return (
@@ -171,9 +172,9 @@ const StartForm = (props) => {
                 widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
             />
             <div className="btngroups">
-                <Button type="primary" style={{ marginLeft: 30 }} shape="round" onClick={handleSubmit}>发起</Button>
-                <Button style={{ marginLeft: 30 }} shape="round" onClick={handleClick}>重置</Button>
-                <Button style={{ marginLeft: 30 }} shape="round" onClick={handleGoBack}>返回</Button>
+                <Button type="primary" style={{ marginLeft: 30 }} className="table-oper-btn" onClick={handleSubmit}>发起</Button>
+                <Button style={{ marginLeft: 30 }} className="table-oper-btn" onClick={handleClick}>重置</Button>
+                <Button style={{ marginLeft: 30 }} className="table-oper-btn" onClick={handleGoBack}>返回</Button>
             </div>
         </div>
     );

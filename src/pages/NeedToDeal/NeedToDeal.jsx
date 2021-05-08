@@ -693,15 +693,15 @@ const NeedToDeal = (props) => {
             </div>
             <div className="divider-box"></div>
             <div className="btnGroups">
-                <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={saveTask}>保存</Button>
-                <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={completeTask}>完成</Button>
-                <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={transferTo}>移交</Button>
-                <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={goBack}>回退</Button>
-                <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={openAbolishModal}>作废</Button>
-                <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={urgentTask}>催办</Button>
-                <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={openUploadFile}>附件</Button>
-                <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={showTransFlow}>流转信息</Button>
-                <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={showModeler}>流程图</Button>
+                <Button type="primary" className="table-oper-btn" style={{ marginRight: 15, width:80 }} onClick={saveTask}>保存</Button>
+                <Button type="primary" className="table-oper-btn" style={{ marginRight: 15, width:80 }} onClick={completeTask}>完成</Button>
+                <Button type="primary" className="table-oper-btn" style={{ marginRight: 15, width:80 }} onClick={transferTo}>移交</Button>
+                <Button type="primary" className="table-oper-btn" style={{ marginRight: 15, width:80 }} onClick={goBack}>回退</Button>
+                <Button type="primary" className="table-oper-btn" style={{ marginRight: 15, width:80 }} onClick={openAbolishModal}>作废</Button>
+                <Button type="primary" className="table-oper-btn" style={{ marginRight: 15, width:80 }} onClick={urgentTask}>催办</Button>
+                <Button type="primary" className="table-oper-btn" style={{ marginRight: 15, width:80 }} onClick={openUploadFile}>附件</Button>
+                <Button type="primary" className="table-oper-btn" style={{ marginRight: 15, width:80 }} onClick={showTransFlow}>流转信息</Button>
+                <Button type="primary" className="table-oper-btn" style={{ marginRight: 15, width:80 }} onClick={showModeler}>流程图</Button>
             </div>
             <div className="divider-box"></div>
             <Modal title="请选择候选人" visible={nextPersonVisible} onCancel={closeNextPersonModeler} onOk={sureNextPersonModeler} width={650}>

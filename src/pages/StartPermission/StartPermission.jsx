@@ -55,7 +55,7 @@ class StartPermission extends React.Component {
                 cookieArr[1],
                 {
                     path: '/',
-                    expires: new Date(new Date().getTime() + 30*24 * 3600 * 1000)
+                    expires: new Date(new Date().getTime() + 7*24 * 3600 * 1000)
                 }
             )
         })
@@ -145,14 +145,14 @@ class StartPermission extends React.Component {
                 <div className="form-headerbox">
                     <Form layout="inline">
                         <Form.Item label="流程名称">
-                            <Input type="text" placeholder="请输入流程名称" size="small" className="header-search" style={{padding:'2px 0'}} allowClear onChange={this.getInput}></Input>
+                            <Input type="text" placeholder="请输入流程名称" className="header-search" style={{padding:'2px 0'}} allowClear onChange={this.getInput}></Input>
                         </Form.Item>
                         <Form.Item>
                             <Button className="localBtnClass" size="small"  type="primary" onClick={this.getData}>查询</Button>
                         </Form.Item>
                     </Form>
                 </div>
-                <Divider />
+                <Divider className="header-content-divider"/>
                 <div className="contentbox">
                     <Row gutter={[20, 10]}>
                         {

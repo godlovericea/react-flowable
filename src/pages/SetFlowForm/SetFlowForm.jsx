@@ -200,7 +200,7 @@ const SetFlowForm =(props)=> {
                 <Row>
                     <Col span={8}></Col>
                     <Col span={12}>
-                        <Button type="primary" style={{width:'100px'}} shape="round" onClick={linkToModeler}>保存</Button> 
+                        <Button type="primary" style={{width:'100px'}} className="table-oper-btn" onClick={linkToModeler}>保存</Button> 
                     </Col>
                 </Row>
             </div>

@@ -180,7 +180,7 @@ class EventConfig extends React.Component {
                             <StaffSelect handleStaff={this.handleStaff}></StaffSelect>
                         </Form.Item>
                         <Form.Item label="流程名称">
-                            <Input type="text" placeholder="请输入流程名称" size="small" allowClear onChange={this.getInput}></Input>
+                            <Input type="text" placeholder="请输入流程名称" className="input-text-content"  allowClear onChange={this.getInput}></Input>
                         </Form.Item>
                         <Form.Item>
                             <Button className="localBtnClass" size="small" type="primary" onClick={this.getData}>查询</Button>

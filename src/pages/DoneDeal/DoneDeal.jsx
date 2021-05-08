@@ -340,9 +340,9 @@ const NeedToDeal = (props) => {
             </div>
             <div className="divider-box"></div>
             <div className="btnGroups">
-                <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={uploadFile}>附件</Button>
-                <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={showTransFlow}>流转信息</Button>
-                <Button type="primary" shape="round" style={{ marginRight: 15, width:80 }} onClick={showModeler}>流程图</Button>
+                <Button type="primary" className="table-oper-btn" style={{ marginRight: 15, width:80 }} onClick={uploadFile}>附件</Button>
+                <Button type="primary" className="table-oper-btn" style={{ marginRight: 15, width:80 }} onClick={showTransFlow}>流转信息</Button>
+                <Button type="primary" className="table-oper-btn" style={{ marginRight: 15, width:80 }} onClick={showModeler}>流程图</Button>
             </div>
             <div className="divider-box"></div>
             <Modal title="流程图" visible={modelerVisible} onCancel={closeModeler} onOk={closeModeler} width={1000}

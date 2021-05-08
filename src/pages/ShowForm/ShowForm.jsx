@@ -58,7 +58,7 @@ const ShowForm = (props) => {
                 widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
             />
             <div style={{textAlign: 'right',marginRight: '20px',padding: '30px 0'}}>
-                <Button type="primary" style={{ marginLeft: 30 }} shape="round" onClick={handleClickReback}>返回列表</Button>
+                <Button type="primary" style={{ marginLeft: 30 }} className="table-oper-btn" onClick={handleClickReback}>返回列表</Button>
             </div>
         </div>
     );

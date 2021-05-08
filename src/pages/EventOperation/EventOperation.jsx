@@ -57,6 +57,10 @@ const EventOperation = (props) => {
 
     // 登录到Flowable
     const LoginToFlowable = ()=>{
+        let obj = reactCookie.loadAll()
+        if (obj.FLOWABLE_REMEMBER_ME) {
+            return
+        }
         const myData = {
             _spring_security_remember_me:true,
             j_password:"test",
@@ -77,7 +81,7 @@ const EventOperation = (props) => {
                 cookieArr[1],
                 { 
                     path: '/',
-                    expires: new Date(new Date().getTime() + 30*24 * 3600 * 1000)
+                    expires: new Date(new Date().getTime() + 7*24 * 3600 * 1000)
                 }
             )
         })
@@ -151,10 +155,10 @@ const EventOperation = (props) => {
             
             <div className="linked-flow-box">
                 <div className="btngroups">
-                    <Button type="primary" shape="round" style={{ marginLeft: 30 }} onClick={handleClickReback}>
+                    <Button type="primary" className="table-oper-btn" style={{ marginLeft: 30 }} onClick={handleClickReback}>
                         返回列表
                     </Button>
-                    <Button type="primary" shape="round" style={{ marginLeft: 30 }} onClick={closeCurrentEvent}>
+                    <Button type="primary" className="table-oper-btn" style={{ marginLeft: 30 }} onClick={closeCurrentEvent}>
                         关闭事件
                     </Button>
                 </div>
@@ -172,7 +176,7 @@ const EventOperation = (props) => {
                                             </div>
                                             <div className="flowNameList-operBox">
                                                 <LoginNameSelect handleStaff={handleStaff}></LoginNameSelect>
-                                                <Button type="primary" shape="round" size="small" style={{marginLeft:"10px"}} onClick={openStaffModal(item.FlowName)}>发起</Button>
+                                                <Button type="primary" className="table-oper-btn" size="small" style={{marginLeft:"10px"}} onClick={openStaffModal(item.FlowName)}>发起</Button>
                                             </div>
                                         </div>
                                     )

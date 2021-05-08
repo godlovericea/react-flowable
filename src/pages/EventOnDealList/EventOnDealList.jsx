@@ -22,7 +22,8 @@ const EventOnDealList = (props) => {
     const [eventType, setEventType] = useState(0)
 
     const [userName, setUserName] = useState("")
-    
+    // 滚动高度
+    const [clientHeight, setClientHeight] = useState(0)
     const [userDepart, setUserDepart] = useState("")
     const [loginName,setLoginName] = useState("")
     // 事件类型的名称输入框
@@ -223,6 +224,10 @@ const EventOnDealList = (props) => {
     }
     // 登录到Flowable
     const LoginToFlowable = (userLoginName)=>{
+        let obj = reactCookie.loadAll()
+        if (obj.FLOWABLE_REMEMBER_ME) {
+            return
+        }
         const myData = {
             _spring_security_remember_me:true,
             j_password:"test",
@@ -235,7 +240,7 @@ const EventOnDealList = (props) => {
                 message.error("流程引擎服务不可用，请联系管理员")
                 return
             }
-            let inFifteenMinutes = new Date(new Date().getTime() + 30*24 * 3600 * 1000);//30天
+            let inFifteenMinutes = new Date(new Date().getTime() + 7*24 * 3600 * 1000);//30天
             let resArr = res.data.split(';')
             let cookieKeyVal = resArr[0]
             let cookieArr = cookieKeyVal.split('=')
@@ -248,6 +253,12 @@ const EventOnDealList = (props) => {
                 }
             )
         })
+    }
+
+    const computeHeight=()=>{
+        var height = document.documentElement.clientHeight;
+        console.log(height)
+        setClientHeight(height - 180)
     }
 
     useEffect(()=>{
@@ -284,6 +295,7 @@ const EventOnDealList = (props) => {
                 setLoginName(loginName)
             }
         })
+        computeHeight()
         getData()
         LoginToFlowable(loginName)
     }, [])
@@ -307,7 +319,7 @@ const EventOnDealList = (props) => {
                 />
                 {/* <Button type="dashed" onClick={goToNewEventForm}>新增</Button> */}
             </div>
-            <Table dataSource={data} pagination={pagination} rowClassName="rowClassName">
+            <Table dataSource={data} pagination={pagination} rowClassName="rowClassName" scroll={{y: clientHeight}}>
                 <Column title="序号" width={60} dataIndex="EventIndex" key="EventIndex" />
                 <Column title="事件名称" dataIndex="EventName" key="EventName" />
                 <Column title="事件表" dataIndex="EventTable" key="EventTable" />
@@ -333,8 +345,8 @@ const EventOnDealList = (props) => {
                         return (
                             record.EventState !== "已关闭"?
                             <Space size="middle">
-                                <Button type="primary" size="small" onClick={handleOperate(record.EventName, record.EventJson, record.EventCode)}>操作</Button>
-                                <Button type="primary" size="small" onClick={openShowStartedFlow(record.EventName, record.EventJson, record.EventCode)}>查看已发起流程</Button>
+                                <Button type="primary" size="small" className="table-oper-btn" onClick={handleOperate(record.EventName, record.EventJson, record.EventCode)}>操作</Button>
+                                <Button type="primary" size="small" className="table-oper-btn" onClick={openShowStartedFlow(record.EventName, record.EventJson, record.EventCode)}>查看已发起流程</Button>
                             </Space>
                             :
                             ""
