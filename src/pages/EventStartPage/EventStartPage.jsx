@@ -7,6 +7,9 @@ import reactCookie from 'react-cookies'
 import flowIcon from "../../assets/flow-icon.png"
 import { FileDoneOutlined } from '@ant-design/icons';
 import flowArrowIcon from "../../assets/flow-arrow-right.png"
+import NoDataImg from '../../assets/nodata.png'
+import NoData from '../../components/NoData/NoData'
+const { Search } = Input
 class EventStartPage extends React.Component {
     state={
         userName: '', // web4登录的用户名
@@ -62,8 +65,8 @@ class EventStartPage extends React.Component {
         })
     }
     // 拉取数据
-    getData=()=>{
-        GetEventList('')
+    getData=(name = "")=>{
+        GetEventList(name)
         .then((res)=>{
             this.setState({
                 flowArr: res.data.getMe
@@ -137,15 +140,20 @@ class EventStartPage extends React.Component {
                 <div className="form-headerbox">
                     <Form layout="inline">
                         <Form.Item label="事件名称">
-                            <Input type="text" placeholder="请输入事件名称" allowClear onChange={this.getInput}></Input>
-                        </Form.Item>
-                        <Form.Item>
-                            <Button className="localBtnClass" size="small" type="primary" onClick={this.getData}>查询</Button>
+                            <Search
+                                className="onlistinput"
+                                placeholder="请输入事件名称"
+                                allowClear
+                                onSearch={this.getData}
+                                style={{width: 200}}
+                            />
                         </Form.Item>
                     </Form>
                 </div>
-                <Divider className="header-content-divider"/>
-                <div className="contentbox">
+                <div className="header-content-divider"></div>
+                {
+                    this.state.flowArr.length > 0?
+                    <div className="contentbox">
                     <Row gutter={[20, 10]}>
                         {
                             this.state.flowArr.map((item,index)=>{
@@ -166,6 +174,9 @@ class EventStartPage extends React.Component {
                         }
                     </Row>
                 </div>
+                :
+                <NoData></NoData>
+                }
             </div>
         )
     }

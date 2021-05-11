@@ -67,6 +67,15 @@ export function UpdateFormDef (id, data) {
     })
 }
 
+// 任务发起检查移交人
+export function GetTransferList_FirstNode (cookie, userId, EventNode, data) {
+    return request({
+        url: `/rest/services/PandaWorkflow.svc/GetTransferList_FirstNode?Cookie=${cookie}&UserID=${userId}&EventNode=${EventNode}`,
+        method: 'post',
+        data
+    })
+}
+
 // 任务发起
 export function WorkflowStart (cookie, userId, EVENTCODE, USERCODE, data) {
     return request({

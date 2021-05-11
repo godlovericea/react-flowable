@@ -1,11 +1,13 @@
 // 流程发起权限页面
 import React from 'react';
-import { Button, Input, Form, Row, Col, message, Divider } from 'antd';
+import { Button, Input, Form, Row, Col, message } from 'antd';
 import { GetWorkflowBaseInfo, flowableLogin } from '../../apis/process';
 import './StartPermission.less';
 import reactCookie from 'react-cookies'
 import flowIcon from "../../assets/flow-icon.png"
 import flowArrowIcon from "../../assets/flow-arrow-right.png"
+import NoData from '../../components/NoData/NoData'
+const { Search } = Input
 class StartPermission extends React.Component {
     state={
         userName: '', // web4登录的用户名
@@ -61,9 +63,9 @@ class StartPermission extends React.Component {
         })
     }
     // 拉取数据
-    getData=()=>{
+    getData=(name = "")=>{
         let deArr = []
-        let name =  this.state.flowName || ''
+        // let name =  this.state.flowName || ''
         // GetWorkflowBaseInfo(name, '王万里', '', '', 1, 1000)
         GetWorkflowBaseInfo(name, this.state.userName, '', '', 1, 1000)
         .then((res)=>{
@@ -145,35 +147,42 @@ class StartPermission extends React.Component {
                 <div className="form-headerbox">
                     <Form layout="inline">
                         <Form.Item label="流程名称">
-                            <Input type="text" placeholder="请输入流程名称" className="header-search" style={{padding:'2px 0'}} allowClear onChange={this.getInput}></Input>
+                            {/* <Input type="text" placeholder="请输入流程名称" className="header-search" style={{padding:'2px 0'}} allowClear onChange={this.getInput}></Input> */}
+                            <Search placeholder="请输入流程名称" className="input-text-content" onSearch={this.getData} style={{ width: 200 }} />
                         </Form.Item>
-                        <Form.Item>
+                        {/* <Form.Item>
                             <Button className="localBtnClass" size="small"  type="primary" onClick={this.getData}>查询</Button>
-                        </Form.Item>
+                        </Form.Item> */}
                     </Form>
                 </div>
-                <Divider className="header-content-divider"/>
-                <div className="contentbox">
-                    <Row gutter={[20, 10]}>
-                        {
-                            this.state.flowArr.map((item,index)=>{
-                                return(
-                                    <Col span={6} key={index}>
-                                        <div className="card-wrapper" onClick={this.handleStart(item.WorkflowName, item.FlowID)}>
-                                            <div className="left-card">
-                                                <img src={flowIcon} alt="" className="flow-icon"/>
-                                                <span>{item.WorkflowName}</span>
-                                            </div>
-                                            <div className="arrow-class">
-                                                <img src={flowArrowIcon} alt=""/>
-                                            </div>
-                                        </div>
-                                    </Col>
-                                )
-                            })
-                        }
-                    </Row>
-                </div>
+                <div className="header-content-divider"/>
+                {
+                    this.state.flowArr.length > 0 ?
+                        <div className="contentbox">
+                            <Row gutter={[20, 10]}>
+                                {
+                                    this.state.flowArr.map((item,index)=>{
+                                        return(
+                                            <Col span={6} key={index}>
+                                                <div className="card-wrapper" onClick={this.handleStart(item.WorkflowName, item.FlowID)}>
+                                                    <div className="left-card">
+                                                        <img src={flowIcon} alt="" className="flow-icon"/>
+                                                        <span>{item.WorkflowName}</span>
+                                                    </div>
+                                                    <div className="arrow-class">
+                                                        <img src={flowArrowIcon} alt=""/>
+                                                    </div>
+                                                </div>
+                                            </Col>
+                                        )
+                                    })
+                                }
+                            </Row>
+                        </div>
+                    :
+                        <NoData></NoData>
+                }
+                
             </div>
         )
     }

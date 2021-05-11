@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Table, Space, Input, Button, Modal, Form, message } from 'antd';
 import { GetEventList, EventOperate } from '../../apis/process'
 import './EventList.less'
+import NoDataImg from '../../assets/nodata.png'
+import NoData from '../../components/NoData/NoData'
 const { Column } = Table;
 const { Search } = Input;
 
@@ -24,9 +26,17 @@ const EventList = (props) => {
     const [isModalVisible, setIsModalVisible] = useState(false)
     // 删除Modal
     const [isDelEvent, setIsDelEvent] = useState(false)
+    // total
+    const [total, setTotal] = useState(0)
     
     // 设置分页属性，20条/页
     const [pagination, setPagination] = useState({
+        hideOnSinglePage: false,
+        pageSizeOptions: [20,30,50],
+        showQuickJumper: true,
+        total: total,
+        showTotal: total => `总共 ${total} 条数据`,
+        size: 'small',
         pageSize: 20
     })
     // 搜索按钮
@@ -120,12 +130,13 @@ const EventList = (props) => {
             item.key = item.ID
         })
         setData(result.data.getMe)
+        setTotal(result.data.totalRcdNum)
     }
 
     const computeHeight=()=>{
         var height = document.documentElement.clientHeight;
-        console.log(height)
-        setClientHeight(height - 180)
+        // console.log(height)
+        setClientHeight(height - 190)
     }
 
     useEffect(()=>{
@@ -135,39 +146,48 @@ const EventList = (props) => {
 
     return (
         <div className="eventList-wrapper">
-            <div className="eventList-header">
-                <span>事件名称：</span>
-                <Search
-                    placeholder="请输入事件名称"
-                    allowClear
-                    enterButton="查询"
-                    onSearch={onSearch}
-                    style={{width: '300px'}}
-                />
-                <Button type="dashed" onClick={goToNewEventForm}>新增</Button>
+            <div className="form-headerbox">
+                <Form layout="inline">
+                    <Form.Item label="事件名称">
+                        <Search
+                            className="input-text-content"
+                            placeholder="请输入事件名称"
+                            onSearch={onSearch}
+                            style={{width: 200}}
+                        />
+                    </Form.Item>
+                </Form>
+                <Button type="primary" className="rightBtn" onClick={goToNewEventForm}>新增事件</Button>
             </div>
-            <Table dataSource={data} pagination={pagination} rowClassName="rowClassName" scroll={{y: clientHeight}}>
-                <Column title="序号" dataIndex="index" key="index" width={60} align="center"></Column>
-                <Column title="事件名称" dataIndex="EventName" key="EventName" />
-                <Column title="事件表" dataIndex="EventTable" key="EventTable" />
-                <Column title="事件编码" dataIndex="EventCode" key="EventCode" />
-                {/* <Column title="当前处理人" dataIndex="current" key="current" />
-                <Column title="描述" dataIndex="lastName" key="lastName" />
-                <Column title="创建时间" dataIndex="age" key="age" />
-                <Column title="修改时间" dataIndex="address" key="address" /> */}
-                <Column
-                    title="操作"
-                    key="action"
-                    render={(text, record) => (
-                        <Space size="middle">
-                            <Button type="primary" size="small" className="table-oper-btn" onClick={handleShow(record.EventName)}>事件表单</Button>
-                            <Button type="primary" size="small" className="table-oper-btn" onClick={handleDel(record.EventName, record.EventCode)}>删除</Button>
-                            <Button type="primary" size="small" className="table-oper-btn" onClick={handleConfig(record.EventName)}>流程配置</Button>
-                            {/* <Button type="primary" size="small" onClick={handleEventConfig(record.EventName)}>事件权限配置</Button> */}
-                        </Space>
-                    )}
-                />
-            </Table>
+            <div className="header-content-divider"></div>
+            {
+                data.length > 0 ?
+                <Table className="customTable" bordered={true} dataSource={data} pagination={pagination} rowClassName="rowClassName" /**scroll={{y: clientHeight}}*/>
+                    <Column title="序号" dataIndex="index" key="index" width={80} align="center"></Column>
+                    <Column title="事件名称" dataIndex="EventName" key="EventName" align="center"/>
+                    <Column title="事件表" dataIndex="EventTable" key="EventTable" align="center"/>
+                    <Column title="事件编码" dataIndex="EventCode" key="EventCode" align="center"/>
+                    {/* <Column title="当前处理人" dataIndex="current" key="current" />
+                    <Column title="描述" dataIndex="lastName" key="lastName" />
+                    <Column title="创建时间" dataIndex="age" key="age" />
+                    <Column title="修改时间" dataIndex="address" key="address" /> */}
+                    <Column
+                        align="center"
+                        title="操作"
+                        key="action"
+                        render={(text, record) => (
+                            <Space size="middle">
+                                <Button type="primary" size="small" className="table-oper-btn" onClick={handleShow(record.EventName)}>事件表单</Button>
+                                <Button type="primary" size="small" className="table-oper-btn" onClick={handleDel(record.EventName, record.EventCode)}>删除</Button>
+                                <Button type="primary" size="small" className="table-oper-btn" onClick={handleConfig(record.EventName)}>流程配置</Button>
+                                {/* <Button type="primary" size="small" onClick={handleEventConfig(record.EventName)}>事件权限配置</Button> */}
+                            </Space>
+                        )}
+                    />
+                </Table>
+                :
+                <NoData></NoData>
+            }
             
             <Modal title="新增事件" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                 <Form layout="vertical">

@@ -5,6 +5,7 @@ import { GetWorkflowBaseInfo, SaveEventConfig, GetEvent } from '../../apis/proce
 import { ToolFilled } from '@ant-design/icons';
 import StaffSelect from '../../components/StaffSelect/StaffSelect';
 import './EventConfig.less'
+const { Search } = Input
 class EventConfig extends React.Component {
     state={
         eventName: '',
@@ -199,22 +200,22 @@ class EventConfig extends React.Component {
         }
         return (
             <div className="EventConfig-wrapper">
-                <div className="EventConfigform-headerbox">
+                <div className="form-headerbox">
                     <Form layout="inline">
                         <Form.Item label="人员选择">
                             <StaffSelect handleStaff={this.handleStaff}></StaffSelect>
                         </Form.Item>
                         <Form.Item label="流程名称">
-                            <Input type="text" placeholder="请输入流程名称" className="input-text-content" allowClear onChange={this.getInput}></Input>
+                            {/* <Input type="text" placeholder="请输入流程名称" className="input-text-content" allowClear onChange={this.getInput}></Input> */}
+                            <Search placeholder="请输入流程名称" className="input-text-content" onSearch={this.getData} style={{ width: 200 }} />
                         </Form.Item>
-                        <Form.Item>
+                        {/* <Form.Item>
                             <Button className="localBtnClass" size="small" type="primary" className="table-oper-btn" onClick={this.getData}>查询</Button>
-                        </Form.Item>
-                        <Form.Item>
-                            <Button className="localBtnClass" size="small" type="primary" className="table-oper-btn" onClick={this.linkToEvent}>挂接</Button>
-                        </Form.Item>
+                        </Form.Item> */}
                     </Form>
+                    <Button className="localBtnClass rightBtn" size="small" type="primary" onClick={this.linkToEvent}>挂接</Button>
                 </div>
+                <div className="header-content-divider"></div>
                 <div className="EventConfig-contentbox">
                     <Row gutter={[20, 20]}>
                         {

@@ -6,6 +6,8 @@ import './EventOnDealList.less'
 import configData from '../../utils/config'
 import reactCookie from 'react-cookies'
 import moment from 'moment'
+import NoDataImg from '../../assets/nodata.png'
+import NoData from '../../components/NoData/NoData'
 const { Column } = Table;
 const { Search } = Input;
 const { Option } = Select;
@@ -48,9 +50,17 @@ const EventOnDealList = (props) => {
     const [flowVisible, setFlowVisible] = useState(false)
     // 流转信息列表
     const [flowTableData, setFlowTableData] = useState([])
+    // total
+    const [total, setTotal] = useState(0)
     
     // 设置分页属性，20条/页
     const [pagination, setPagination] = useState({
+        hideOnSinglePage: false,
+        pageSizeOptions: [20,30,50],
+        showQuickJumper: true,
+        total: total,
+        showTotal: total => `总共 ${total} 条数据`,
+        size: 'small',
         pageSize: 20
     })
     // 搜索按钮
@@ -215,6 +225,7 @@ const EventOnDealList = (props) => {
             item.ReportTime = moment(item.ReportTime).format("YYYY-MM-DD HH:mm:ss")
         })
         setData(result.data.getMe)
+        setTotal(result.data.totalRcdNum)
     }
 
     // 筛选事件类型
@@ -258,7 +269,7 @@ const EventOnDealList = (props) => {
     const computeHeight=()=>{
         var height = document.documentElement.clientHeight;
         console.log(height)
-        setClientHeight(height - 180)
+        setClientHeight(height - 190)
     }
 
     useEffect(()=>{
@@ -302,33 +313,40 @@ const EventOnDealList = (props) => {
 
     return (
         <div className="eventList-wrapper">
-            <div className="eventList-header">
-                <span>事件类型：</span>
-                <Select defaultValue={0} style={{ width: 200 }} onChange={handleChange}>
-                    <Option value={1}>全部</Option>
-                    <Option value={0}>在办</Option>
-                    {/* <Option value={2}>已办</Option> */}
-                </Select>
-                <span style={{marginLeft: '15px'}}>事件名称：</span>
-                <Search
-                    placeholder="请输入事件名称"
-                    allowClear
-                    enterButton="查询"
-                    onSearch={onSearch}
-                    style={{width: '300px'}}
-                />
-                {/* <Button type="dashed" onClick={goToNewEventForm}>新增</Button> */}
+            <div className="form-headerbox">
+                <Form layout="inline">
+                    <Form.Item label="事件类型">
+                        <Select defaultValue={0} style={{ width: 200 }} onChange={handleChange}>
+                            <Option value={1}>全部</Option>
+                            <Option value={0}>在办</Option>
+                            {/* <Option value={2}>已办</Option> */}
+                        </Select>
+                    </Form.Item>
+                    <Form.Item label="事件名称">
+                        <Search
+                            className="onlistinput"
+                            placeholder="请输入事件名称"
+                            allowClear
+                            onSearch={onSearch}
+                            style={{width: 200,height:28}}
+                        />
+                    </Form.Item>
+                </Form>
             </div>
-            <Table dataSource={data} pagination={pagination} rowClassName="rowClassName" scroll={{y: clientHeight}}>
-                <Column title="序号" width={60} dataIndex="EventIndex" key="EventIndex" />
-                <Column title="事件名称" dataIndex="EventName" key="EventName" />
-                <Column title="事件表" dataIndex="EventTable" key="EventTable" />
-                <Column title="事件编码" dataIndex="EventCode" key="EventCode" />
-                <Column title="事件发起人" dataIndex="ReportMan" key="ReportMan" />
-                <Column title="发起时间" dataIndex="ReportTime" key="ReportTime" />
+            <div className="header-content-divider"></div>
+            {
+                data.length > 0 ?
+                <Table bordered dataSource={data} pagination={pagination} rowClassName="rowClassName" scroll={{y: clientHeight}}>
+                <Column title="序号" width={80} dataIndex="EventIndex" key="EventIndex" align="center"/>
+                <Column title="事件名称" dataIndex="EventName" key="EventName" align="center"/>
+                <Column title="事件表" dataIndex="EventTable" key="EventTable" align="center"/>
+                <Column title="事件编码" dataIndex="EventCode" key="EventCode" align="center"/>
+                <Column title="事件发起人" dataIndex="ReportMan" key="ReportMan" align="center"/>
+                <Column title="发起时间" dataIndex="ReportTime" key="ReportTime" align="center"/>
                 <Column 
                     title="事件状态" 
                     key="EventState"
+                    align="center"
                     render={(text, record) => {
                         return (
                             record.EventState !== "已关闭"?
@@ -363,17 +381,22 @@ const EventOnDealList = (props) => {
                     )}
                 /> */}
             </Table>
+            :
+            <NoData></NoData>
+            }
+            
             <Modal title="已发起流程" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={1200}>
-                <Table dataSource={flowData} rowClassName="rowClassName">
-                    <Column title="序号" width={60} dataIndex="index" key="index" />
-                    <Column title="流程名称" dataIndex="FlowName" key="FlowName" />
-                    <Column title="流程发起人" dataIndex="Creater" key="ReportMan" />
-                    <Column title="流程发起时间" dataIndex="StartTime" key="StartTime" />
-                    <Column title="流程结束时间" dataIndex="EndTime" key="EndTime" />
-                    <Column title="事件流程编码" dataIndex="ProcCode" key="ProcCode" />
+                <Table bordered dataSource={flowData} rowClassName="rowClassName">
+                    <Column title="序号" width={80} dataIndex="index" key="index" align="center"/>
+                    <Column title="流程名称" dataIndex="FlowName" key="FlowName" align="center"/>
+                    <Column title="流程发起人" dataIndex="Creater" key="ReportMan" align="center"/>
+                    <Column title="流程发起时间" dataIndex="StartTime" key="StartTime" align="center"/>
+                    <Column title="流程结束时间" dataIndex="EndTime" key="EndTime" align="center"/>
+                    <Column title="事件流程编码" dataIndex="ProcCode" key="ProcCode" align="center"/>
                     <Column
                         title="操作"
                         key="action"
+                        align="center"
                         render={(text, record) => {
                             return (
                                 <Space size="middle">
@@ -391,15 +414,16 @@ const EventOnDealList = (props) => {
             </Modal>
             <Modal title="流转信息" visible={flowVisible} onCancel={closeFlow} onOk={sureFlow} width={900}
             bodyStyle={{ display: 'flex',justifyContent: 'center',alignItems:'center'}}>
-                <Table dataSource={flowTableData} pagination={false} rowClassName="rowClassName" style={{width:'100%'}}>
-                    <Column title="序号" width={60} dataIndex="index" key="index" />
-                    <Column title="操作步骤" dataIndex="TaskName" key="TaskName" />
-                    <Column title="开始时间" dataIndex="STime" key="STime" />
+                <Table bordered dataSource={flowTableData} pagination={false} rowClassName="rowClassName" style={{width:'100%'}}>
+                    <Column title="序号" width={80} dataIndex="index" key="index" align="center"/>
+                    <Column title="操作步骤" dataIndex="TaskName" key="TaskName" align="center"/>
+                    <Column title="开始时间" dataIndex="STime" key="STime" align="center"/>
                     <Column title="结束时间" dataIndex="ETime" key="ETime" />
-                    <Column title="操作人账号" dataIndex="OperationMan" key="OperationMan" />
+                    <Column title="操作人账号" dataIndex="OperationMan" key="OperationMan" align="center"/>
                     <Column
                         title="流程状态"
                         key="state"
+                        align="center"
                         render={(text, record) => (
                             <Space size="middle">
                                 {

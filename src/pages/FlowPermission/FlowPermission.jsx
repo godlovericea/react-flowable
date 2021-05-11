@@ -1,10 +1,12 @@
 // 给用户配置流程权限
 import React from 'react'
-import { Button, Input, Form, Row, Col, Checkbox, message, Divider } from 'antd';
+import { Button, Input, Form, Row, Col, Checkbox, message } from 'antd';
 import { GetWorkflowBaseInfo, UpdateWorkFlowRight, flowableLogin } from '../../apis/process';
 import StaffSelect from '../../components/StaffSelect/StaffSelect';
 import reactCookie from 'react-cookies'
 import './FlowPermission.less';
+import NoData from '../../components/NoData/NoData'
+const { Search } = Input;
 class FlowPermission extends React.Component {
     state={
         userName: '',// 用户名
@@ -41,11 +43,16 @@ class FlowPermission extends React.Component {
             flowName: e.target.value
         })
     }
+    // 获取输入框的值
+    onSearch=(e)=>{
+        this.setState({
+            flowName: e
+        })
+    }
     // 拉取数据
-    getData=()=>{
+    getData=(name = '')=>{
         // console.log(this.state.userName)
         let arr =[]
-        let name =  ''
         GetWorkflowBaseInfo(name, this.state.userName, '', '', 1, 1000)
         .then((res)=>{
             // 处理获取AccessRight为1的，有权限的值
@@ -168,18 +175,22 @@ class FlowPermission extends React.Component {
                             <StaffSelect handleStaff={this.handleStaff}></StaffSelect>
                         </Form.Item>
                         <Form.Item label="流程名称">
-                            <Input type="text" placeholder="请输入流程名称" className="input-text-content"  allowClear onChange={this.getInput}></Input>
+                            {/* <Input type="text" placeholder="请输入流程名称" className="input-text-content"  allowClear onChange={this.getInput}></Input> */}
+                            <Search placeholder="请输入流程名称" className="input-text-content" onSearch={this.getData} style={{ width: 200 }} />
                         </Form.Item>
-                        <Form.Item>
+                        {/* <Form.Item>
                             <Button className="localBtnClass" size="small" type="primary" onClick={this.getData}>查询</Button>
-                        </Form.Item>
-                        <Form.Item>
+                        </Form.Item> */}
+                        {/* <Form.Item className="formItemBox">
                             <Button className="localBtnClass" size="small" type="primary" onClick={this.linkToModeler}>挂接</Button>
-                        </Form.Item>
+                        </Form.Item> */}
                     </Form>
+                    <Button className="localBtnClass rightBtn" size="small" type="primary" onClick={this.linkToModeler}>挂接</Button>
                 </div>
-                <Divider className="header-content-divider"/>
-                <div className="contentbox">
+                <div className="header-content-divider"/>
+                {
+                    this.state.flowArr.length > 0 ?
+                    <div className="contentbox">
                     <Row gutter={[20, 20]}>
                         {
                             this.state.flowArr.map((item,index)=>{
@@ -193,6 +204,10 @@ class FlowPermission extends React.Component {
                         }
                     </Row>
                 </div>
+                :
+                <NoData></NoData>
+                }
+                
             </div>
         )
     }

@@ -1,7 +1,7 @@
 // 流程发起页面
 import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
-import { Button, message, Input, Modal, Radio } from 'antd';
+import { Button, message, Modal, Input, Radio } from 'antd';
 import FormTransfer from '../../libs/transform/transform'
 import ConfigSchemaClass from '../../libs/configSchema/configSchema'
 import { GetStartForm, WorkflowStart, getTableName, GetTransferList_FirstNode } from '../../apis/process'
@@ -12,7 +12,6 @@ import TableAccount from '../../components/TableAccount/TableAccount'
 import UploadFile from '../../components/UploadFile/UploadFile'
 import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
 import SearchSelect from '../../components/SearchSelect/SearchSelect'
-
 
 const { Search } = Input;
 
@@ -76,7 +75,7 @@ const StartForm = (props) => {
             setSchema(schemadata)
             setConfigSchema(JSON.stringify(schemadata))
             
-        } else if (res.data.Type === "表单") {
+        } else {
             let fieldData = res.data
             setConfigSchema(fieldData.Form)
 
@@ -86,7 +85,9 @@ const StartForm = (props) => {
                 userDepart: userDepart
             }
             // 处理表单数据
+            console.log("start")
             const testData = new ConfigSchemaClass(fieldData.ColumnConfig, fieldData.Form, web4Config)
+            console.log("end")
             setSchema(testData.schema)
         }
     }
@@ -179,7 +180,6 @@ const StartForm = (props) => {
         })
     }
 
-    // 提交
     const handleSubmit = () => {
         if (valid.length > 0) {
             message.error("提交失败,请按照提示填写表单！")
@@ -238,6 +238,7 @@ const StartForm = (props) => {
         }
         WorkflowStart(cookie, userId, evCode, loginName, myData)
         .then((res)=>{
+            console.log(res)
             message.success("提交成功")
         })
     };
@@ -249,10 +250,9 @@ const StartForm = (props) => {
     };
 
     const handleGoBack=()=>{
-        // props.history.push({
-        //     pathname: '/form-render/stpermis'
-        // })
-        props.history.go(-1)
+        props.history.push({
+            pathname: '/form-render/stpermis'
+        })
     }
 
     // 选择候选人
@@ -388,9 +388,9 @@ const StartForm = (props) => {
                 widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
             />
             <div className="btngroups">
-                <Button type="primary" style={{ marginLeft: 30 }} className="table-oper-btn" onClick={handleSubmitFirst}>发起</Button>
-                <Button style={{ marginLeft: 30 }} className="table-oper-btn" onClick={handleClick}>重置</Button>
-                <Button style={{ marginLeft: 30 }} className="table-oper-btn" onClick={handleGoBack}>返回</Button>
+                <Button type="primary" style={{ marginLeft: 30 }} shape="round" onClick={handleSubmitFirst}>发起</Button>
+                <Button style={{ marginLeft: 30 }} shape="round" onClick={handleClick}>重置</Button>
+                <Button style={{ marginLeft: 30 }} shape="round" onClick={handleGoBack}>返回</Button>
             </div>
             <Modal title="请选择候选人" visible={nextPersonVisible} onCancel={closeNextPersonModeler} onOk={sureNextPersonModeler} width={650}>
                 <div>

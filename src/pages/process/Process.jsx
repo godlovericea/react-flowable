@@ -5,6 +5,7 @@ import { UpdateStatus, GetFormListInfo, DeleteFormLogic } from '../../apis/proce
 import { Table, Space, Button, Form, Input, Pagination, Modal, message } from 'antd';
 import './process.less'
 import moment from 'moment';
+const { Search } = Input
 const { Column } = Table;
 class Process extends React.Component{
     state={
@@ -45,19 +46,18 @@ class Process extends React.Component{
         },()=>{
             this.getData()
         })
-        
     }
     // 改变页码大小
     handlePageSizeChange=(page, size)=>{
     }
     // 拉取数据
-    getData = ()=> {
-        GetFormListInfo(this.state.name,this.state.curPage, this.state.pageSize)
+    getData = (name = "")=> {
+        GetFormListInfo(name,this.state.curPage, this.state.pageSize)
         .then(res=>{
             res.data.getMe.forEach((item,index)=>{
                 item.index = index + 1
-                item.created = moment(item.created).format("YYYY-MM-DD HH:mm:ss")
-                item.lastUpdated = moment(item.lastUpdated).format("YYYY-MM-DD HH:mm:ss")
+                item.created = item.created === "" ? "无数据" : moment(item.created).format("YYYY-MM-DD HH:mm:ss")
+                item.lastUpdated = item.lastUpdated === "" ? "无数据" :moment(item.lastUpdated).format("YYYY-MM-DD HH:mm:ss")
             })
             this.setState({
                 tableData: res.data.getMe,
@@ -175,32 +175,39 @@ class Process extends React.Component{
     computeHeight(){
         var height = document.documentElement.clientHeight;
         this.setState({
-            clientHeight: height - 180
+            clientHeight: height - 190
         })
     }
     render() {
         return(
             <div className="modeler-wrapper">
                 {/* <Modeler></Modeler> */}
-                <Form layout="inline" className="form-header-box">
-                    <Form.Item label="表单名称">
-                        <Input placeholder="请输入表单名称" className="input-text-content" allowClear onChange={this.handleProName}/>
-                    </Form.Item>
-                    <Form.Item>
-                        <Button className="localBtnClass" size="small" type="primary" onClick={this.getData}>查询</Button>
-                    </Form.Item>
-                    <Form.Item>
-                        <Button className="localBtnClass" size="small" type="primary" onClick={this.openModal}>新增</Button>
-                    </Form.Item>
-                </Form>
-                <Table dataSource={this.state.tableData} pagination={false} rowClassName="rowClassName" scroll={{y: this.state.clientHeight}}>
-                    <Column title="序号" dataIndex="index" key="index" width={60} align="center"/>
-                    <Column title="表单名称" dataIndex="name" key="WorkflowName" />
-                    <Column title="表单标识" dataIndex="key" key="Key" />
-                    <Column title="创建人" dataIndex="createdBy" key="createdBy" />
-                    <Column title="创建时间" dataIndex="created" key="created" />
-                    <Column title="最后修改时间" dataIndex="lastUpdated" key="lastUpdated" />
+                <div className="form-headerbox">
+                    <Form layout="inline">
+                        <Form.Item label="表单名称">
+                            {/* <Input placeholder="请输入表单名称" className="input-text-content" allowClear onChange={this.handleProName}/> */}
+                            <Search placeholder="请输入表单名称" className="input-text-content" onSearch={this.getData} style={{ width: 200 }} />
+                        </Form.Item>
+                        {/* <Form.Item>
+                            <Button className="localBtnClass" size="small" type="primary" onClick={this.getData}>查询</Button>
+                        </Form.Item> */}
+                        {/* <Form.Item>
+                            <Button className="localBtnClass" size="small" type="primary" onClick={this.openModal}>新增</Button>
+                        </Form.Item> */}
+                    </Form>
+                    <Button className="localBtnClass rightBtn" size="small" type="primary" onClick={this.openModal}>新增</Button>
+                </div>
+                
+                <div className="header-content-divider"></div>
+                <Table bordered={true} dataSource={this.state.tableData} pagination={false} rowClassName="rowClassName" scroll={{y: this.state.clientHeight}}>
+                    <Column title="序号" dataIndex="index" key="index" width={80} align="center"/>
+                    <Column title="表单名称" dataIndex="name" key="WorkflowName" align="center"/>
+                    <Column title="表单标识" dataIndex="key" key="Key" align="center"/>
+                    <Column title="创建人" dataIndex="createdBy" key="createdBy" align="center"/>
+                    <Column title="创建时间" dataIndex="created" key="created" align="center"/>
+                    <Column title="最后修改时间" dataIndex="lastUpdated" key="lastUpdated" align="center"/>
                     <Column
+                        align="center"
                         title="操作"
                         key="action"
                         render={(text, record) => (
@@ -234,13 +241,14 @@ class Process extends React.Component{
                     确定删除该表单吗？
                 </Modal>
                 <Pagination
+                    size="small"
                     current={this.state.curPage}
                     total={this.state.total}
                     showSizeChanger
                     showQuickJumper
                     defaultPageSize={20}
                     onChange = {this.handlePageChange}
-                    showTotal={total => `共 ${total} 条数据`}>
+                    showTotal={total => `共${Math.ceil(total/this.state.pageSize)}页/${total}条记录`}>
                 </Pagination>
             </div>
         )

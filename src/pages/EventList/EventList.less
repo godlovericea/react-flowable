@@ -1,9 +1,60 @@
 .eventList-wrapper{
+    .form-headerbox{
+        height: 50px;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .rightBtn{
+            margin-right: 40px;
+        }
+        label{
+            font-weight: 400;
+            color: #666666;
+            font-family: Microsoft YaHei;
+            font-size: 12px;
+         }
+    }
     .eventList-header{
-        margin-bottom: 10px;
+        height: 50px;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .spanname{
+            color: rgba(89, 89, 89, 1);
+         }
+         .rightBtn{
+             margin-right: 40px;
+         }
+         .left-search{
+             display: flex;
+             align-items: center;
+         }
+    }
+    .header-content-divider{
+        background: rgba(244, 246, 252, 1);
+        height: 10px;
+        width: 100%;
     }
     .ant-pagination{
         text-align: right;
         padding: 10px 0;
     }
+    .nodataclass{
+        height: 500px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .spanname{
+            font-weight: 400;
+            font-size: 14px;
+            color: #ccc;
+            margin-top: 20px;
+         }
+    }
+}
+.rowClassName:hover{
+    background-color: rgba(207, 231, 226, 0.4) !important;
 }

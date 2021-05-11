@@ -770,14 +770,15 @@ const NeedToDeal = (props) => {
 
             <Modal title="回退" visible={rebackVisible} onCancel={closeRebackModeler} onOk={sureRebackModeler} width={650}
                 bodyStyle={{ display: 'flex',flexDirection: 'column',justifyContent: 'center'}}>
-                    <Table dataSource={goBacktableData} pagination={false} rowClassName="rowClassName" style={{width:'100%'}}>
-                        <Column title="操作步骤" dataIndex="TaskName" key="TaskName" />
-                        <Column title="开始时间" dataIndex="STime" key="STime" />
-                        <Column title="结束时间" dataIndex="ETime" key="ETime" />
-                        <Column title="操作人账号" dataIndex="OperationMan" key="OperationMan" />
+                    <Table bordered dataSource={goBacktableData} pagination={false} rowClassName="rowClassName" style={{width:'100%'}}>
+                        <Column title="操作步骤" dataIndex="TaskName" key="TaskName" align="center"/>
+                        <Column title="开始时间" dataIndex="STime" key="STime" align="center"/>
+                        <Column title="结束时间" dataIndex="ETime" key="ETime" align="center"/>
+                        <Column title="操作人账号" dataIndex="OperationMan" key="OperationMan" align="center"/>
                         <Column
                             title="流程状态"
                             key="state"
+                            align="center"
                             render={(text, record) => (
                                 <Space size="middle">
                                     {
@@ -796,14 +797,15 @@ const NeedToDeal = (props) => {
 
             <Modal title="催办" visible={urgentVisible} onCancel={closeUrgentModeler} onOk={sureUrgentModeler} width={650}
             bodyStyle={{ display: 'flex',justifyContent: 'center',flexDirection: 'column'}}>
-                <Table dataSource={urgentTableData} pagination={false} rowClassName="rowClassName" style={{width:'100%'}}>
-                        <Column title="操作步骤" dataIndex="TaskName" key="TaskName" />
-                        <Column title="开始时间" dataIndex="STime" key="STime" />
-                        <Column title="结束时间" dataIndex="ETime" key="ETime" />
-                        <Column title="操作人账号" dataIndex="OperationMan" key="OperationMan" />
+                <Table bordered dataSource={urgentTableData} pagination={false} rowClassName="rowClassName" style={{width:'100%'}}>
+                        <Column title="操作步骤" dataIndex="TaskName" key="TaskName" align="center"/>
+                        <Column title="开始时间" dataIndex="STime" key="STime" align="center"/>
+                        <Column title="结束时间" dataIndex="ETime" key="ETime" align="center"/>
+                        <Column title="操作人账号" dataIndex="OperationMan" key="OperationMan" align="center"/>
                         <Column
                             title="流程状态"
                             key="state"
+                            align="center"
                             render={(text, record) => (
                                 <Space size="middle">
                                     {
@@ -822,13 +824,14 @@ const NeedToDeal = (props) => {
 
             <Modal title="流转信息" visible={flowVisible} onCancel={closeFlow} onOk={sureFlow} width={900}
             bodyStyle={{ display: 'flex',justifyContent: 'center',alignItems:'center'}}>
-                <Table dataSource={tableData} pagination={false} rowClassName="rowClassName" style={{width:'100%'}}>
-                    <Column title="操作步骤" dataIndex="TaskName" key="TaskName" />
-                    <Column title="开始时间" dataIndex="STime" key="STime" />
-                    <Column title="结束时间" dataIndex="ETime" key="ETime" />
-                    <Column title="操作人账号" dataIndex="OperationMan" key="OperationMan" />
+                <Table bordered dataSource={tableData} pagination={false} rowClassName="rowClassName" style={{width:'100%'}}>
+                    <Column title="操作步骤" dataIndex="TaskName" key="TaskName" align="center"/>
+                    <Column title="开始时间" dataIndex="STime" key="STime" align="center"/>
+                    <Column title="结束时间" dataIndex="ETime" key="ETime" align="center"/>
+                    <Column title="操作人账号" dataIndex="OperationMan" key="OperationMan" align="center"/>
                     <Column
                         title="流程状态"
+                        align="center"
                         key="state"
                         render={(text, record) => (
                             <Space size="middle">
@@ -864,12 +867,13 @@ const NeedToDeal = (props) => {
 
             <Modal title="附件" visible={fileVisible} onCancel={closeFileVisible} okText="上传附件" onOk={openUploadVisible} width={680}
             bodyStyle={{ display: 'flex',justifyContent: 'center',alignItems:'center'}}>
-                <Table dataSource={fileTableData} pagination={false} rowClassName="rowClassName" style={{width:'100%'}}>
-                    <Column title="文件名" dataIndex="name" key="name" />
-                    <Column title="状态" dataIndex="state" key="state" />
+                <Table bordered dataSource={fileTableData} pagination={false} rowClassName="rowClassName" style={{width:'100%'}}>
+                    <Column title="文件名" dataIndex="name" key="name" align="center"/>
+                    <Column title="状态" dataIndex="state" key="state" align="center"/>
                     <Column
                         title="操作"
                         key="action"
+                        align="center"
                         render={(text, record) => (
                             <Space size="middle">
                                 {
