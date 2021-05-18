@@ -30,7 +30,10 @@ export default class Transform extends Component {
     // 返回列表
     handleClickReback=()=>{
         this.props.history.push({
-            pathname: '/form-render/home'
+            pathname: '/form-render/home',
+            state:{
+                searchName: this.props.location.state.searchName
+            }
         })
     }
     handleSchema = (data) => {
@@ -49,13 +52,15 @@ export default class Transform extends Component {
                 for(let childkey in properties[key].properties) {
                     BaseTypeList.push({
                         Name:properties[key].properties[childkey].title,
-                        Type: properties[key].properties[childkey].type
+                        Type: properties[key].properties[childkey].type,
+                        ProcID: ''
                     })
                 }
             } else {
                 BaseTypeList.push({
                     Name:properties[key].title,
-                    Type: properties[key].type
+                    Type: properties[key].type,
+                    ProcID: ''
                 })
             }
         }
@@ -124,9 +129,14 @@ export default class Transform extends Component {
     render() {
         return (
             <div className="transform-wrapper">
+                <div className="form-info-box">
+                    <div className="form-info-before"></div>
+                    <div>{this.props.location.state.name}</div>
+                </div>
+                <div className="header-content-divider"></div>
                 <FormRenderTrans tableName={this.props.location.state.name} handleSchema={this.handleSchema}/>
                 <div className="gobackBtn">
-                    <Button type="primary" onClick={this.handleClickReback}>
+                    <Button style={{width:'100px'}} onClick={this.handleClickReback}>
                         返回列表
                     </Button>
                 </div>

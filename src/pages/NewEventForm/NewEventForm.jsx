@@ -93,6 +93,8 @@ class NewEventForm extends React.Component{
         }
         this.setState({
             isModalVisible: true
+        }, ()=>{
+            this.goBackToList()
         })
     }
     // 自定义返回列表按钮
@@ -190,6 +192,8 @@ class NewEventForm extends React.Component{
             alert("新增成功")
             this.setState({
                 isModalVisible: false
+            }, ()=>{
+                this.goBackToList()
             })
         })
     }

@@ -14,6 +14,8 @@ import TableAccount from '../../components/TableAccount/TableAccount'
 import UploadFile from '../../components/UploadFile/UploadFile'
 import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
 import SearchSelect from '../../components/SearchSelect/SearchSelect'
+import AMapContainer from '../../components/AMapContainer/AMapContainer'
+import cityPicker from '../../components/CityPicker/CityPicker'
 import './EventOperation.less'
 
 const EventOperation = (props) => {
@@ -140,6 +142,11 @@ const EventOperation = (props) => {
 
     return (
         <div className="eventoperation-wrapper">
+            <div className="form-info-box">
+                <div className="form-info-before"></div>
+                <div>{props.location.state.name}</div>
+            </div>
+            <div className="header-content-divider"></div>
             <Row justify="start">
                 <Col span={24}>
                     <FormRender
@@ -148,7 +155,7 @@ const EventOperation = (props) => {
                         formData={formData}
                         onChange={setFormData}
                         onValidate={onValidate}
-                        widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
+                        widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker }}
                     />
                 </Col>
             </Row>

@@ -7,6 +7,37 @@
     }
 }
 
+.header-content-divider{
+    background: rgba(244, 246, 252, 1);
+    height: 10px;
+    width: 100%;
+}
+.form-info-box{
+    display: flex;
+    align-items: center;
+    height: 50px;
+    line-height: 50px;
+    padding-left: 10px;
+    font-size: 16px;
+    .form-info-before{
+        width: 4px;
+        height: 25px;
+        background-color: #666666;
+        margin-right: 8px;
+    }
+}
+.fr-label-row{
+    width: 85px !important;
+}
+
+.fr-wrapper .ml3{
+    margin-left: 0 !important;
+}
+
+.fr-label-title::after{
+    content: '' !important;
+}
+
 .fr-label-object{
     .fr-label-title {
         display: flex;
@@ -110,9 +141,6 @@ body{
     border-color: #01c1a4;
     color: #fff !important;
 }
-.ant-pagination-options{
-
-}
 .ant-pagination-item-active a, .ant-pagination-item:focus, .ant-pagination-item:hover{
     background-color:#01c1a4;
     border-color: #01c1a4;
@@ -124,7 +152,7 @@ body{
     color: #ccc !important;
 }
 .ant-table{
-    height: calc(100vh - 140px);
+    height: calc(100vh - 135px);
 }
 .ant-pagination{
     border-top:1px solid rgba(244, 246, 252, 1);
@@ -153,4 +181,79 @@ body{
 }
 .ant-form-inline .ant-form-item{
     margin-right: 20px;
+}
+.fr-wrapper{
+    .fileupload-wrapper{
+        .ant-input-group .ant-input{
+            line-height: 14px;
+        }
+    }
+    .ant-input-affix-wrapper>input.ant-input{
+        padding: 5px 10px !important;
+    }
+}
+
+.person-select{
+    .ant-radio-group{
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: 10px;
+        .ant-radio-wrapper{
+            width: 100px;
+            margin: 3px;
+        }
+    }
+}
+.personModalClass{
+    .ant-input{
+        padding: 0 10px !important;
+    }
+}
+
+.personModalClass{
+    .ant-modal-body::-webkit-scrollbar{
+        width:10px;
+        height:10px;
+    }
+    .ant-modal-body::-webkit-scrollbar-track{
+        background: rgb(239, 239, 239);
+        border-radius:2px;
+    }
+    .ant-modal-body::-webkit-scrollbar-thumb{
+        background: #bfbfbf;
+        border-radius:10px;
+    }
+    .ant-modal-body::-webkit-scrollbar-thumb:hover{
+        background: #333;
+    }
+    .ant-modal-body::-webkit-scrollbar-corner{
+        background: #179a16;
+    }
+}
+.fieldset-class{
+    padding: 10px 0;
+    fieldset{
+        border: 1px solid #dddddd;
+    }
+    legend{
+        width: auto;
+        margin-left: 10px;
+        font-size: 15px !important;
+    }
+}
+.ant-modal-content{
+    .ant-table{
+        height: auto;
+    }
+    .ant-table-thead{
+        height: 40px;
+        line-height: 12px;
+    }
+}
+.ant-input-suffix{
+    padding-right: 5px;
+}
+.ant-table-header{
+    height: 40px;
+    line-height: 12px;
 }

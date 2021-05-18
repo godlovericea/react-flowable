@@ -32,13 +32,16 @@ class TableAccount extends React.Component {
         let accountName = ""
         let rowkey = ""
         if (this.props.options && this.props.options.value) {
-            arr1 = this.props.name.split('.')
-            accountName = arr1[0]
-            if (arr1[1].inedxOf('|')> -1) {
-                let keyArr = arr1[1].split('|')
-                rowkey = keyArr[0]
-            } else {
-                rowkey = arr1[1]
+            console.log(this.props.name, "this.props.name")
+            if (this.props.name.indexOf(".")> -1) {
+                arr1 = this.props.name.split('.')
+                accountName = arr1[0]
+                if (arr1[1].indexOf('|')> -1) {
+                    let keyArr = arr1[1].split('|')
+                    rowkey = keyArr[0]
+                } else {
+                    rowkey = arr1[1]
+                }
             }
         }
         let info = this.state.searchVal || ''

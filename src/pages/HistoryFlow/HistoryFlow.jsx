@@ -15,6 +15,8 @@ import TableAccount from '../../components/TableAccount/TableAccount'
 import UploadFile from '../../components/UploadFile/UploadFile'
 import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
 import SearchSelect from '../../components/SearchSelect/SearchSelect'
+import AMapContainer from '../../components/AMapContainer/AMapContainer'
+import cityPicker from '../../components/CityPicker/CityPicker'
 const { Search } = Input;
 const { Column } = Table;
 
@@ -164,6 +166,9 @@ const NeedToDeal = (props) => {
             setETime(data.ETime)
         })
     }
+    const goBack=()=>{
+        props.history.go(-1)
+    }
     useEffect(()=>{
         getData()
     }, [])
@@ -185,8 +190,11 @@ const NeedToDeal = (props) => {
                 onChange={setFormData}
                 onValidate={onValidate}
                 showValidate={false}
-                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file: UploadFile, editSearch: EditbleSelct }}
+                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker }}
             />
+            <div className="btngroups">
+                <Button type="primary" onClick={goBack}>返回</Button>
+            </div>
         </div>
     );
 };

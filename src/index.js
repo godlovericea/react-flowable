@@ -5,7 +5,7 @@ import './styles/reset.less'
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import zhCN from 'antd/es/locale/zh_CN';
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.less';
 import { BrowserRouter, HashRouter } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 

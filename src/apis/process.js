@@ -377,3 +377,10 @@ export function GetLedgerAccountList(){
         method: 'get'
     })
 }
+// 查询产品信息
+export function GetProduct(){
+    return request({
+        url: `/rest/services/OA.svc/GetProduct?tableName=销售管理_产品信息表&plateName=项目`,
+        method: 'get'
+    })
+}

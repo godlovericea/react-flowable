@@ -1,6 +1,6 @@
 // 给事件配置流程
 import React from 'react'
-import { Button, Input, Form, Row, Col, Checkbox, message, Modal, Radio } from 'antd';
+import { Button, Input, Form, Row, Col, Checkbox, message, Modal, Radio, Tooltip } from 'antd';
 import { GetWorkflowBaseInfo, SaveEventConfig, GetEvent } from '../../apis/process';
 import { ToolFilled } from '@ant-design/icons';
 import StaffSelect from '../../components/StaffSelect/StaffSelect';
@@ -9,7 +9,7 @@ const { Search } = Input
 class EventConfig extends React.Component {
     state={
         eventName: '',
-        userName: '',// 用户名
+        userName: this.props.location.state.userName,// 用户名
         flowName: '',// 流程名称
         flowArr: [],// 流程数组
         defaultVal: [],// 默认值
@@ -20,9 +20,11 @@ class EventConfig extends React.Component {
         configedFlowArr: [], // 已经配置过的流程数组
     }
     // 与StaffSelect子组件绑定事件传值交互
-    handleStaff=async (val)=>{
+    handleStaff= (val)=>{
         this.setState({
             userName: val
+        }, ()=>{
+            this.getData()
         })
     }
     // 获取点击选中的checkbox值
@@ -49,7 +51,7 @@ class EventConfig extends React.Component {
     getData=()=>{
         // console.log(this.props.location.state.name)
         let arr =[]
-        GetWorkflowBaseInfo('', '', '', '', 1, 1000)
+        GetWorkflowBaseInfo(this.state.flowName, this.state.userName, '', '', 1, 1000)
         .then((res)=>{
             // 处理获取AccessRight为1的，有权限的值
             res.data.getMe.forEach((item)=>{
@@ -72,7 +74,8 @@ class EventConfig extends React.Component {
                 })
                 this.setState({
                     flowArr: arr,
-                    eventName: this.props.location.state.name
+                    eventName: this.props.location.state.name,
+                    configedFlowArr: arr
                 })
             })
         })
@@ -111,7 +114,11 @@ class EventConfig extends React.Component {
     }
     handleClickReback=()=>{
         this.props.history.push({
-            pathname: '/form-render/eventlist'
+            pathname: '/form-render/eventlist',
+            state:{
+                searchName: this.props.location.state.searchName,
+                userName: this.state.userName
+            }
         })
     }
     // 打开Modal
@@ -132,6 +139,7 @@ class EventConfig extends React.Component {
     // 把流程挂接到某人身上，分配流程发起的权限
     linkToEvent=()=>{
         let keyList = []
+        console.log(this.state.configedFlowArr)
         this.state.configedFlowArr.forEach((item)=>{
             if (item.checked) {
                 keyList.push({
@@ -203,7 +211,7 @@ class EventConfig extends React.Component {
                 <div className="form-headerbox">
                     <Form layout="inline">
                         <Form.Item label="人员选择">
-                            <StaffSelect handleStaff={this.handleStaff}></StaffSelect>
+                            <StaffSelect handleStaff={this.handleStaff} userName={this.state.userName}></StaffSelect>
                         </Form.Item>
                         <Form.Item label="流程名称">
                             {/* <Input type="text" placeholder="请输入流程名称" className="input-text-content" allowClear onChange={this.getInput}></Input> */}
@@ -213,7 +221,15 @@ class EventConfig extends React.Component {
                             <Button className="localBtnClass" size="small" type="primary" className="table-oper-btn" onClick={this.getData}>查询</Button>
                         </Form.Item> */}
                     </Form>
-                    <Button className="localBtnClass rightBtn" size="small" type="primary" onClick={this.linkToEvent}>挂接</Button>
+                    <Tooltip title="请点击选择人员，如未选择，默认挂接自己" placement="leftBottom">
+                        <Button className="localBtnClass rightBtn" size="small" type="primary" onClick={this.linkToEvent}>挂接</Button>
+                    </Tooltip>
+                </div>
+                <div className="header-content-divider"></div>
+                <div className="eventconfig-tipsbox">
+                    <p className="flowname-span">{this.props.location.state.name}</p>
+                    提示：请为{this.props.location.state.name}
+                    事件配置相关联的流程，如为别人配置权限，请点击人员选择器，选择具体人员，然后请点击勾选下面流程卡片，然后在选中的卡片右侧点击设置图标，为该事件设置流程结束之后事宜，再点击页面右上角挂接按钮!
                 </div>
                 <div className="header-content-divider"></div>
                 <div className="EventConfig-contentbox">
@@ -241,7 +257,7 @@ class EventConfig extends React.Component {
                     </Button>
                 </div>
                 <Modal title="流程结束之后" visible={this.state.visible} onOk={this.saveEndType} onCancel={this.closeModal}>
-                    <Radio.Group onChange={this.handleChangeSelect} value={this.state.EndType}>
+                    <Radio.Group onChange={this.handleChangeSelect} value={this.state.EndType} defaultValue={"0"}>
                         <Radio style={radioStyle} value="0">
                             不做任何事情
                         </Radio>

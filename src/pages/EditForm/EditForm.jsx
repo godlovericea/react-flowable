@@ -85,6 +85,39 @@ const customizeSetting = {
             widget: 'cascader',
             setting: {},
         },
+        {
+            text: '城市选择器',
+            name: 'cityPicker',
+            schema: {
+                title: '城市选择器',
+                type: 'string',
+                'ui:widget': 'cityPicker',
+            },
+            widget: 'cityPicker',
+            setting: {},
+        },
+        {
+            text: '坐标控件',
+            name: 'mapSelect',
+            schema: {
+                title: '坐标控件',
+                type: 'string',
+                'ui:widget': 'mapSelect',
+            },
+            widget: 'mapSelect',
+            setting: {},
+        },
+        {
+            text: '自定义多选',
+            name: 'multiSelect',
+            schema: {
+                title: '自定义多选',
+                type: 'string',
+                'ui:widget': 'multiSelect',
+            },
+            widget: 'multiSelect',
+            setting: {},
+        },
     ],
 }
 
@@ -220,13 +253,14 @@ const EditForm = (props) => {
         }
         UpdateFormDef(props.location.state.id, params)
         .then(res=>{
-            alert("修改成功")
+            message.success("修改成功")
+            goBackToHome()
         })
     }
     return(
         <div style={{ height: '100vh' }}>
             <Generator 
-                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: LedgerAccount, file:UploadFile, editSearch: EditbleSelct }} 
+                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: LedgerAccount, file:UploadFile, editSearch: EditbleSelct,  }} 
                 ref={genRef} 
                 defaultValue={defaultValue} 
                 templates={templates} 

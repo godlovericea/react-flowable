@@ -5,6 +5,7 @@ import { UpdateStatus, GetFormListInfo, DeleteFormLogic } from '../../apis/proce
 import { Table, Space, Button, Form, Input, Pagination, Modal, message } from 'antd';
 import './process.less'
 import moment from 'moment';
+import NoData from '../../components/NoData/NoData'
 const { Search } = Input
 const { Column } = Table;
 class Process extends React.Component{
@@ -44,20 +45,33 @@ class Process extends React.Component{
             curPage: curPage,
             pageSize: pageSize
         },()=>{
-            this.getData()
+            this.getData(this.state.name)
         })
     }
     // 改变页码大小
     handlePageSizeChange=(page, size)=>{
     }
+    handleChange=(e)=>{
+        this.setState({
+            name: e.target.value
+        })
+    }
+    handleSearch=(e)=>{
+        this.setState({
+            name: e
+        }, ()=>{
+            this.getData(this.state.name)
+        })
+    }
     // 拉取数据
-    getData = (name = "")=> {
-        GetFormListInfo(name,this.state.curPage, this.state.pageSize)
+    getData = (flowName)=> {
+        
+        GetFormListInfo(flowName,this.state.curPage, this.state.pageSize)
         .then(res=>{
             res.data.getMe.forEach((item,index)=>{
                 item.index = index + 1
-                item.created = item.created === "" ? "无数据" : moment(item.created).format("YYYY-MM-DD HH:mm:ss")
-                item.lastUpdated = item.lastUpdated === "" ? "无数据" :moment(item.lastUpdated).format("YYYY-MM-DD HH:mm:ss")
+                item.created = item.created === "" ? "" : moment(item.created).format("YYYY-MM-DD HH:mm:ss")
+                item.lastUpdated = item.lastUpdated === "" ? "" :moment(item.lastUpdated).format("YYYY-MM-DD HH:mm:ss")
             })
             this.setState({
                 tableData: res.data.getMe,
@@ -70,7 +84,7 @@ class Process extends React.Component{
         return ()=>{
             UpdateStatus(record.ID, 0)
             .then((res)=>{
-                this.getData()
+                this.getData(this.state.name)
             })
         }
     }
@@ -92,7 +106,7 @@ class Process extends React.Component{
                 this.setState({
                     visible: false
                 })
-                this.getData()
+                this.getData(this.state.name)
             } else {
                 message.success(res.data.errMsg)
             }
@@ -143,13 +157,15 @@ class Process extends React.Component{
         }
     }
     // 查看流程
-    goShow=(id)=>{
+    goShow=(id, name)=>{
         // console.log(id)
         return ()=>{
             this.props.history.push({
                 pathname: '/form-render/show',
                 state:{
-                    id: id
+                    id: id,
+                    name: name,
+                    searchName: this.state.name
                 }
             })
         }
@@ -161,6 +177,7 @@ class Process extends React.Component{
                 pathname: '/form-render/trans',
                 state:{
                     name: name,
+                    searchName: this.state.name,
                     key: key,
                     id: id,
                     type: type
@@ -170,7 +187,14 @@ class Process extends React.Component{
     }
     componentDidMount() {
         this.computeHeight()
-        this.getData()
+        let flowName = this.state.name
+        if (this.props.location.state) {
+            flowName = this.props.location.state.searchName
+            this.setState({
+                name: flowName
+            })
+        }
+        this.getData(flowName)
     }
     computeHeight(){
         var height = document.documentElement.clientHeight;
@@ -186,7 +210,7 @@ class Process extends React.Component{
                     <Form layout="inline">
                         <Form.Item label="表单名称">
                             {/* <Input placeholder="请输入表单名称" className="input-text-content" allowClear onChange={this.handleProName}/> */}
-                            <Search placeholder="请输入表单名称" className="input-text-content" onSearch={this.getData} style={{ width: 200 }} />
+                            <Search placeholder="请输入表单名称" value={this.state.name} className="input-text-content" onChange={this.handleChange} onSearch={this.handleSearch} style={{ width: 200 }} />
                         </Form.Item>
                         {/* <Form.Item>
                             <Button className="localBtnClass" size="small" type="primary" onClick={this.getData}>查询</Button>
@@ -199,36 +223,55 @@ class Process extends React.Component{
                 </div>
                 
                 <div className="header-content-divider"></div>
-                <Table bordered={true} dataSource={this.state.tableData} pagination={false} rowClassName="rowClassName" scroll={{y: this.state.clientHeight}}>
-                    <Column title="序号" dataIndex="index" key="index" width={80} align="center"/>
-                    <Column title="表单名称" dataIndex="name" key="WorkflowName" align="center"/>
-                    <Column title="表单标识" dataIndex="key" key="Key" align="center"/>
-                    <Column title="创建人" dataIndex="createdBy" key="createdBy" align="center"/>
-                    <Column title="创建时间" dataIndex="created" key="created" align="center"/>
-                    <Column title="最后修改时间" dataIndex="lastUpdated" key="lastUpdated" align="center"/>
-                    <Column
-                        align="center"
-                        title="操作"
-                        key="action"
-                        render={(text, record) => (
-                            <Space size="middle">
-                                {
-                                    record.Type === '表单' ?
-                                    <div>
-                                        <Button className="table-oper-btn" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.goEdit(record.id, record.name, record.key, record.description)}>编辑</Button>
-                                        <Button className="table-oper-btn" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.delForm(record.id)}>删除</Button>
-                                        <Button className="table-oper-btn" size="small" type="primary" onClick={this.goShow(record.id)}>查看</Button>
-                                    </div>
-                                    :
-                                    <div>
-                                        <Button className="table-oper-btn" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.delForm(record.id)}>删除</Button>
-                                        <Button className="table-oper-btn" size="small" type="primary" onClick={this.goShowAccount(record.TableName, record.key, record.id, record.IsUpdateOrAdd)}>查看</Button>
-                                    </div>
-                                }
-                            </Space>
-                        )}
-                    />
-                </Table>
+                {
+                    this.state.tableData.length > 0 ?
+                    <>
+                        <Table bordered={true} dataSource={this.state.tableData} pagination={false} rowClassName="rowClassName" scroll={{y: this.state.clientHeight}}>
+                            <Column title="序号" dataIndex="index" key="index" width={80} align="center"/>
+                            <Column title="表单名称" dataIndex="name" key="WorkflowName" align="center"/>
+                            <Column title="表单标识" dataIndex="key" key="Key" align="center"/>
+                            <Column title="创建人" dataIndex="createdBy" key="createdBy" align="center"/>
+                            <Column title="创建时间" dataIndex="created" key="created" align="center"/>
+                            <Column title="最后修改时间" dataIndex="lastUpdated" key="lastUpdated" align="center"/>
+                            <Column
+                                align="center"
+                                title="操作"
+                                key="action"
+                                width={250}
+                                render={(text, record) => (
+                                    <Space size="middle">
+                                        {
+                                            record.Type === '表单' ?
+                                            <div>
+                                                <Button className="table-oper-btn" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.goEdit(record.id, record.name, record.key, record.description)}>编辑</Button>
+                                                <Button className="table-oper-btn" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.delForm(record.id, record.name)}>删除</Button>
+                                                <Button className="table-oper-btn" size="small" type="primary" onClick={this.goShow(record.id, record.name)}>查看</Button>
+                                            </div>
+                                            :
+                                            <div>
+                                                <Button className="table-oper-btn" size="small" type="primary" style={{marginRight:"10px"}} onClick={this.delForm(record.id)}>删除</Button>
+                                                <Button className="table-oper-btn" size="small" type="primary" onClick={this.goShowAccount(record.TableName, record.key, record.id, record.IsUpdateOrAdd)}>查看</Button>
+                                            </div>
+                                        }
+                                    </Space>
+                                )}
+                            />
+                        </Table>
+                        <Pagination
+                            size="small"
+                            current={this.state.curPage}
+                            total={this.state.total}
+                            showSizeChanger
+                            showQuickJumper
+                            defaultPageSize={20}
+                            onChange = {this.handlePageChange}
+                            showTotal={total => `共${Math.ceil(total/this.state.pageSize)}页/${total}条记录`}>
+                        </Pagination>
+                    </>
+                    :
+                    <NoData></NoData>                
+                }
+                
                 <Modal
                     title="提示"
                     visible={this.state.visible}
@@ -240,16 +283,7 @@ class Process extends React.Component{
                 >
                     确定删除该表单吗？
                 </Modal>
-                <Pagination
-                    size="small"
-                    current={this.state.curPage}
-                    total={this.state.total}
-                    showSizeChanger
-                    showQuickJumper
-                    defaultPageSize={20}
-                    onChange = {this.handlePageChange}
-                    showTotal={total => `共${Math.ceil(total/this.state.pageSize)}页/${total}条记录`}>
-                </Pagination>
+                
             </div>
         )
     }

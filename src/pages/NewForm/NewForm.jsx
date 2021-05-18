@@ -71,7 +71,7 @@ class NewForm extends React.Component{
         }
         // 配置生成器的表头按钮
         this.extraButtons = [
-            true, true, false, true, 
+            true, true, true, true, 
             { 
                 text: '保存',
                 type: 'primary',
@@ -203,9 +203,11 @@ class NewForm extends React.Component{
         }
         CreateModel(cookie,params)
         .then(res=>{
-            alert("新增成功")
+            message.success("新增成功")
             this.setState({
                 isModalVisible: false
+            }, ()=>{
+                this.goBackToList()
             })
         })
     }

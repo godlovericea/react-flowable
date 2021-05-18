@@ -114,7 +114,14 @@ module.exports = function (webpackEnv) {
       },
       {
         loader: require.resolve('less-loader'),
-        options: lessOptions,
+        options: {
+            javascriptEnabled: true,
+             // 如果使用less-loader@5，请移除 lessOptions 这一级直接配置选项。
+            modifyVars: {
+              'primary-color': '#01c1a4',
+              'border-radius-base': '4px',
+            },
+        },
       },
       {
         // Options for PostCSS as we reference these options twice

@@ -82,13 +82,17 @@ const EventOnDealList = (props) => {
     // 打开查询以发起流程
     const openShowStartedFlow=(evname, evjson, evcode)=>{
         return ()=>{
+            if (!evcode){
+                message.error("无事件编码，请联系管理员！")
+                return
+            }
             GetProcInstByEventCode(evcode)
             .then((res)=>{
                 if (res.data.say.statusCode === "0000") {
                     res.data.getMe.forEach((item,index)=>{
                         item.index = index + 1
-                        item.StartTime = moment(item.StartTime).format("YYYY-MM-DD HH:mm:ss")
-                        item.EndTime = moment(item.EndTime).format("YYYY-MM-DD HH:mm:ss")
+                        item.StartTime = item.StartTime ? moment(item.StartTime).format("YYYY-MM-DD HH:mm:ss") : ""
+                        item.EndTime = item.EndTime ? moment(item.EndTime).format("YYYY-MM-DD HH:mm:ss") : ""
                         item.key = index
                     })
                     setFlowData(res.data.getMe)
@@ -165,7 +169,10 @@ const EventOnDealList = (props) => {
     // 操作事件
     const handleOperate=(name, evJson, evCode)=>{
         return ()=>{
-            console.log(userId)
+            if (!evCode){
+                message.error("无事件编码，请联系管理员！")
+                return
+            }
             props.history.push({
                 pathname: '/form-render/eventoper',
                 state: {
@@ -336,77 +343,75 @@ const EventOnDealList = (props) => {
             <div className="header-content-divider"></div>
             {
                 data.length > 0 ?
-                <Table bordered dataSource={data} pagination={pagination} rowClassName="rowClassName" scroll={{y: clientHeight}}>
-                <Column title="序号" width={80} dataIndex="EventIndex" key="EventIndex" align="center"/>
-                <Column title="事件名称" dataIndex="EventName" key="EventName" align="center"/>
-                <Column title="事件表" dataIndex="EventTable" key="EventTable" align="center"/>
-                <Column title="事件编码" dataIndex="EventCode" key="EventCode" align="center"/>
-                <Column title="事件发起人" dataIndex="ReportMan" key="ReportMan" align="center"/>
-                <Column title="发起时间" dataIndex="ReportTime" key="ReportTime" align="center"/>
-                <Column 
-                    title="事件状态" 
-                    key="EventState"
-                    align="center"
-                    render={(text, record) => {
-                        return (
-                            record.EventState !== "已关闭"?
-                            "进行中"
-                            :
-                            record.EventState
-                        )
-                    }}
-                />
-                <Column
-                    title="操作"
-                    key="action"
-                    render={(text, record) => {
-                        return (
-                            record.EventState !== "已关闭"?
-                            <Space size="middle">
-                                <Button type="primary" size="small" className="table-oper-btn" onClick={handleOperate(record.EventName, record.EventJson, record.EventCode)}>操作</Button>
-                                <Button type="primary" size="small" className="table-oper-btn" onClick={openShowStartedFlow(record.EventName, record.EventJson, record.EventCode)}>查看已发起流程</Button>
-                            </Space>
-                            :
-                            ""
-                        )
-                    }}
-                />
-                {/* <Column
-                    title="操作"
-                    key="action"
-                    render={(text, record) => (
-                        <Space size="middle">
-                            <Button type="primary" size="small" onClick={handleOperate(record.EventName, record.EventJson, record.EventCode)}>操作</Button>
-                        </Space>
-                    )}
-                /> */}
+                <Table className="event-ondeal-table" bordered dataSource={data} pagination={pagination} rowClassName="rowClassName">
+                    <Column title="序号" width={80} dataIndex="EventIndex" key="EventIndex" align="center"/>
+                    <Column title="事件名称" dataIndex="EventName" key="EventName" align="center"/>
+                    <Column title="事件编码" dataIndex="EventCode" key="EventCode" align="center"/>
+                    <Column title="事件发起人" dataIndex="ReportMan" key="ReportMan" align="center"/>
+                    <Column title="发起时间" dataIndex="ReportTime" key="ReportTime" align="center"/>
+                    <Column 
+                        title="事件状态" 
+                        key="EventState"
+                        align="center"
+                        render={(text, record) => {
+                            return (
+                                record.EventState !== "已关闭"?
+                                "进行中"
+                                :
+                                record.EventState
+                            )
+                        }}
+                    />
+                    <Column
+                        title="操作"
+                        align="center"
+                        key="action"
+                        width={250}
+                        render={(text, record) => {
+                            return (
+                                record.EventState !== "已关闭"?
+                                <Space size="middle">
+                                    <Button type="primary" size="small" className="table-oper-btn" onClick={handleOperate(record.EventName, record.EventJson, record.EventCode)}>操作</Button>
+                                    <Button type="primary" size="small" className="table-oper-btn" onClick={openShowStartedFlow(record.EventName, record.EventJson, record.EventCode)}>查看已发起流程</Button>
+                                </Space>
+                                :
+                                ""
+                            )
+                        }}
+                    />
             </Table>
             :
             <NoData></NoData>
             }
             
             <Modal title="已发起流程" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={1200}>
-                <Table bordered dataSource={flowData} rowClassName="rowClassName">
-                    <Column title="序号" width={80} dataIndex="index" key="index" align="center"/>
-                    <Column title="流程名称" dataIndex="FlowName" key="FlowName" align="center"/>
-                    <Column title="流程发起人" dataIndex="Creater" key="ReportMan" align="center"/>
-                    <Column title="流程发起时间" dataIndex="StartTime" key="StartTime" align="center"/>
-                    <Column title="流程结束时间" dataIndex="EndTime" key="EndTime" align="center"/>
-                    <Column title="事件流程编码" dataIndex="ProcCode" key="ProcCode" align="center"/>
-                    <Column
-                        title="操作"
-                        key="action"
-                        align="center"
-                        render={(text, record) => {
-                            return (
-                                <Space size="middle">
-                                    <Button type="primary" size="small" onClick={showModelerImg(record.FlowName, record.ProcInstID, record.ProcCode)}>流程图</Button>
-                                    <Button type="primary" size="small" onClick={showTransfer(record.FlowName, record.ProcInstID, record.ProcCode)}>流转信息</Button>
-                                </Space>
-                            )
-                        }}
-                    />
-                </Table>
+                {
+                    flowData.length > 0 ?
+                    <Table bordered dataSource={flowData} pagination={false} rowClassName="rowClassName">
+                        <Column title="序号" width={80} dataIndex="index" key="index" align="center"/>
+                        <Column title="流程名称" dataIndex="FlowName" key="FlowName" align="center"/>
+                        <Column title="流程发起人" dataIndex="Creater" key="ReportMan" align="center"/>
+                        <Column title="流程发起时间" dataIndex="StartTime" key="StartTime" align="center"/>
+                        <Column title="流程结束时间" dataIndex="EndTime" key="EndTime" align="center"/>
+                        <Column title="事件流程编码" dataIndex="ProcCode" key="ProcCode" align="center"/>
+                        <Column
+                            title="操作"
+                            key="action"
+                            align="center"
+                            render={(text, record) => {
+                                return (
+                                    <Space size="middle">
+                                        <Button type="primary" size="small" onClick={showModelerImg(record.FlowName, record.ProcInstID, record.ProcCode)}>流程图</Button>
+                                        <Button type="primary" size="small" onClick={showTransfer(record.FlowName, record.ProcInstID, record.ProcCode)}>流转信息</Button>
+                                    </Space>
+                                )
+                            }}
+                        />
+                    </Table>
+                    :
+                    <NoData></NoData>
+                }
+                
             </Modal>
             <Modal title="流程图" visible={modelerVisible} onCancel={closeModeler} onOk={closeModeler} width={1000}
                 bodyStyle={{ display: 'flex',justifyContent: 'center',alignItems:'center'}}>
@@ -414,46 +419,52 @@ const EventOnDealList = (props) => {
             </Modal>
             <Modal title="流转信息" visible={flowVisible} onCancel={closeFlow} onOk={sureFlow} width={900}
             bodyStyle={{ display: 'flex',justifyContent: 'center',alignItems:'center'}}>
-                <Table bordered dataSource={flowTableData} pagination={false} rowClassName="rowClassName" style={{width:'100%'}}>
-                    <Column title="序号" width={80} dataIndex="index" key="index" align="center"/>
-                    <Column title="操作步骤" dataIndex="TaskName" key="TaskName" align="center"/>
-                    <Column title="开始时间" dataIndex="STime" key="STime" align="center"/>
-                    <Column title="结束时间" dataIndex="ETime" key="ETime" />
-                    <Column title="操作人账号" dataIndex="OperationMan" key="OperationMan" align="center"/>
-                    <Column
-                        title="流程状态"
-                        key="state"
-                        align="center"
-                        render={(text, record) => (
-                            <Space size="middle">
-                                {
-                                    record.DeleteReason !== "" ?
-                                    <span>回退</span>
-                                    :
-                                    <span style={{color: record.State === '进行中'? '#096dd9' : ''}}>{record.State === "提交" ? "已完成": record.State}</span>
-                                }
-                            </Space>
-                        )}
-                    />
-                    <Column
-                        title="操作"
-                        key="action"
-                        render={(text, record) => (
-                            <Space size="middle">
-                                {
-                                    record.DeleteReason !== "" ?
-                                    <div>
-                                        {record.GoBackReason}
-                                    </div>
-                                    :
-                                    <div>
-                                        <Button className="localBtnClass" size="small" type="primary" onClick={goShowHistoryForm(record.TaskID)}>查看</Button>
-                                    </div>
-                                }
-                            </Space>
-                        )}
-                    />
-                </Table>
+                {
+                    flowTableData.length > 0 ?
+                    <Table bordered dataSource={flowTableData} pagination={false} rowClassName="rowClassName">
+                        <Column title="序号" width={80} dataIndex="index" key="index" align="center"/>
+                        <Column title="操作步骤" dataIndex="TaskName" key="TaskName" align="center"/>
+                        <Column title="开始时间" dataIndex="STime" key="STime" align="center"/>
+                        <Column title="结束时间" dataIndex="ETime" key="ETime" />
+                        <Column title="操作人账号" dataIndex="OperationMan" key="OperationMan" align="center"/>
+                        <Column
+                            title="流程状态"
+                            key="state"
+                            align="center"
+                            render={(text, record) => (
+                                <Space size="middle">
+                                    {
+                                        record.DeleteReason !== "" ?
+                                        <span>回退</span>
+                                        :
+                                        <span style={{color: record.State === '进行中'? '#096dd9' : ''}}>{record.State === "提交" ? "已完成": record.State}</span>
+                                    }
+                                </Space>
+                            )}
+                        />
+                        <Column
+                            title="操作"
+                            key="action"
+                            render={(text, record) => (
+                                <Space size="middle">
+                                    {
+                                        record.DeleteReason !== "" ?
+                                        <div>
+                                            {record.GoBackReason}
+                                        </div>
+                                        :
+                                        <div>
+                                            <Button className="localBtnClass" size="small" type="primary" onClick={goShowHistoryForm(record.TaskID)}>查看</Button>
+                                        </div>
+                                    }
+                                </Space>
+                            )}
+                        />
+                    </Table>
+                    :
+                    <NoData></NoData>
+                }
+                
             </Modal>
         </div>
     )

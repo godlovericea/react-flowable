@@ -15,6 +15,8 @@ import TableAccount from '../../components/TableAccount/TableAccount'
 import UploadFile from '../../components/UploadFile/UploadFile'
 import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
 import SearchSelect from '../../components/SearchSelect/SearchSelect'
+import AMapContainer from '../../components/AMapContainer/AMapContainer'
+import cityPicker from '../../components/CityPicker/CityPicker'
 const { Search } = Input;
 const { Column } = Table;
 
@@ -187,6 +189,9 @@ const NeedToDeal = (props) => {
                     // let values = {}
                     const testData = new ConfigSchemaClass(fieldData.ColumnConfig, fieldData.Config, web4Config, values)
                     setSchema(testData.schema)
+                    console.log(fieldData.ColumnConfig, "fieldData.ColumnConfig")
+
+                    console.log(testData.schema, "testData.schema")
                 }
             }
         })
@@ -255,6 +260,32 @@ const NeedToDeal = (props) => {
             setUserNameArr(res.data.getMe)
         })
     }
+
+    const handleArray=(arr)=> {
+        let str = ""
+        if (arr.length === 0){
+            str = ""
+        } else if (arr.length === 1) {
+            str = arr[0] + "#=#"
+        } else {
+            str = arr.join("#=#")
+        }
+        return str
+    }
+    
+    // 将字符串转数组
+    const revertHandleArray=(params) =>{
+        let arr = []
+        if (!params){
+            arr = []
+        } else {
+            let arrTemp = params.split("#=#")
+            arr = arrTemp.filter(s => {
+                return s && s.trim()
+            })
+        }
+        return arr
+    }
     // 处理FormRenderBaseType
     const handleFormRenderBaseType = (formData, configSchema)=>{
         let arr = []
@@ -265,10 +296,16 @@ const NeedToDeal = (props) => {
                     for(const ckey in properties[key].properties){
                         for(const cfkey in formData[fkey]) {
                             if (ckey === cfkey) {
+                                let tempValue = ""
+                                if (Array.isArray(formData[fkey][cfkey])) {
+                                    tempValue = handleArray(formData[fkey][cfkey])
+                                } else {
+                                    tempValue = formData[fkey][cfkey]
+                                }
                                 arr.push({
                                     Type: properties[key].properties[ckey].type,
                                     Name: properties[key].properties[ckey].title,
-                                    Value: formData[fkey][cfkey]
+                                    Value: tempValue
                                 })
                             }
                         }
@@ -281,10 +318,10 @@ const NeedToDeal = (props) => {
     // 保存
     const saveTask=()=>{
         // console.log(formData)
-        if (valid.length > 0) {
-            message.error("提交失败,请按照提示填写表单")
-            return
-        }
+        // if (valid.length > 0) {
+        //     message.error("提交失败,请按照提示填写表单")
+        //     return
+        // }
         // let obj = {}
         // if (prevSchemaValues) {
         //     for(let pkey in prevSchemaValues) {
@@ -706,7 +743,7 @@ const NeedToDeal = (props) => {
             <div className="divider-box"></div>
             <Modal title="请选择候选人" visible={nextPersonVisible} onCancel={closeNextPersonModeler} onOk={sureNextPersonModeler} width={650}>
                 <div>
-                    <Search placeholder="请输入姓名" onSearch={onTransferSearch} enterButton />
+                    <Search placeholder="请输入姓名" onSearch={onTransferSearch} enterButton className="cadidateinput"/>
                     {
                         assigneeList.map((item, index)=>{
                             return(
@@ -739,10 +776,10 @@ const NeedToDeal = (props) => {
                 bodyStyle={{height:'500px',overflowY:'auto'}}>
                 <div>
                     <Search
+                        className="onlistinput"
                         placeholder="请输入姓名"
                         allowClear
-                        enterButton="搜索"
-                        size="large"
+                        style={{width: 400}}
                         onSearch={getTransferName}
                     />
                 </div>
@@ -768,7 +805,7 @@ const NeedToDeal = (props) => {
                 <img src={processImgSrc} alt="process"/>
             </Modal>
 
-            <Modal title="回退" visible={rebackVisible} onCancel={closeRebackModeler} onOk={sureRebackModeler} width={650}
+            <Modal title="回退" visible={rebackVisible} onCancel={closeRebackModeler} onOk={sureRebackModeler} width={750}
                 bodyStyle={{ display: 'flex',flexDirection: 'column',justifyContent: 'center'}}>
                     <Table bordered dataSource={goBacktableData} pagination={false} rowClassName="rowClassName" style={{width:'100%'}}>
                         <Column title="操作步骤" dataIndex="TaskName" key="TaskName" align="center"/>
@@ -795,7 +832,7 @@ const NeedToDeal = (props) => {
                     <Input type="text" placeholder="请输入回退意见" ref={backRef}></Input>
             </Modal>
 
-            <Modal title="催办" visible={urgentVisible} onCancel={closeUrgentModeler} onOk={sureUrgentModeler} width={650}
+            <Modal title="催办" visible={urgentVisible} onCancel={closeUrgentModeler} onOk={sureUrgentModeler} width={750}
             bodyStyle={{ display: 'flex',justifyContent: 'center',flexDirection: 'column'}}>
                 <Table bordered dataSource={urgentTableData} pagination={false} rowClassName="rowClassName" style={{width:'100%'}}>
                         <Column title="操作步骤" dataIndex="TaskName" key="TaskName" align="center"/>
@@ -902,8 +939,7 @@ const NeedToDeal = (props) => {
                 formData={formData}
                 onChange={setFormData}
                 onValidate={onValidate}
-                showValidate={false}
-                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file: UploadFile, editSearch: EditbleSelct }}
+                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker }}
             />
         </div>
     );

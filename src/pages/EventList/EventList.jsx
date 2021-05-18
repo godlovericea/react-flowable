@@ -14,10 +14,15 @@ const EventList = (props) => {
     const [data, setData] = useState([])
     // 事件名称
     const [eventName, setEventName] = useState('')
+    // 搜索框值
+    const [searchName,  setSearchName] = useState("")
     // 事件编号
     const [EventCode, setEventCode] = useState('')
     // 滚动高度
     const [clientHeight, setClientHeight] = useState(0)
+    //
+    const [userName, setUserName] = useState("")
+    const [loginName, setLoginName] = useState("")
     // 事件类型的名称输入框
     const eventNameRef = useRef()
     // 事件类型描述输入框
@@ -41,6 +46,7 @@ const EventList = (props) => {
     })
     // 搜索按钮
     const onSearch =(data) =>{
+        setEventName(data)
         getData(data)
     }
     // 跳转到事件权限配置
@@ -63,8 +69,6 @@ const EventList = (props) => {
     }
     // 点击确定新增事件类型
     const handleOk=()=>{
-        console.log(eventDescRef.current.state.value)
-        console.log(eventNameRef.current.state.value)
         setIsModalVisible(false)
     }
     // 点击取消按钮，取消新增
@@ -80,7 +84,8 @@ const EventList = (props) => {
             props.history.push({
                 pathname: '/form-render/eventshow',
                 state: {
-                    name: name
+                    name: name,
+                    searchName: eventName
                 }
             })
         }
@@ -116,7 +121,9 @@ const EventList = (props) => {
             props.history.push({
                 pathname: '/form-render/eventconfig',
                 state: {
-                    name: name
+                    name: name,
+                    searchName: eventName,
+                    userName: userName
                 }
             })
         }
@@ -138,10 +145,57 @@ const EventList = (props) => {
         // console.log(height)
         setClientHeight(height - 190)
     }
+    const handleOnChange=(e)=>{
+        console.log(e)
+        setEventName(e.target.value)
+    }
+
+    // 处理从web4的路由传递过来的参数
+    const handleRouteParams=()=>{
+        let userId = ""
+        let userName = ""
+        // 用户部门
+        let userDepart = ""
+        let loginName= ""
+        // 路由的search
+        let hashData = ""
+        let searchData = ""
+        let search = ""
+        if (window.location.hash) {
+            hashData = window.location.hash
+            searchData = hashData.split("?")
+            search = searchData[1]
+        } else {
+            search = window.location.search.slice(1)
+        }
+        const searchArr = search.split("&")
+        // 循环接续值
+        // ?userId=${userId}&loginName=${loginName}&userName=${userName}" 
+        searchArr.forEach((item)=>{
+            if (item.indexOf("userId") > -1) {
+                userId = item.split("=")[1]
+            } else if (item.indexOf("userName") > -1) {
+                userName = decodeURI(item.split("=")[1])
+            } else if (item.indexOf("userDepart") > -1) {
+                userDepart = decodeURI(item.split("=")[1])
+            } else if (item.indexOf("loginName") > -1) {
+                loginName = item.split("=")[1]
+            }
+        })
+        setUserName(userName)
+    }
 
     useEffect(()=>{
+
         computeHeight()
-        getData()
+        let name = eventName
+        if (props.location.state) {
+            name = props.location.state.searchName
+            setEventName(name)
+        }
+        handleRouteParams()
+        getData(name)
+        
     }, [])
 
     return (
@@ -152,6 +206,8 @@ const EventList = (props) => {
                         <Search
                             className="input-text-content"
                             placeholder="请输入事件名称"
+                            value={eventName}
+                            onChange={handleOnChange}
                             onSearch={onSearch}
                             style={{width: 200}}
                         />
@@ -175,6 +231,7 @@ const EventList = (props) => {
                         align="center"
                         title="操作"
                         key="action"
+                        width={250}
                         render={(text, record) => (
                             <Space size="middle">
                                 <Button type="primary" size="small" className="table-oper-btn" onClick={handleShow(record.EventName)}>事件表单</Button>

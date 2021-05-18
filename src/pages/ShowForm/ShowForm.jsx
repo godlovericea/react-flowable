@@ -9,6 +9,8 @@ import TableAccount from '../../components/TableAccount/TableAccount'
 import UploadFile from '../../components/UploadFile/UploadFile'
 import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
 import SearchSelect from '../../components/SearchSelect/SearchSelect'
+import AMapContainer from '../../components/AMapContainer/AMapContainer'
+import cityPicker from '../../components/CityPicker/CityPicker'
 
 const ShowForm = (props) => {
     // FormRender的formData
@@ -38,7 +40,10 @@ const ShowForm = (props) => {
     // 返回列表
     const handleClickReback = ()=>{
         props.history.push({
-            pathname: '/form-render/home'
+            pathname: '/form-render/home',
+            state:{
+                searchName: props.location.state.searchName
+            }
         })
     }
 
@@ -48,14 +53,20 @@ const ShowForm = (props) => {
     }
 
     return (
-        <div>
+        <div style={{backgroundColor:'#ffffff'}}>
+            <div className="form-info-box">
+                <div className="form-info-before"></div>
+                <div>{props.location.state.name}</div>
+            </div>
+            <div className="header-content-divider"></div>
             <FormRender
                 ref={formRef}
                 {...schema}
                 formData={formData}
                 onChange={setFormData}
                 onValidate={onValidate}
-                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
+                showValidate={false}
+                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker }}
             />
             <div style={{textAlign: 'right',marginRight: '20px',padding: '30px 0'}}>
                 <Button type="primary" style={{ marginLeft: 30 }} className="table-oper-btn" onClick={handleClickReback}>返回列表</Button>

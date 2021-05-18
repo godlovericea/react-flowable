@@ -1,0 +1,135 @@
+.productInfo-wrapper{
+    width: 100%;
+    .productInfo-header{
+        border-top: 1px solid rgba(235, 235, 235);
+        background: #fafafa;
+        border-left: 1px solid rgba(235, 235, 235);
+        border-bottom: 1px solid rgba(235, 235, 235);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        .header-title{
+            width: 25%;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-right: 1px solid rgba(235, 235, 235);
+            font-weight: bold;
+        }
+    }
+    .productInfo-content{
+        width: 100%;
+        .product-rows{
+            display: flex;
+            width: 100%;
+            .first-column{
+                width: 25%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 1px solid rgba(235, 235, 235);
+            }
+            .other-column{
+                width: 75%;
+                .normal-column{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-top: 1px solid rgba(235, 235, 235);
+                    border-bottom: 1px solid rgba(235, 235, 235);
+                    .product-name{
+                        height: 36px;
+                        width: 33.3333%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        border-right: 1px solid rgba(235, 235, 235);
+                        .ant-input-number-sm input{
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+}
+.product-wrapper{
+    .modal-productInfo-header{
+        border-top: 1px solid rgba(235, 235, 235);
+        background: #fafafa;
+        border-left: 1px solid rgba(235, 235, 235);
+        border-bottom: 1px solid rgba(235, 235, 235);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 55px;
+        z-index: 2;
+        .modal-header-title{
+            font-weight: bold;
+            width: 240px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-right: 1px solid rgba(235, 235, 235);
+        }
+        .modal-header-product{
+            font-weight: bold;
+            width: 240px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-right: 1px solid rgba(235, 235, 235);
+        }
+    }
+    .productInfo-content{
+        width: 100%;
+        height: 600px;
+        margin-top: 18px;
+        .product-rows{
+            display: flex;
+            .first-column{
+                width: 240px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 1px solid rgba(235, 235, 235);
+            }
+            .other-column{
+                .normal-column{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-top: 1px solid rgba(235, 235, 235);
+                    border-bottom: 1px solid rgba(235, 235, 235);
+                    .product-name{
+                        height: 36px;
+                        width: 240px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        border-right: 1px solid rgba(235, 235, 235);
+                        .ant-input-number-sm input{
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.nodata{
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.topbtns{
+    text-align: right;
+    margin: 20px;
+}

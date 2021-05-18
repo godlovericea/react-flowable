@@ -124,12 +124,12 @@ class StartPermission extends React.Component {
         })
     }
     // 点击发起
-    handleStart=(flowName, FlowDefID)=>{
+    handleStart=(name, FlowDefID)=>{
         return ()=>{
             this.props.history.push({
                 pathname: '/form-render/start',
                 state:{
-                    flowName: flowName,
+                    name: name,
                     FlowDefID: FlowDefID,
                     userId: this.state.userId,
                     userName: this.state.userName,

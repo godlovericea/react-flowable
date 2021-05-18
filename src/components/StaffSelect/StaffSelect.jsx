@@ -1,14 +1,16 @@
 // 台账的人员选择器组件（非FormRender自定义组件）
 import React, { useState, useEffect } from 'react'
-import { Modal, Button, Radio, Input } from 'antd';
+import { Modal, Button, Radio, Input, Tooltip } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
 import { getUserListForRole } from '../../apis/process';
 import './StaffSelect.less';
 const { Search } = Input;
 
 const StaffSelect =(props)=> {
+    console.log(props)
     const [visible, setVisible] = useState(false)
     const [personArr, setPersonArr] = useState([])
+    const [personList, setPersonList] = useState([])
     const [person, setPerson] = useState('')
     const getData =()=>{
         getUserListForRole()
@@ -20,6 +22,7 @@ const StaffSelect =(props)=> {
                 }
             })
             setPersonArr(arr)
+            setPersonList(arr)
         })
     }
     const onFocus = ()=>{
@@ -37,12 +40,11 @@ const StaffSelect =(props)=> {
         setPerson(e.target.value)
     }
     const handleChange=(e)=>{
-        console.log(e)
         setPerson(e.target.value)
     }
     const onSearch=(e)=>{
         let arr = []
-        personArr.map((item) => {
+        personList.map((item) => {
             let list = {
                 OUID: item.OUID,
                 OUName: item.OUName,
@@ -64,9 +66,16 @@ const StaffSelect =(props)=> {
     }, [])
     return (
         <div className="personselect-wrapper">
-            <div>
-                <span className="selectvalue">{person}</span>
-                <Button type="primary" size="small" shape="round" icon={<UserAddOutlined />} onClick={onFocus}></Button>
+            <div className="personselect-header">
+                {
+                    person ?
+                    <div className="selectvalue">{ person }</div>
+                    :
+                    <div className="selectvalue">{ props.userName }</div>
+                }
+                <Tooltip title="请点击选择人员">
+                    <Button type="primary" size="small" shape="round" icon={<UserAddOutlined />} onClick={onFocus}></Button>
+                </Tooltip>
             </div>
             <Modal title="人员选择器" visible={visible} onOk={onOk} onCancel={onCancel} wrapClassName="personModalClass" bodyStyle={{height:'500px',overflowY:'auto'}}>
                 <Search

@@ -1,6 +1,6 @@
 // 给用户配置流程权限
 import React from 'react'
-import { Button, Input, Form, Row, Col, Checkbox, message } from 'antd';
+import { Button, Input, Form, Row, Col, Checkbox, message, Tooltip } from 'antd';
 import { GetWorkflowBaseInfo, UpdateWorkFlowRight, flowableLogin } from '../../apis/process';
 import StaffSelect from '../../components/StaffSelect/StaffSelect';
 import reactCookie from 'react-cookies'
@@ -20,6 +20,8 @@ class FlowPermission extends React.Component {
     handleStaff=async (val)=>{
         this.setState({
             userName: val
+        },()=>{
+            this.getData(this.state.flowName)
         })
     }
     // 获取点击选中的checkbox值
@@ -44,13 +46,15 @@ class FlowPermission extends React.Component {
         })
     }
     // 获取输入框的值
-    onSearch=(e)=>{
+    handleSearch=(e)=>{
         this.setState({
             flowName: e
+        },()=>{
+            this.getData(this.state.flowName)
         })
     }
     // 拉取数据
-    getData=(name = '')=>{
+    getData=(name)=>{
         // console.log(this.state.userName)
         let arr =[]
         GetWorkflowBaseInfo(name, this.state.userName, '', '', 1, 1000)
@@ -148,7 +152,7 @@ class FlowPermission extends React.Component {
         },()=>{
             // console.log(this.state.userName)
             this.LoginToFlowable()
-            this.getData()
+            this.getData(this.state.flowName)
         })
     }
     // 前一个版本配置字段的默认值以及属性，此版本废弃
@@ -172,11 +176,11 @@ class FlowPermission extends React.Component {
                 <div className="form-headerbox">
                     <Form layout="inline">
                         <Form.Item label="人员选择">
-                            <StaffSelect handleStaff={this.handleStaff}></StaffSelect>
+                            <StaffSelect handleStaff={this.handleStaff} userName={this.state.userName}></StaffSelect>
                         </Form.Item>
                         <Form.Item label="流程名称">
                             {/* <Input type="text" placeholder="请输入流程名称" className="input-text-content"  allowClear onChange={this.getInput}></Input> */}
-                            <Search placeholder="请输入流程名称" className="input-text-content" onSearch={this.getData} style={{ width: 200 }} />
+                            <Search placeholder="请输入流程名称" className="input-text-content" onSearch={this.handleSearch} style={{ width: 200 }} />
                         </Form.Item>
                         {/* <Form.Item>
                             <Button className="localBtnClass" size="small" type="primary" onClick={this.getData}>查询</Button>
@@ -185,7 +189,9 @@ class FlowPermission extends React.Component {
                             <Button className="localBtnClass" size="small" type="primary" onClick={this.linkToModeler}>挂接</Button>
                         </Form.Item> */}
                     </Form>
-                    <Button className="localBtnClass rightBtn" size="small" type="primary" onClick={this.linkToModeler}>挂接</Button>
+                    <Tooltip title="请点击选择人员，如未选择，默认挂接自己" placement="leftBottom">
+                        <Button className="localBtnClass rightBtn" size="small" type="primary" onClick={this.linkToModeler}>挂接</Button>
+                    </Tooltip>
                 </div>
                 <div className="header-content-divider"/>
                 {

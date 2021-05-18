@@ -19,6 +19,7 @@ class FormTransfer {
             // 处理每一种台账的数据类型
             let objData =await this.handleEveryGroup(this.dataArr[i].Schema)
             // 对象的value值
+            console.log(objData)
             obj[key] = {
                 type:"object",
                 title: this.dataArr[i].GroupName,
@@ -34,7 +35,7 @@ class FormTransfer {
             displayType: "row",
             showDescIcon: false,
             column: this.column,
-            labelWidth: 120
+            labelWidth: 80
         }
         return this.schema
     }
@@ -52,57 +53,63 @@ class FormTransfer {
             const ConfigInfo = schemaList[i].ConfigInfo
             
             if ((shape === "文本" || shape === "编码") && type === "文本") {
-                objKey =  `inputName_${i}`
+                objKey =  `inputName_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.handleInput(itemObj)
             } else if (shape === "多行文本") {
                 objKey =  `textarea_${i}`
                 obj[objKey] = await this.handleTextarea(itemObj)
             } else if ((shape + type).indexOf("数值") > -1) {
-                objKey = `inputNumber_${i}`
+                objKey = `inputNumber_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.handleNumberInput(itemObj)
             } else if (shape === "日期") {
-                objKey = `date_${i}`
+                objKey = `date_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.handleDatePicker(itemObj)
             } else if (shape === "日期时间" || shape === "时间") {
-                objKey = `dateTime_${i}`
+                objKey = `dateTime_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.handleDateTime(itemObj)
             } else if (shape === "选择器") {
                 if (ConfigInfo.indexOf('.') > -1) {
                     objKey = `selectTreeNode_${i}_${ConfigInfo}`
                     obj[objKey] = await this.hanldeSelectTreeNode(name)
                 } else {
-                    objKey = `selectName_${i}`
+                    objKey = `selectName_${i}_${itemObj.Alias}`
                     obj[objKey] = await this.hanldeSelect(itemObj)
                 }
             } else if (shape === "日期年份") {
-                objKey = `selectYear_${i}`
+                objKey = `selectYear_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.hanldeYearSelect(itemObj)
             } else if (shape === "本人姓名") {
-                objKey = `mySelfName_${i}`
+                objKey = `mySelfName_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.handleMySelfName(name)
             } else if (shape === "本人部门") {
-                objKey = `mySelfDe_${i}`
+                objKey = `mySelfDe_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.handleMySelfDepart(name)
-            } else if (shape === "人员选择器") {
-                objKey = `staffSelect_${i}`
+            } else if (shape.indexOf("人员选择器") > -1) {
+                objKey = `staffSelect_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.handleStaffSelect(itemObj)
             } else if (shape === "附件" || shape==="可预览附件") {
-                objKey = `fileUpload_${i}`
+                objKey = `fileUpload_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.handleFileUploadWidget(itemObj)
             } else if (shape === "值选择器") {
-                objKey = `selecValtName_${i}`
+                objKey = `selecValtName_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.hanldeValueSelect(itemObj)
             } else if (shape === "搜索选择器") {
-                objKey = `selectSearchName_${i}}`
+                objKey = `selectSearchName_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.hanldeSearchSelect(itemObj)
             } else if (shape === "台账选择器") {
-                objKey = `accountName_${i}`
+                objKey = `accountName_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.handleTableAccount(itemObj)
             } else if (shape === "可编辑值选择器") {
-                objKey = `editble_${i}`
+                objKey = `editble_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.handleEditBle(itemObj)
+            } else if (shape === "坐标控件") {
+                objKey = `amap_${i}_${itemObj.Alias}`
+                obj[objKey] = await this.handleAMap(itemObj)
+            } else if (shape === "城市选择器") {
+                objKey = `cityPicker_${i}_${itemObj.Alias}`
+                obj[objKey] = await this.handleCityPicker(itemObj)
             } else {
-                objKey =  `unrecognized_${i}`
+                objKey = `unrecognized_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.handleUnrecognized(itemObj)
             }
         }
@@ -193,7 +200,7 @@ class FormTransfer {
         return {
             title:dataObj.Alias,
             type: "number",
-            default: dataObj.PresetValue || 0,
+            default: Number(dataObj.PresetValue) || 0,
             pattern: required ?  `^.{0,13}$` : "",
             message: {
                 pattern: "请输入数字"
@@ -308,6 +315,22 @@ class FormTransfer {
             }
         }
     }
+    //坐标控件
+    handleAMap(dataObj) {
+        const { required } = this.handlePattern(dataObj.ValidateRule)
+        return {
+            title: dataObj.Alias,
+            "ui:widget": "mapSelect"
+        }
+    }
+    // 城市选择器
+    handleCityPicker(dataObj){
+        const { required } = this.handlePattern(dataObj.ValidateRule)
+        return {
+            title: dataObj.Alias,
+            "ui:widget": "cityPicker"
+        }
+    }
     // 本人姓名
     handleMySelfName(title){
         return {
@@ -371,9 +394,14 @@ class FormTransfer {
     }
     // 判断是否是必填字段
     judgeRequired(objData){
+        console.log(objData)
         let requireList = []
         for(let ckey in objData) {
+            
             if (objData[ckey].pattern && objData[ckey].pattern !== "") {
+                if (objData[ckey].enum && objData[ckey].enum.length === 0) {
+                    continue
+                }
                 requireList.push(ckey)
             }
         }
@@ -395,12 +423,22 @@ class FormTransfer {
             enumVals.push(item.NODEVALUE)
             enumNames.push(item.NODENAME)
         })
+        let pattern = ""
+        if (required && enumNames.length ===0 && enumVals.length === 0) {
+            pattern = ""
+        } else {
+            if (required) {
+                pattern = "^.{1,100}$"
+            } else {
+                pattern = ""
+            }
+        }
         obj = {
             title: dataObj.Alias,
             type: 'string',
             enum: enumVals,
             enumNames: enumNames,
-            pattern: required ? "^.{1,100}$" : "",
+            pattern: pattern,
             message: {
                 pattern: "必填项"
             }

@@ -12,6 +12,9 @@ import TableAccount from '../../components/TableAccount/TableAccount'
 import UploadFile from '../../components/UploadFile/UploadFile'
 import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
 import SearchSelect from '../../components/SearchSelect/SearchSelect'
+import AMapContainer from '../../components/AMapContainer/AMapContainer'
+import cityPicker from '../../components/CityPicker/CityPicker'
+import multiSelect from '../../components/MultiSelect/MultiSelect'
 
 
 const { Search } = Input;
@@ -94,8 +97,51 @@ const StartForm = (props) => {
         getData()
     },[])
 
+    const handleArray=(arr)=> {
+        let str = ""
+        if (arr.length === 0){
+            str = ""
+        } else if (arr.length === 1) {
+            str = arr[0] + "#=#"
+        } else {
+            str = arr.join("#=#")
+        }
+        return str
+    }
+
+    // 处理FormRenderBaseType
+    const handleFormRenderBaseType = (formData, configSchema)=>{
+        let arr = []
+        const { properties } = JSON.parse(configSchema).schema
+        for (const key in properties) {
+            for(const fkey in formData) {
+                if (key === fkey) {
+                    for(const ckey in properties[key].properties){
+                        for(const cfkey in formData[fkey]) {
+                            if (ckey === cfkey) {
+                                let tempValue = ""
+                                if (Array.isArray(formData[fkey][cfkey])) {
+                                    tempValue = handleArray(formData[fkey][cfkey])
+                                } else {
+                                    tempValue = formData[fkey][cfkey]
+                                }
+                                arr.push({
+                                    Type: properties[key].properties[ckey].type,
+                                    Name: properties[key].properties[ckey].title,
+                                    Value: tempValue
+                                })
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return arr;
+    }
+
     // 提交
     const handleSubmitFirst = () =>{
+        console.log(valid)
         if (valid.length > 0) {
             message.error("提交失败,请按照提示填写表单！")
             return
@@ -149,7 +195,8 @@ const StartForm = (props) => {
             Config: configSchema,
             processDefinitionId,
             name: `${flowName} - ${monthName} ${day}th ${year}`,
-            FormKey: FormKey
+            FormKey: FormKey,
+            FormRenderBaseList: handleFormRenderBaseType(formData, configSchema)
         }
         GetTransferList_FirstNode(cookie, userId, evCode, myData)
         .then((res)=>{
@@ -182,6 +229,7 @@ const StartForm = (props) => {
     // 提交
     const handleSubmit = () => {
         if (valid.length > 0) {
+            console.log(valid)
             message.error("提交失败,请按照提示填写表单！")
             return
         }
@@ -378,6 +426,19 @@ const StartForm = (props) => {
 
     return (
         <div className="startwrap">
+            <div className="form-info-box">
+                <div className="form-info-before"></div>
+                <div>{props.location.state.name}</div>
+            </div>
+            <div className="header-content-divider"></div>
+            {/* <FormRender
+                ref={formRef}
+                {...schema}
+                formData={formData}
+                onChange={setFormData}
+                onValidate={onValidate}
+                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker }}
+            /> */}
             <FormRender
                 ref={formRef}
                 {...schema}
@@ -385,7 +446,7 @@ const StartForm = (props) => {
                 onChange={setFormData}
                 onValidate={onValidate}
                 showValidate={false}
-                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
+                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker, multiSelect: multiSelect }}
             />
             <div className="btngroups">
                 <Button type="primary" style={{ marginLeft: 30 }} className="table-oper-btn" onClick={handleSubmitFirst}>发起</Button>

@@ -25,6 +25,8 @@ import EventStartForm from '../pages/EventStartForm/EventStartForm'// 事件发�
 import EventStartPage from '../pages/EventStartPage/EventStartPage'// 事件发起权限列表
 import EventOnDealList from '../pages/EventOnDealList/EventOnDealList'// 在办事件
 import EventOperation from '../pages/EventOperation/EventOperation'// 操作在办事件
+import ProductInfo from '../components/ProductInfo/ProductInfo'// 操作在办事件
+import AMapContainer from '../components/AMapContainer/AMapContainer'// 操作在办事件
 import {Switch, Route, Redirect} from 'react-router-dom'
 
 
@@ -47,6 +49,7 @@ function MyRouter(){
             <Route exact path="/form-render/setform" component={SetFlowForm}/>
             <Route exact path="/form-render/testfr" component={TestFrGenerator}/>
             <Route exact path="/form-render/ledger" component={LedgerAccount}/>
+            <Route exact path="/form-render/product" component={ProductInfo}/> 
             <Route exact path="/form-render/eventlist" component={EventList}/>
             <Route exact path="/form-render/eventtype" component={EventTypeList}/>
             <Route exact path="/form-render/eventconfig" component={EventConfig}/>
@@ -57,6 +60,7 @@ function MyRouter(){
             <Route exact path="/form-render/eventstart" component={EventStartPage}/>
             <Route exact path="/form-render/eventondeal" component={EventOnDealList}/>
             <Route exact path="/form-render/eventoper" component={EventOperation}/>
+            <Route exact path="/form-render/map" component={AMapContainer}/>
             <Redirect to="/form-render/home"></Redirect>
         </Switch>
     )

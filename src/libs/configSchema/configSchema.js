@@ -2,6 +2,8 @@
 class ConfigSchema {
     // 接收配置文件数组，以及表单配置文件
     constructor(columnConfigList, schemaForm, web4Config, values) {
+        console.log(columnConfigList, "columnConfigList")
+        console.log(values)
         // 配置文件数组：schema所有字段数组
         this.columnConfigList = columnConfigList
         // schema配置文件

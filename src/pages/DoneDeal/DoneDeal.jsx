@@ -15,6 +15,8 @@ import TableAccount from '../../components/TableAccount/TableAccount'
 import UploadFile from '../../components/UploadFile/UploadFile'
 import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
 import SearchSelect from '../../components/SearchSelect/SearchSelect'
+import AMapContainer from '../../components/AMapContainer/AMapContainer'
+import cityPicker from '../../components/CityPicker/CityPicker'
 const { Search } = Input;
 const { Column } = Table;
 
@@ -353,7 +355,7 @@ const NeedToDeal = (props) => {
 
             <Modal title="流转信息" visible={flowVisible} onCancel={closeFlow} onOk={sureFlow} width={900}
             bodyStyle={{ display: 'flex',justifyContent: 'center',alignItems:'center'}}>
-                <Table bordered dataSource={tableData} pagination={false} rowClassName="rowClassName" style={{width:'100%'}}>
+                <Table bordered dataSource={tableData} pagination={false} rowClassName="rowClassName">
                     <Column title="操作步骤" dataIndex="TaskName" key="TaskName" align="center"/>
                     <Column title="开始时间" dataIndex="STime" key="STime" align="center"/>
                     <Column title="结束时间" dataIndex="ETime" key="ETime" align="center"/>
@@ -374,8 +376,10 @@ const NeedToDeal = (props) => {
                         )}
                     />
                     <Column
+                        width={150}
                         title="操作"
                         key="action"
+                        align="center"
                         render={(text, record) => (
                             <Space size="middle">
                                 {
@@ -424,7 +428,7 @@ const NeedToDeal = (props) => {
                 onChange={setFormData}
                 onValidate={onValidate}
                 showValidate={false}
-                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file: UploadFile, editSearch: EditbleSelct }}
+                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker }}
             />
         </div>
     );

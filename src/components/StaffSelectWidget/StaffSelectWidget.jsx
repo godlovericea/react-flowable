@@ -1,6 +1,6 @@
 // 自定义FormRender组件——人员选择器
 import React, { useState, useEffect } from 'react'
-import { Modal, Button, Radio, Input } from 'antd';
+import { Modal, Button, Radio, Input, Tooltip } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
 import { getUserListForRole } from '../../apis/process';
 import './StaffSelectWidget.less';
@@ -9,6 +9,7 @@ const { Search } = Input;
 const StaffSelectWidget =(props)=> {
     const [visible, setVisible] = useState(false)
     const [personArr, setPersonArr] = useState([])
+    const [personList, setPersonList] = useState([])
     const [person, setPerson] = useState(props.value)
     const getData =()=>{
         getUserListForRole()
@@ -20,6 +21,7 @@ const StaffSelectWidget =(props)=> {
                 }
             })
             setPersonArr(arr)
+            setPersonList(arr)
         })
     }
     const onFocus = ()=>{
@@ -41,7 +43,7 @@ const StaffSelectWidget =(props)=> {
     }
     const onSearch=(e)=>{
         let arr = []
-        personArr.map((item) => {
+        personList.map((item) => {
             let list = {
                 OUID: item.OUID,
                 OUName: item.OUName,
@@ -63,9 +65,12 @@ const StaffSelectWidget =(props)=> {
     }, [])
     return (
         <div className="personselect-wrapper">
+            
             <div>
                 <span className="selectvalue">{person}</span>
-                <Button type="primary" size="small" shape="round" icon={<UserAddOutlined />} onClick={onFocus}></Button>
+                <Tooltip title="请点击选择人员" placement="right">
+                    <Button type="primary" size="small" shape="round" icon={<UserAddOutlined />} onClick={onFocus}></Button>
+                </Tooltip>
             </div>
             <Modal title="人员选择器" visible={visible} onOk={onOk} onCancel={onCancel} wrapClassName="personModalClass" bodyStyle={{height:'500px',overflowY:'auto'}}>
                 <Search

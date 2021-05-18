@@ -10,6 +10,10 @@ import TableAccount from '../../components/TableAccount/TableAccount'
 import UploadFile from '../../components/UploadFile/UploadFile'
 import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
 import SearchSelect from '../../components/SearchSelect/SearchSelect'
+import AMapContainer from '../../components/AMapContainer/AMapContainer'
+import cityPicker from '../../components/CityPicker/CityPicker'
+import "./FormRenderTrans.less"
+
 
 const FormRenderTrans=(props)=>{
     const [formData, setFormData] = useState({});
@@ -22,10 +26,14 @@ const FormRenderTrans=(props)=>{
         const {tableName} = props
         getTableName(tableName)
         .then(async(res)=>{
-            const dataArr = res.data.getMe[0].Groups
-            let formTransfer = new FormTransfer(dataArr)
-            let schema =await formTransfer.handleGroup()
-            setSchema(schema)
+            if (res.data.say.statusCode === "0000") {
+                const dataArr = res.data.getMe[0].Groups
+                let formTransfer = new FormTransfer(dataArr)
+                let schema =await formTransfer.handleGroup()
+                setSchema(schema)
+            } else {
+                message.error(res.data.say.errMsg)
+            }
         })
     }
 
@@ -50,9 +58,11 @@ const FormRenderTrans=(props)=>{
                 onChange={setFormData}
                 onValidate={onValidate}
                 showValidate={false}
-                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct }}
+                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct, mapSelect: AMapContainer, cityPicker: cityPicker }}
             />
-            <Button type="primary" shape="round" style={{marginLeft:'10px'}} onClick={transfer}>转换</Button>
+            <div className="gobackBtntrans">
+                <Button  type="primary" style={{marginLeft:'10px',width:'100px'}} onClick={transfer}>转换</Button>
+            </div>
         </div>
     );
 }
