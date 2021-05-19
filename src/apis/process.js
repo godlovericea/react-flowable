@@ -3,7 +3,7 @@ import request from '../utils/request'
 // 流程列表
 export function GetWorkflowBaseInfo (WorkflowName, userName, STime, ETime, pageIndex, pageSize) {
     return request({
-        url: '/rest/services/PandaWorkflow.svc/GetWorkflowBaseInfo?WorkflowName=' + WorkflowName +`&UserName=${userName}` + `&STime=` + STime + `&ETime=` + ETime + `&pageIndex=` + pageIndex + `&pageSize=` + pageSize + `&sortFields=created&direction=desc`,
+        url: '/GetWorkflowBaseInfo?WorkflowName=' + WorkflowName +`&UserName=${userName}` + `&STime=` + STime + `&ETime=` + ETime + `&pageIndex=` + pageIndex + `&pageSize=` + pageSize + `&sortFields=created&direction=desc`,
         method: 'get'
     })
 }
@@ -11,7 +11,7 @@ export function GetWorkflowBaseInfo (WorkflowName, userName, STime, ETime, pageI
 // 删除流程
 export function UpdateStatus (id, type) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/UpdateStatus?id=${id}&type${type}`,
+        url: `/UpdateStatus?id=${id}&type${type}`,
         method: 'get'
     })
 }
@@ -19,7 +19,7 @@ export function UpdateStatus (id, type) {
 // 登录到flowable
 export function flowableLogin (data) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/Flowable_Login`,
+        url: `/Flowable_Login`,
         method: 'post',
         data
     })
@@ -28,7 +28,7 @@ export function flowableLogin (data) {
 // 新增流程
 export function CreateModel (cookie, data) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/CreateModel?Cookie=${cookie}`,
+        url: `/CreateModel?Cookie=${cookie}`,
         method: 'post',
         data
     })
@@ -37,7 +37,7 @@ export function CreateModel (cookie, data) {
 // 查询表单列表
 export function GetFormListInfo (FormName, pageIndex, pageSize) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/GetFormListInfo?FormName=${FormName}&pageIndex=${pageIndex}&pageSize=${pageSize}&sortFields=created&direction=desc`,
+        url: `/GetFormListInfo?FormName=${FormName}&pageIndex=${pageIndex}&pageSize=${pageSize}&sortFields=created&direction=desc`,
         method: 'get'
     })
 }
@@ -45,7 +45,7 @@ export function GetFormListInfo (FormName, pageIndex, pageSize) {
 // 查询表单列表
 export function GetFormJson (id) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/GetFormJson?FormID=${id}`,
+        url: `/GetFormJson?FormID=${id}`,
         method: 'get'
     })
 }
@@ -53,7 +53,7 @@ export function GetFormJson (id) {
 // 删除表单
 export function DeleteFormLogic (name, id) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/DeleteFormLogic?UserName=${name}&FormID=${id}`,
+        url: `/DeleteFormLogic?UserName=${name}&FormID=${id}`,
         method: 'get'
     })
 }
@@ -61,7 +61,7 @@ export function DeleteFormLogic (name, id) {
 // 编辑表单
 export function UpdateFormDef (id, data) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/UpdateFormDef?FormID=${id}`,
+        url: `/UpdateFormDef?FormID=${id}`,
         method: 'post',
         data
     })
@@ -70,7 +70,7 @@ export function UpdateFormDef (id, data) {
 // 任务发起检查移交人
 export function GetTransferList_FirstNode (cookie, userId, EventNode, data) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/GetTransferList_FirstNode?Cookie=${cookie}&UserID=${userId}&EventNode=${EventNode}`,
+        url: `/GetTransferList_FirstNode?Cookie=${cookie}&UserID=${userId}&EventNode=${EventNode}`,
         method: 'post',
         data
     })
@@ -79,7 +79,7 @@ export function GetTransferList_FirstNode (cookie, userId, EventNode, data) {
 // 任务发起
 export function WorkflowStart (cookie, userId, EVENTCODE, USERCODE, data) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/WorkflowStart?Cookie=${cookie}&UserID=${userId}&EventCode=${EVENTCODE}&UserCode=${USERCODE}`,
+        url: `/WorkflowStart?Cookie=${cookie}&UserID=${userId}&EventCode=${EVENTCODE}&UserCode=${USERCODE}`,
         method: 'post',
         data
     })
@@ -88,7 +88,7 @@ export function WorkflowStart (cookie, userId, EVENTCODE, USERCODE, data) {
 // 查询表单
 export function GetStartForm (FlowDefID) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/GetStartForm?FlowDefID=${FlowDefID}`,
+        url: `/GetStartForm?FlowDefID=${FlowDefID}`,
         method: 'get'
     })
 }
@@ -96,7 +96,7 @@ export function GetStartForm (FlowDefID) {
 // 查询在办表单
 export function GetFormList (Cookie, taskId) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/GetFormList?Cookie=${Cookie}&TaskID=${taskId}`,
+        url: `/GetFormList?Cookie=${Cookie}&TaskID=${taskId}`,
         method: 'get'
     })
 }
@@ -104,7 +104,7 @@ export function GetFormList (Cookie, taskId) {
 // 在办-完成
 export function SaveFormInfo (Cookie, taskId, userId, data) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/SaveFormInfo?Cookie=${Cookie}&TaskID=${taskId}&UserID=${userId}`,
+        url: `/SaveFormInfo?Cookie=${Cookie}&TaskID=${taskId}&UserID=${userId}`,
         method: 'post',
         data
     })
@@ -113,7 +113,7 @@ export function SaveFormInfo (Cookie, taskId, userId, data) {
 // 在办-保存
 export function TaskSave (Cookie, taskId, data) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/TaskSave?Cookie=${Cookie}&TaskID=${taskId}`,
+        url: `/TaskSave?Cookie=${Cookie}&TaskID=${taskId}`,
         method: 'post',
         data
     })
@@ -122,7 +122,7 @@ export function TaskSave (Cookie, taskId, data) {
 // 在办-查询任务详情
 export function GetTaskBaseInfo (taskId) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/GetTaskBaseInfo?TaskID=${taskId}`,
+        url: `/GetTaskBaseInfo?TaskID=${taskId}`,
         method: 'get'
     })
 }
@@ -130,7 +130,7 @@ export function GetTaskBaseInfo (taskId) {
 // 在办-作废流程
 export function WorkflowDelete (FLOWID, COOKIE) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/WorkflowDelete?FlowID=${FLOWID}&Cookie=${COOKIE}`,
+        url: `/WorkflowDelete?FlowID=${FLOWID}&Cookie=${COOKIE}`,
         method: 'get'
     })
 }
@@ -138,7 +138,7 @@ export function WorkflowDelete (FLOWID, COOKIE) {
 // 在办-任务移交
 export function UpdateTaskInfo (CONDITION,TASKID) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/UpdateTaskInfo?Condition=${CONDITION}&TaskID=${TASKID}`,
+        url: `/UpdateTaskInfo?Condition=${CONDITION}&TaskID=${TASKID}`,
         method: 'get'
     })
 }
@@ -146,7 +146,7 @@ export function UpdateTaskInfo (CONDITION,TASKID) {
 // 在办-查看流程图
 export function GetWorkflowDiagram (processInstanceId) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/GetWorkflowDiagram?processInstanceId=${processInstanceId}`,
+        url: `/GetWorkflowDiagram?processInstanceId=${processInstanceId}`,
         method: 'get'
     })
 }
@@ -154,7 +154,7 @@ export function GetWorkflowDiagram (processInstanceId) {
 // 在办-任务回退
 export function TaskGoBack (processInstanceId,TASKID, textVal) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/TaskGoBack?PROC_INST_ID_=${processInstanceId}&TaskID=${TASKID}&Comment=${textVal}`,
+        url: `/TaskGoBack?PROC_INST_ID_=${processInstanceId}&TaskID=${TASKID}&Comment=${textVal}`,
         method: 'get'
     })
 }
@@ -162,7 +162,7 @@ export function TaskGoBack (processInstanceId,TASKID, textVal) {
 // 在办-任务催办
 export function WorkflowUrging (processInstanceId, UserName, textVal) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/TaskGoBack?ProcInstID=${processInstanceId}&UserName=${UserName}&Content=${textVal}`,
+        url: `/TaskGoBack?ProcInstID=${processInstanceId}&UserName=${UserName}&Content=${textVal}`,
         method: 'get'
     })
 }
@@ -170,14 +170,14 @@ export function WorkflowUrging (processInstanceId, UserName, textVal) {
 // 在办-任务流转信息
 export function GetFlowProcessInfo (processInstanceId) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/GetFlowProcessInfo?PROC_INST_ID_=${processInstanceId}`,
+        url: `/GetFlowProcessInfo?PROC_INST_ID_=${processInstanceId}`,
         method: 'get'
     })
 }
 // 在办-附件
 export function WorkflowFileOperation (TaskID) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/WorkflowFileOperation?TaskID=${TaskID}&Type=search`,
+        url: `/WorkflowFileOperation?TaskID=${TaskID}&Type=search`,
         method: 'get'
     })
 }
@@ -185,7 +185,7 @@ export function WorkflowFileOperation (TaskID) {
 // 在办-附件上传到服务器
 export function uploadToService (TaskID, FilePath) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/WorkflowFileOperation?TaskID=${TaskID}&Type=add&FilePath=${FilePath}`,
+        url: `/WorkflowFileOperation?TaskID=${TaskID}&Type=add&FilePath=${FilePath}`,
         method: 'get'
     })
 }
@@ -193,7 +193,7 @@ export function uploadToService (TaskID, FilePath) {
 // 流程发起权限配置
 export function UpdateWorkFlowRight (USERNAME, FORMKEYLIST) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/UpdateWorkFlowRight?UserName=${USERNAME}&FormKeyList=${FORMKEYLIST}`,
+        url: `/UpdateWorkFlowRight?UserName=${USERNAME}&FormKeyList=${FORMKEYLIST}`,
         method: 'get'
     })
 }
@@ -201,7 +201,7 @@ export function UpdateWorkFlowRight (USERNAME, FORMKEYLIST) {
 // 查询节点信息
 export function GetActList (FLOWDEFID) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/GetActList?FlowDefID=${FLOWDEFID}`,
+        url: `/GetActList?FlowDefID=${FLOWDEFID}`,
         method: 'get'
     })
 }
@@ -209,7 +209,7 @@ export function GetActList (FLOWDEFID) {
 // 获取字段配置信息
 export function GetColumnConfig (ACTID, FORMKEY) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/GetColumnConfig?ActID=${ACTID}&FormKey=${FORMKEY}`,
+        url: `/GetColumnConfig?ActID=${ACTID}&FormKey=${FORMKEY}`,
         method: 'get'
     })
 }
@@ -217,7 +217,7 @@ export function GetColumnConfig (ACTID, FORMKEY) {
 // 保存字段配置信息
 export function SaveColumnConfig (ACTID, FORMKEY, COLUMNCONFIG) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/SaveColumnConfig?ActID=${ACTID}&FormKey=${FORMKEY}&ColumnConfig=${COLUMNCONFIG}`,
+        url: `/SaveColumnConfig?ActID=${ACTID}&FormKey=${FORMKEY}&ColumnConfig=${COLUMNCONFIG}`,
         method: 'get'
     })
 }
@@ -225,7 +225,7 @@ export function SaveColumnConfig (ACTID, FORMKEY, COLUMNCONFIG) {
 // 获取移交人信息
 export function GetTransferList (TASKID, USERID, COOKIE, data) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/GetTransferList?TaskID=${TASKID}&UserID=${USERID}&Cookie=${COOKIE}`,
+        url: `/GetTransferList?TaskID=${TASKID}&UserID=${USERID}&Cookie=${COOKIE}`,
         method: 'post',
         data
     })
@@ -234,7 +234,7 @@ export function GetTransferList (TASKID, USERID, COOKIE, data) {
 // 移交完成接口
 export function SaveFormInfoTransfer (TASKID, USERID, COOKIE, WORKCODE, data) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/SaveFormInfoTransfer?TaskID=${TASKID}&UserID=${USERID}&Cookie=${COOKIE}&WorkCode=${WORKCODE}`,
+        url: `/SaveFormInfoTransfer?TaskID=${TASKID}&UserID=${USERID}&Cookie=${COOKIE}&WorkCode=${WORKCODE}`,
         method: 'post',
         data
     })
@@ -243,7 +243,7 @@ export function SaveFormInfoTransfer (TASKID, USERID, COOKIE, WORKCODE, data) {
 // 事件中心——新增事件接口
 export function SaveEvent (EVENTJSON, TABLENAME, CODE, EVENTNAME, data) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/SaveEvent?EventJson=${EVENTJSON}&TableName=${TABLENAME}&Code=${CODE}&EventName=${EVENTNAME}`,
+        url: `/SaveEvent?EventJson=${EVENTJSON}&TableName=${TABLENAME}&Code=${CODE}&EventName=${EVENTNAME}`,
         method: 'post',
         data
     })
@@ -252,7 +252,7 @@ export function SaveEvent (EVENTJSON, TABLENAME, CODE, EVENTNAME, data) {
 // 事件中心——查询事件列表接口
 export function GetEventList (EVENTNAME) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/GetEventList?EventName=${EVENTNAME}&pageIndex=1&pageSize=${1000}&sortFields=&direction=`,
+        url: `/GetEventList?EventName=${EVENTNAME}&pageIndex=1&pageSize=${1000}&sortFields=&direction=`,
         method: 'get'
     })
 }
@@ -260,7 +260,7 @@ export function GetEventList (EVENTNAME) {
 // 事件中心——事件挂接流程
 export function SaveEventConfig (EVENTNAME, data) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/SaveEventConfig?EventName=${EVENTNAME}`,
+        url: `/SaveEventConfig?EventName=${EVENTNAME}`,
         method: 'post',
         data
     })
@@ -269,7 +269,7 @@ export function SaveEventConfig (EVENTNAME, data) {
 // 事件中心——删除事件
 export function EventOperate (EVENTNAME, OPERTYPE, EVENTCODE) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/EventOperate?EventName=${EVENTNAME}&OperType=${OPERTYPE}&EventCode=${EVENTCODE}`,
+        url: `/EventOperate?EventName=${EVENTNAME}&OperType=${OPERTYPE}&EventCode=${EVENTCODE}`,
         method: 'get'
     })
 }
@@ -277,7 +277,7 @@ export function EventOperate (EVENTNAME, OPERTYPE, EVENTCODE) {
 // 事件中心——查看事件详情
 export function GetEvent (EVENTNAME) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/GetEvent?EventName=${EVENTNAME}`,
+        url: `/GetEvent?EventName=${EVENTNAME}`,
         method: 'get'
     })
 }
@@ -285,7 +285,7 @@ export function GetEvent (EVENTNAME) {
 // 事件中心——发起事件
 export function CreateEvent (EVENTNAME, TABLENAME, EVENTJSON, EVENTCODE, NAME, data) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/CreateEvent?EventName=${EVENTNAME}&TableName=${TABLENAME}&EventJson=${EVENTJSON}&EventCode=${EVENTCODE}&Name=${NAME}`,
+        url: `/CreateEvent?EventName=${EVENTNAME}&TableName=${TABLENAME}&EventJson=${EVENTJSON}&EventCode=${EVENTCODE}&Name=${NAME}`,
         method: 'post',
         data
     })
@@ -294,7 +294,7 @@ export function CreateEvent (EVENTNAME, TABLENAME, EVENTJSON, EVENTCODE, NAME, d
 // 事件中心——查询在办事件列表接口
 export function GetEventDoingList (EVENTNAME, TYPE) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/GetEventDoingList?EventName=${EVENTNAME}&Type=${TYPE}&pageIndex=1&pageSize=${1000}&sortFields=&direction=`,
+        url: `/GetEventDoingList?EventName=${EVENTNAME}&Type=${TYPE}&pageIndex=1&pageSize=${1000}&sortFields=&direction=`,
         method: 'get'
     })
 }
@@ -302,7 +302,7 @@ export function GetEventDoingList (EVENTNAME, TYPE) {
 // 事件中心——通过流程的key去查流程的ID
 export function GetFlowIdByFlowKey (FLOWKEY) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/GetFlowIdByFlowKey?FlowKey=${FLOWKEY}`,
+        url: `/GetFlowIdByFlowKey?FlowKey=${FLOWKEY}`,
         method: 'get'
     })
 }
@@ -310,15 +310,7 @@ export function GetFlowIdByFlowKey (FLOWKEY) {
 // 事件中心——查询在办事件发起的流程
 export function GetProcInstByEventCode (EVENTCODE) {
     return request({
-        url: `/rest/services/PandaWorkflow.svc/GetProcInstByEventCode?EventCode=${EVENTCODE}`,
-        method: 'get'
-    })
-}
-
-// 新增流程  
-export function getAssetsList(){
-    return request({
-        url: `/rest/services/CountyProduct.svc/AccountManage/GetTableGroupMetaV3?tableName=资产管理_资产明细表&columnName=设备状态`,
+        url: `/GetProcInstByEventCode?EventCode=${EVENTCODE}`,
         method: 'get'
     })
 }
@@ -326,7 +318,7 @@ export function getAssetsList(){
 // 台账查询
 export function getTableName(name){
     return request({
-        url: `/rest/services/CountyProduct.svc/AccountManage/GetTableGroupMetaV3?tableName=${name}`,
+        url: `/GetTableGroupMetaV3?tableName=${name}`,
         method: 'get'
     })
 }
@@ -334,7 +326,7 @@ export function getTableName(name){
 // 选择器选项的值查询
 export function getSelectName(nodeName){
     return request({
-        url: `/Services/CityServer_WorkFlow/REST/WorkFlowREST.svc/WorkFlow/175/?nodeName=${nodeName}`,
+        url: `/WorkFlow/175/?nodeName=${nodeName}`,
         method: 'get'
     })
 }
@@ -342,7 +334,7 @@ export function getSelectName(nodeName){
 // 姓名查询
 export function getUserName(name){
     return request({
-        url: `/rest/services/OA.svc/GetAllPerson_PandaWisdom?UserName=${name}`,
+        url: `/GetAllPerson_PandaWisdom?UserName=${name}`,
         method: 'get'
     })
 }
@@ -350,15 +342,7 @@ export function getUserName(name){
 // 人员选择器查询
 export function getUserListForRole(){
     return request({
-        url: `/rest/services/PandaWorkflow.svc/getUserListForRole?_version=9999`,
-        method: 'get'
-    })
-}
-
-// 台账的表查询
-export function GetAccountConfigInfo(accountName){
-    return request({
-        url: `/Services/CityServer_CaseManage/REST/CaseManageREST.svc/GetAccountConfigInfo?accountName=${accountName}`,
+        url: `/getUserListForRole?_version=9999`,
         method: 'get'
     })
 }
@@ -366,21 +350,33 @@ export function GetAccountConfigInfo(accountName){
 // 台账的表查询
 export function GetAccountPageList(pageIndex, pageSize, accountName, info){
     return request({
-        url: `/Services/CityServer_CaseManage/REST/CaseManageREST.svc/GetAccountPageList?pageIndex=${pageIndex}&pageSize=${pageSize}&sortFields=录入时间&direction=desc&accountName=${accountName}&info=${info}`,
+        url: `/GetAccountPageList?pageIndex=${pageIndex}&pageSize=${pageSize}&sortFields=录入时间&direction=desc&accountName=${accountName}&info=${info}`,
         method: 'get'
     })
 }
-// 查询台账列表
-export function GetLedgerAccountList(){
-    return request({
-        url: `/rest/services/OMS.svc/CM_Ledger_LoadLedgers?_version=9999`,
-        method: 'get'
-    })
-}
+
 // 查询产品信息
 export function GetProduct(){
     return request({
-        url: `/rest/services/OA.svc/GetProduct?tableName=销售管理_产品信息表&plateName=项目`,
+        url: `/GetProduct?tableName=销售管理_产品信息表&plateName=项目`,
         method: 'get'
     })
 }
+
+// 查询台账列表
+export function GetTZInfo(NAME){
+    return request({
+        url: `/GetTZInfo?Name=${NAME}`,
+        method: 'get'
+    })
+}
+
+// 查询台账列表
+export function AddProduct(data){
+    return request({
+        url: `/AddProduct`,
+        method: 'post',
+        data
+    })
+}
+

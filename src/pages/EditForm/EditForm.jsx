@@ -5,14 +5,14 @@ import Generator, {
     defaultCommonSettings,
     defaultGlobalSettings,
 } from 'fr-generator';
-import { GetFormJson, UpdateFormDef } from '../../apis/process'
+import { GetFormJson, UpdateFormDef, getSelectName } from '../../apis/process'
 import {Modal, Form, Input, message} from 'antd'
 import TreeCascader from '../../components/TreeCascader/TreeCascader'
 import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
 import UploadFile from '../../components/UploadFile/UploadFile'
 import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
 import SearchSelect from '../../components/SearchSelect/SearchSelect'
-import LedgerAccount from '../../components/LedgerAccount/LedgerAccount'
+// import LedgerAccount from '../../components/LedgerAccount/LedgerAccount'
 
 const customizeSetting = {
     title: '自定义组件',
@@ -27,7 +27,14 @@ const customizeSetting = {
             },
             widget: 'file',
             setting: {
-                // api: { title: 'api', type: 'string' },
+                api:{
+                    title: "数据字典",
+                    type: 'string'
+                },
+                isRequired:{
+                    title: '必填',
+                    type: 'boolean'
+                }
             },
         },
         {
@@ -39,7 +46,16 @@ const customizeSetting = {
                 'ui:widget': 'staff',
             },
             widget: 'staff',
-            setting: {},
+            setting: {
+                api:{
+                    title: "数据字典",
+                    type: 'string'
+                },
+                isRequired:{
+                    title: '必填',
+                    type: 'boolean'
+                }
+            },
         },
         {
             text: '台账选择器',
@@ -47,10 +63,19 @@ const customizeSetting = {
             schema: {
                 title: '台账选择器',
                 type: 'string',
-                'ui:widget': 'table',
+                'ui:widget': 'TableAccount',
             },
-            widget: 'table',
-            setting: {},
+            widget: 'TableAccount',
+            setting: {
+                api:{
+                    title: "数据字典",
+                    type: 'string'
+                },
+                isRequired:{
+                    title: '必填',
+                    type: 'boolean'
+                }
+            },
         },
         {
             text: '可编辑值选择器',
@@ -61,7 +86,16 @@ const customizeSetting = {
                 'ui:widget': 'editSearch',
             },
             widget: 'editSearch',
-            setting: {},
+            setting: {
+                api:{
+                    title: "数据字典",
+                    type: 'string'
+                },
+                isRequired:{
+                    title: '必填',
+                    type: 'boolean'
+                }
+            },
         },
         {
             text: '搜索选择器',
@@ -72,7 +106,16 @@ const customizeSetting = {
                 'ui:widget': 'search',
             },
             widget: 'search',
-            setting: {},
+            setting: {
+                api:{
+                    title: "数据字典",
+                    type: 'string'
+                },
+                isRequired:{
+                    title: '必填',
+                    type: 'boolean'
+                }
+            },
         },
         {
             text: '级联选择器',
@@ -83,7 +126,16 @@ const customizeSetting = {
                 'ui:widget': 'cascader',
             },
             widget: 'cascader',
-            setting: {},
+            setting: {
+                api:{
+                    title: "数据字典",
+                    type: 'string'
+                },
+                isRequired:{
+                    title: '必填',
+                    type: 'boolean'
+                }
+            },
         },
         {
             text: '城市选择器',
@@ -94,7 +146,16 @@ const customizeSetting = {
                 'ui:widget': 'cityPicker',
             },
             widget: 'cityPicker',
-            setting: {},
+            setting: {
+                api:{
+                    title: "数据字典",
+                    type: 'string'
+                },
+                isRequired:{
+                    title: '必填',
+                    type: 'boolean'
+                }
+            },
         },
         {
             text: '坐标控件',
@@ -105,23 +166,79 @@ const customizeSetting = {
                 'ui:widget': 'mapSelect',
             },
             widget: 'mapSelect',
-            setting: {},
+            setting: {
+                api:{
+                    title: "数据字典",
+                    type: 'string'
+                },
+                isRequired:{
+                    title: '必填',
+                    type: 'boolean'
+                }
+            },
         },
         {
-            text: '自定义多选',
+            text: '竞争对手',
             name: 'multiSelect',
             schema: {
-                title: '自定义多选',
+                title: '竞争对手',
                 type: 'string',
                 'ui:widget': 'multiSelect',
             },
             widget: 'multiSelect',
-            setting: {},
+            setting: {
+                api:{
+                    title: "数据字典",
+                    type: 'string'
+                },
+                isRequired:{
+                    title: '必填',
+                    type: 'boolean'
+                }
+            },
+        },
+        {
+            text: '日期时间',
+            name: 'DateTimePicker',
+            schema: {
+                title: '日期时间',
+                type: 'string',
+                'ui:widget': 'DateTimePicker',
+            },
+            widget: 'DateTimePicker',
+            setting: {
+                api:{
+                    title: "数据字典",
+                    type: 'string'
+                },
+                isRequired:{
+                    title: '必填',
+                    type: 'boolean'
+                }
+            },
         },
     ],
 }
 
+
+defaultSettings.forEach((item)=>{
+    item.widgets.forEach((cItem)=>{
+        cItem.setting = {...cItem.setting,
+            api:{
+                title: "数据字典",
+                type: 'string'
+            },
+            isRequired:{
+                title: '必填',
+                type: 'boolean'
+            }
+        }
+    })
+})
+
 const settings = defaultSettings.push(customizeSetting)
+
+// const commonSettings = defaultCommonSettings["ui:options"] = customerCommonSettings["ui:options"]
 
 const EditForm = (props) => {
     const [isModalVisible, setIsModalVisible] = useState(false)
@@ -202,19 +319,31 @@ const EditForm = (props) => {
     }
     // 判断表单中是否有重复名称的字段
     const hanldeDeepObject = (properties) => {
-        let BaseTypeList = []
+        let BaseTypeList = [{Name: 'ProcID',Type: 'string'}]
         for(let key in properties) {
             if (properties[key].hasOwnProperty('properties')) {
                 for(let childkey in properties[key].properties) {
+                    let objType = properties[key].properties[childkey].type
+                    if (properties[key].properties[childkey].hasOwnProperty("format")) {
+                        if (properties[key].properties[childkey].format === "date" || properties[key].properties[childkey].format === "dateTime") {
+                            objType = "dateTime"
+                        }
+                    }
                     BaseTypeList.push({
                         Name:properties[key].properties[childkey].title,
-                        Type: properties[key].properties[childkey].type
+                        Type: objType
                     })
                 }
             } else {
+                let outType = properties[key].type
+                if (properties[key].hasOwnProperty("format")) {
+                    if (properties[key].format === "date" || properties[key].format === "dateTime") {
+                        outType = "dateTime"
+                    }
+                }
                 BaseTypeList.push({
                     Name:properties[key].title,
-                    Type: properties[key].type
+                    Type: outType
                 })
             }
         }
@@ -231,16 +360,66 @@ const EditForm = (props) => {
             return false
         }
     }
+    // 处理schema表单读取数据字典
+    const handleFormInfoApi = async(dataObj) => {
+        let obj = {...dataObj}
+        const {schema} = obj
+        const {properties} = schema
+        for(let key in properties) {
+            for(let cKey in properties[key].properties) {
+                if (properties[key].properties[cKey].hasOwnProperty("api") && properties[key].properties[cKey].api && properties[key].properties[cKey].enum) {
+                    console.log(properties[key].properties[cKey])
+                    properties[key].properties[cKey].enum = []
+                    properties[key].properties[cKey].enumNames = []
+                    let res =await getSelectName(properties[key].properties[cKey].api)
+                    res.data.forEach((item)=>{
+                        properties[key].properties[cKey].enum.push(item.NODEVALUE)
+                        properties[key].properties[cKey].enumNames.push(item.NODENAME)
+                    })
+                }
+            }
+        }
+        return obj
+    }
+
+    // 处理必填字段
+    const handleIsRequired=(dataObj)=>{
+        let obj = {...dataObj}
+        const {schema} = obj
+        const {properties} = schema
+        for(let key in properties) {
+            let required = []
+            for(let cKey in properties[key].properties) {
+                if (properties[key].properties[cKey].hasOwnProperty("isRequired") && properties[key].properties[cKey].isRequired) {
+                    required.push(cKey)
+                    properties[key].required = required
+                }
+            }
+        }
+        return obj
+    }
+
     // 确定保存表单
-    const handleOk=()=>{
+    const handleOk=async()=>{
         // Generator的值
         const FormInfo = genRef.current && genRef.current.getValue()
-        if (!handleObject(FormInfo)) {
+
+        console.log(FormInfo, "FormInfo")
+        // 处理必填
+        let requiredData = handleIsRequired(FormInfo)
+
+        console.log(requiredData, "requiredData")
+        // 处理数据字典
+        let handledData =await handleFormInfoApi(requiredData)
+
+        console.log(handledData, "handledData")
+
+        if (!handleObject(handledData)) {
             return
         }
-        let {properties} = FormInfo.schema
+        let {properties} = handledData.schema
         const params = {
-            FormInfo: JSON.stringify(FormInfo),
+            FormInfo: JSON.stringify(handledData),
             description:props.location.state.desc,
             key: props.location.state.key,
             modelType:2,
@@ -260,12 +439,13 @@ const EditForm = (props) => {
     return(
         <div style={{ height: '100vh' }}>
             <Generator 
-                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: LedgerAccount, file:UploadFile, editSearch: EditbleSelct,  }} 
+                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, file:UploadFile, editSearch: EditbleSelct,  }} 
                 ref={genRef} 
                 defaultValue={defaultValue} 
                 templates={templates} 
                 extraButtons={extraButtons}
                 settings = {settings}
+                // commonSettings={commonSettings}
             />
             <Modal title="保存表单" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                 <Form layout={"horizontal"}>

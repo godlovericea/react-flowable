@@ -3,7 +3,7 @@ import React from 'react';
 // 表单生成器（可视化）
 import Generator from 'fr-generator';
 // import Generator from '../../libs/frGenerator';
-import { CreateModel } from '../../apis/process'
+import { CreateModel, getSelectName } from '../../apis/process'
 import {Modal, Form, Input, message} from 'antd'
 import './NewForm.less'
 
@@ -141,15 +141,27 @@ class NewForm extends React.Component{
         for(let key in properties) {
             if (properties[key].hasOwnProperty('properties')) {
                 for(let childkey in properties[key].properties) {
+                    let objType = properties[key].properties[childkey].type
+                    if (properties[key].properties[childkey].hasOwnProperty("format")) {
+                        if (properties[key].properties[childkey].format === "date" || properties[key].properties[childkey].format === "dateTime") {
+                            objType = "dateTime"
+                        }
+                    }
                     BaseTypeList.push({
                         Name:properties[key].properties[childkey].title,
-                        Type: properties[key].properties[childkey].type
+                        Type: objType
                     })
                 }
             } else {
+                let outType = properties[key].type
+                if (properties[key].hasOwnProperty("format")) {
+                    if (properties[key].format === "date" || properties[key].format === "dateTime") {
+                        outType = "dateTime"
+                    }
+                }
                 BaseTypeList.push({
                     Name:properties[key].title,
-                    Type: properties[key].type
+                    Type: outType
                 })
             }
         }
@@ -165,10 +177,34 @@ class NewForm extends React.Component{
             return false
         }
     }
+
+    // 处理schema表单读取数据字典
+    handleFormInfoApi = async(FormInfo) => {
+        let obj = {...FormInfo}
+        const {schema} = obj
+        const {properties} = schema
+        for(let key in properties) {
+            for(let cKey in properties[key].properties) {
+                if (properties[key].properties[cKey].hasOwnProperty("api") && properties[key].properties[cKey].api) {
+                    properties[key].properties[cKey].enum = []
+                    properties[key].properties[cKey].enumNames = []
+                    let res =await getSelectName(properties[key].properties[cKey].api)
+                    res.data.forEach((item)=>{
+                        properties[key].properties[cKey].enum.push(item.NODEVALUE)
+                        properties[key].properties[cKey].enumNames.push(item.NODENAME)
+                    })
+                }
+            }
+        }
+        return obj
+    }
     // 保存表单
-    handleOk=()=>{
+    handleOk=async()=>{
         // 获取表单生成器得值
         const FormInfo = this.genRef.current && this.genRef.current.getValue()
+
+        let handledData = await this.handleFormInfoApi(FormInfo)
+
         // 判断用户是否使用布局组件Object包围子组件
         // 拿cookie
         var cookies = document.cookie
@@ -188,9 +224,9 @@ class NewForm extends React.Component{
             alert("表单名称必填")
             return false
         }
-        let {properties} = FormInfo.schema
+        let {properties} = handledData.schema
         const params = {
-            FormInfo: JSON.stringify(FormInfo),
+            FormInfo: JSON.stringify(handledData),
             description:this.formDescRef.current.state.value,
             key:this.formKeyRef.current.state.value,
             modelType:2,

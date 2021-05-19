@@ -1,106 +1,64 @@
 // 自定义FormRender组件——台账选择器
 import React from 'react';
-import { Modal, Button, Input, Table, message } from 'antd';
-import { GetAccountConfigInfo, GetAccountPageList } from '../../apis/process';
+import { Modal, Button, Input, Table, message, Tooltip } from 'antd';
+import { GetTZInfo } from '../../apis/process';
 import './TableAccount.less';
 const { Search } = Input;
 
 class TableAccount extends React.Component {
     state={
         visible: false,
-        columns: [],
+        pagination:{
+            size: 'small'
+        },
+        columns: [
+            {
+                title: '序号',
+                dataIndex: 'Index'
+            },
+            {
+                title: '台账名称',
+                dataIndex: 'Name'
+            },
+            {
+                title: '台账表名',
+                dataIndex: 'TableName'
+            },
+            {
+                title: '所属分组',
+                dataIndex: 'GroupName'
+            }
+        ],
         tableData: [],
         tableAccountValue: this.props.options && this.props.options.value || "",
-        searchVal: '',
         rowSelection: {
             onChange: (selectedRowKeys) => {
                 this.setState({
-                    tableAccountValue: selectedRowKeys
+                    tableAccountValue: selectedRowKeys[0]
                 })
-                // let input = document.getElementById("tableAccountInput")
-                // input.value = selectedRowKeys
             }
         }
     }
     componentDidMount(){
         this.getData()
     }
-    getData = () => {
-        // 处理传递过来的参数
-        // console.log(this.props)
-        let arr1 = []
-        let accountName = ""
-        let rowkey = ""
-        if (this.props.options && this.props.options.value) {
-            console.log(this.props.name, "this.props.name")
-            if (this.props.name.indexOf(".")> -1) {
-                arr1 = this.props.name.split('.')
-                accountName = arr1[0]
-                if (arr1[1].indexOf('|')> -1) {
-                    let keyArr = arr1[1].split('|')
-                    rowkey = keyArr[0]
-                } else {
-                    rowkey = arr1[1]
-                }
-            }
-        }
-        let info = this.state.searchVal || ''
-        // let accountName = '项目信息台账简略版'
-        // let info = this.state.searchVal || ''
-        // let rowkey = '项目流水号'
-        GetAccountConfigInfo(accountName)
+    getData = (name = "") => {
+        GetTZInfo(name)
             .then((res) => {
                 if (res.data.say.statusCode !== "0000") {
                     message.error(res.data.say.errMsg)
                     return
                 }
-                let colArr = []
-                let arr = res.data.getMe[0].WebShowFieldGroup.split(',')
-                arr.forEach(item => {
-                    if (!item) {
-                        return
-                    }
-                    colArr.push({
-                        key: (new Date()).getTime(),
-                        title: item,
-                        dataIndex: item,
-                    })
+                res.data.getMe.forEach((item,index)=>{
+                    item.Index = index + 1
+                    item.key = item.Name
                 })
                 this.setState({
-                    columns: colArr
-                },()=>{
-                    GetAccountPageList(1, 2000, accountName, info)
-                    .then((response) => {
-                        let arrWrap = []
-                        response.data.getMe.forEach(async (item) => {
-                            let obj = this.hanldeItem(item)
-                            obj.key = obj[rowkey]
-                            arrWrap.push(obj)
-                        })
-                        this.setState({
-                            tableData: arrWrap
-                        })
-                    })
+                    tableData: res.data.getMe
                 })
             })
     }
 
-    hanldeItem = (obj) => {
-        const dataObj = obj
-        let objarr = []
-        let objobj = {}
-        dataObj.WebRow.forEach((item) => {
-            objarr.push(item.FieldValue)
-        })
-        for (let i = 0; i < this.state.columns.length; i++) {
-            for (let j = 0; j < objarr.length; j++) {
-                if (i === j) {
-                    objobj[this.state.columns[i].dataIndex] = objarr[j]
-                }
-            }
-        }
-        return objobj
-    }
     hanldeInputClick = (e) => {
         this.setState({
             visible: true
@@ -119,22 +77,16 @@ class TableAccount extends React.Component {
         })
     }
     onSearch = (val) => {
-        this.setState({
-            searchVal: val
-        },()=>{
-            this.getData()
-        })
-    }
-    hanldeInputChange=(e)=>{
-        console.log(e)
+        this.getData(val)
     }
     render() {
         return (
             <div className="tableAccount-wrapper">
                 <div>
                     <span className="keyclass">{this.state.tableAccountValue}</span>
-                    <Button type="primary" size="small" shape="round" onClick={this.hanldeInputClick}>台账选择器</Button>
-                    {/* <Input type="text" id="tableAccountInput" onChange={this.hanldeInputChange} defaultValue={this.state.tableAccountValue} onClick={this.hanldeInputClick}></Input> */}
+                    <Tooltip title="请点击选择台账" placement="right">
+                        <Button type="primary" shape="round" size="small" onClick={this.hanldeInputClick}>台账选择器</Button>
+                    </Tooltip>
                 </div>
                 <Modal title="选择台账" visible={this.state.visible} onCancel={this.onCancel} onOk={this.onOk} width={900}
                     bodyStyle={{ height: '500px', overflowY: 'auto' }} wrapClassName="personModalClass">
@@ -149,6 +101,7 @@ class TableAccount extends React.Component {
                             type: 'radio',
                             ...this.state.rowSelection,
                         }}
+                        pagination={this.state.pagination}
                         columns={this.state.columns}
                         dataSource={this.state.tableData}
                         rowClassName="rowClassName" style={{ width: '100%' }}>

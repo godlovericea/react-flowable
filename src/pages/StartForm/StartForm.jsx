@@ -4,7 +4,7 @@ import FormRender from 'form-render/lib/antd';
 import { Button, message, Input, Modal, Radio } from 'antd';
 import FormTransfer from '../../libs/transform/transform'
 import ConfigSchemaClass from '../../libs/configSchema/configSchema'
-import { GetStartForm, WorkflowStart, getTableName, GetTransferList_FirstNode } from '../../apis/process'
+import { GetStartForm, WorkflowStart, getTableName, GetTransferList_FirstNode, AddProduct } from '../../apis/process'
 import "./StartForm.less"
 import TreeCascader from '../../components/TreeCascader/TreeCascader'
 import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
@@ -15,8 +15,8 @@ import SearchSelect from '../../components/SearchSelect/SearchSelect'
 import AMapContainer from '../../components/AMapContainer/AMapContainer'
 import cityPicker from '../../components/CityPicker/CityPicker'
 import multiSelect from '../../components/MultiSelect/MultiSelect'
-
-
+import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
+import ProductInfo from '../../components/ProductInfo/ProductInfo'
 const { Search } = Input;
 
 let actArr = []
@@ -41,10 +41,28 @@ const StartForm = (props) => {
     const [chooseArr, setChooseArr] = useState([])
     // 会签时候，点击完成，候选人列表
     const [assigneeList, setAssigneeList] = useState([])
+    // 加载产品信息得白名单数组
+    const [isShowProduct, setIsShowProduct] = useState(false)
+    // workId
+    const [ProductModels, setProductModels] = useState([])
+    // userName
+    const [myUserName, setMyUserName] = useState("")
 
     // 校验提交表单
     const onValidate=(valid)=>{
         setValid(valid)
+    }
+    // 判断是否要加产品信息组件
+    const judgeShowProduct=(formKey)=>{
+        if (formKey === "事件_销售管理_项目新建审批表_技术员"){
+            setIsShowProduct(true)
+        } else {
+            setIsShowProduct(false)
+        }
+    }
+    // 子组件传值给父组件
+    const getProductInfo=(data)=>{
+        setProductModels(data)
     }
 
     // 拉取数据
@@ -53,6 +71,7 @@ const StartForm = (props) => {
         let FlowDefID = props.location.state.FlowDefID
         // 用户名
         let userName = props.location.state.userName
+        setMyUserName(userName)
         // 用户部门
         let userDepart = props.location.state.userDepart
         // 拉取发起流程的第一个节点的表单
@@ -64,6 +83,7 @@ const StartForm = (props) => {
         }
         setFormId(res.data.FormID)
         setFormKey(res.data.FormKey)
+        judgeShowProduct(res.data.FormKey)
 
         if (res.data.Type === "台账") {
             const tableName = res.data.Form
@@ -79,7 +99,7 @@ const StartForm = (props) => {
             setSchema(schemadata)
             setConfigSchema(JSON.stringify(schemadata))
             
-        } else if (res.data.Type === "表单") {
+        } else {
             let fieldData = res.data
             setConfigSchema(fieldData.Form)
 
@@ -220,6 +240,17 @@ const StartForm = (props) => {
                     message.success("当前节点已完成")
                     setNextPersonVisible(false)
                 }
+                let sayInfoArr = res.data.say.info.split(",")
+                let params = {
+                    WorkId: sayInfoArr[1],
+                    tableName: FormKey,
+                    InputPerson: myUserName,
+                    ProductModels: ProductModels
+                }
+                AddProduct(params)
+                .then((response)=>{
+
+                })
             } else {
                 message.error(res.data.say.errMsg)
             }
@@ -431,14 +462,6 @@ const StartForm = (props) => {
                 <div>{props.location.state.name}</div>
             </div>
             <div className="header-content-divider"></div>
-            {/* <FormRender
-                ref={formRef}
-                {...schema}
-                formData={formData}
-                onChange={setFormData}
-                onValidate={onValidate}
-                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker }}
-            /> */}
             <FormRender
                 ref={formRef}
                 {...schema}
@@ -446,8 +469,17 @@ const StartForm = (props) => {
                 onChange={setFormData}
                 onValidate={onValidate}
                 showValidate={false}
-                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker, multiSelect: multiSelect }}
+                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, TableAccount: TableAccount, file:UploadFile, editSearch: EditbleSelct, 
+                    mapSelect: AMapContainer,cityPicker: cityPicker, multiSelect: multiSelect, DateTimePicker: DateTimePicker }}
             />
+            {
+                isShowProduct ? 
+                <div className="product-info-box">
+                    <ProductInfo getProductInfo={getProductInfo} showAddProductButton={true}></ProductInfo>
+                </div>
+                :
+                null
+            }
             <div className="btngroups">
                 <Button type="primary" style={{ marginLeft: 30 }} className="table-oper-btn" onClick={handleSubmitFirst}>发起</Button>
                 <Button style={{ marginLeft: 30 }} className="table-oper-btn" onClick={handleClick}>重置</Button>

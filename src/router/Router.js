@@ -14,7 +14,6 @@ import StartPermission from '../pages/StartPermission/StartPermission'// 流程�
 import EditbleSelct from '../components/EditbleSelct/EditbleSelct'// 可编辑搜索
 import SetFlowForm from '../pages/SetFlowForm/SetFlowForm'// 设置流程表单
 import TestFrGenerator from '../pages/TestFrGenerator/TestFrGenerator'// 测试Generator
-import LedgerAccount from '../components/LedgerAccount/LedgerAccount'// 台账选择器测试
 import EventList from '../pages/EventList/EventList'// 事件列表
 import EventTypeList from '../pages/EventTypeList/EventTypeList'// 事件类型列表
 import EventConfig from '../pages/EventConfig/EventConfig'// 事件类型列表
@@ -26,7 +25,7 @@ import EventStartPage from '../pages/EventStartPage/EventStartPage'// 事件发�
 import EventOnDealList from '../pages/EventOnDealList/EventOnDealList'// 在办事件
 import EventOperation from '../pages/EventOperation/EventOperation'// 操作在办事件
 import ProductInfo from '../components/ProductInfo/ProductInfo'// 操作在办事件
-import AMapContainer from '../components/AMapContainer/AMapContainer'// 操作在办事件
+import TableAccount from '../components/TableAccount/TableAccount'// 台账选择器测试
 import {Switch, Route, Redirect} from 'react-router-dom'
 
 
@@ -48,7 +47,6 @@ function MyRouter(){
             <Route exact path="/form-render/cascader" component={EditbleSelct}/>
             <Route exact path="/form-render/setform" component={SetFlowForm}/>
             <Route exact path="/form-render/testfr" component={TestFrGenerator}/>
-            <Route exact path="/form-render/ledger" component={LedgerAccount}/>
             <Route exact path="/form-render/product" component={ProductInfo}/> 
             <Route exact path="/form-render/eventlist" component={EventList}/>
             <Route exact path="/form-render/eventtype" component={EventTypeList}/>
@@ -60,7 +58,7 @@ function MyRouter(){
             <Route exact path="/form-render/eventstart" component={EventStartPage}/>
             <Route exact path="/form-render/eventondeal" component={EventOnDealList}/>
             <Route exact path="/form-render/eventoper" component={EventOperation}/>
-            <Route exact path="/form-render/map" component={AMapContainer}/>
+            <Route exact path="/form-render/map" component={TableAccount}/>
             <Redirect to="/form-render/home"></Redirect>
         </Switch>
     )

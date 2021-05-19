@@ -17,6 +17,9 @@ import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
 import SearchSelect from '../../components/SearchSelect/SearchSelect'
 import AMapContainer from '../../components/AMapContainer/AMapContainer'
 import cityPicker from '../../components/CityPicker/CityPicker'
+import multiSelect from '../../components/MultiSelect/MultiSelect'
+import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
+import ProductInfo from '../../components/ProductInfo/ProductInfo'
 const { Search } = Input;
 const { Column } = Table;
 
@@ -99,6 +102,8 @@ const NeedToDeal = (props) => {
     const [prevSchemaValues, setPrevSchemaValues] = useState({})
     // 表单类型：台账或者表单
     const [formType, setFormType] = useState("")
+    // 加载产品信息得白名单数组
+    const [isShowProduct, setIsShowProduct] = useState(false)
     // FormRender的ref
     const formRef = useRef();
     // 回退的ref
@@ -109,6 +114,18 @@ const NeedToDeal = (props) => {
     // FormRender提交表单校验
     const onValidate=(valid)=>{
         setValid(valid)
+    }
+    // 判断是否要加产品信息组件
+    const judgeShowProduct=(formKey)=>{
+        if (formKey === "事件_销售管理_项目新建审批表_技术员"){
+            setIsShowProduct(true)
+        } else {
+            setIsShowProduct(false)
+        }
+    }
+    // 子组件传值给父组件
+    const getProductInfo=(data)=>{
+        console.log(data, "产品信息")
     }
     // 拉取数据
     const getData =()=>{
@@ -190,8 +207,17 @@ const NeedToDeal = (props) => {
                 onChange={setFormData}
                 onValidate={onValidate}
                 showValidate={false}
-                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker }}
+                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, TableAccount: TableAccount, file:UploadFile, 
+                    editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker,multiSelect: multiSelect, DateTimePicker:DateTimePicker }}
             />
+            {
+                isShowProduct ? 
+                <div className="product-info-box">
+                    <ProductInfo getProductInfo={getProductInfo} showAddProductButton={false}></ProductInfo>
+                </div>
+                :
+                null
+            }
             <div className="btngroups">
                 <Button type="primary" onClick={goBack}>返回</Button>
             </div>

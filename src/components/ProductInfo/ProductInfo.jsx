@@ -3,7 +3,6 @@ import { GetProduct } from '../../apis/process'
 import { InputNumber, Modal, Button } from 'antd'
 import "./ProductInfo.less"
 
-const checkedList= []
 const ProductInfo =(props)=>{
     const [proVisible, setProVisible] = useState(false)
     const [productList, setProductList] = useState([])
@@ -15,8 +14,8 @@ const ProductInfo =(props)=>{
         .then((res)=>{
             res.data.getMe.map((item)=>{
                 item.Productes.map(cItem=>{
-                    cItem.count = 0
-                    cItem.price = 0
+                    cItem.Number = 0
+                    cItem.Price = 0
                 })
             })
             setProductList(res.data.getMe)
@@ -36,11 +35,9 @@ const ProductInfo =(props)=>{
                 Productes: []
             }
             item.Productes.map(cItem=>{
-                
-                if (cItem.count * cItem.price > 0) {
+                if (cItem.Number > 0 || cItem.Price > 0) {
                     obj.Productes.push(cItem)
                 }
-                
             })
             if (obj.Productes.length > 0) {
                 arr.push(obj)
@@ -48,6 +45,39 @@ const ProductInfo =(props)=>{
         })
         setAddedProduct(arr)
         setProVisible(false)
+        let arrList = []
+        arr.forEach((item)=>{
+            let myObj = {
+                ProductType: item.ProductType,
+                ProductDetails: []
+            }
+            item.Productes.forEach((cItem)=>{
+                
+                myObj.ProductDetails.push({
+                    ProductName: cItem.ProductNames,
+                    ProductCode: cItem.ProductCode,
+                    Price: cItem.Price,
+                    Number: cItem.Number || 0 + ""
+                })
+            })
+            arrList.push(myObj)
+        })
+        // let dataArr =[...arr]
+        // dataArr.map((item)=>{
+        //     let myObj = {
+        //         ProductType: item.ProductType,
+        //         ProductDetails: []
+        //     }
+        //     item.Productes.map(cItem=>{
+        //         myObj.ProductDetails.push({
+        //             ProductName: cItem.ProductNames,
+        //             ProductCode: cItem.ProductCode,
+        //             Price: cItem.Price,
+        //             Number: cItem.Number || 0 + ""
+        //         })
+        //     })
+        // })
+        props.getProductInfo(arrList);
     }
 
     const closeModal=()=>{
@@ -58,25 +88,24 @@ const ProductInfo =(props)=>{
         copyProductList.map((item)=>{
             item.Productes.map(cItem=>{
                 if (code === cItem.ProductCode) {
-                    cItem.count = value
+                    cItem.Number = value
                 }
             })
         })
         setProductList(copyProductList)
-        console.log(productList)
     }
     
     const productPriceOnChange=(value, type, name, code)=>{
         copyProductList.map((item)=>{
             item.Productes.map(cItem=>{
                 if (code === cItem.ProductCode) {
-                    cItem.price = value
+                    cItem.Price = value
                 }
             })
         })
         setProductList(copyProductList)
-        console.log(productList)
     }
+
     useEffect(()=>{
         getData()
     }, [])
@@ -84,9 +113,17 @@ const ProductInfo =(props)=>{
 
     return(
         <div className="productInfo-wrapper">
-            <div className="topbtns">
-                <Button type="primary" onClick={openMadal}>添加产品</Button>
+            <div className="productinfo-title">
+                产品信息
             </div>
+            {
+                props.showAddProductButton ?
+                <div className="topbtns">
+                    <Button type="primary" onClick={openMadal}>添加产品</Button>
+                </div>
+                :
+                null
+            }
             <div className="productInfo-header">
                 <div className="header-title">产品类型</div>
                 <div className="header-title">产品名称</div>
@@ -94,7 +131,7 @@ const ProductInfo =(props)=>{
                 <div className="header-title">价格（万元）</div>
             </div>
             {
-                addedProduct.length > 0?
+                addedProduct.length > 0 ?
                 <div className="productInfo-content">
                 {
                     addedProduct.map((item,index)=>{
@@ -110,10 +147,10 @@ const ProductInfo =(props)=>{
                                                 <div className="normal-column" key={cIndex}>
                                                     <div className="product-name">{cItem.ProductNames}</div>
                                                     <div className="product-name">
-                                                        {cItem.count}
+                                                        {cItem.Number}
                                                     </div>
                                                     <div className="product-name">
-                                                        {cItem.price}
+                                                        {cItem.Price}
                                                     </div>
                                                 </div>
                                             )
@@ -127,11 +164,11 @@ const ProductInfo =(props)=>{
                 }
                 </div>
                 :
-                <div className="nodata">
+                <div className="product-nodata">
                     暂无数据
                 </div>
             }
-            <Modal title="添加产品信息" visible={proVisible} onOk={addProduct} onCancel={closeModal} width={1030}
+            <Modal title="添加产品信息" visible={proVisible} onOk={addProduct} onCancel={closeModal} width={1008}
             bodyStyle={{overflow:'auto'}} wrapClassName="product-wrapper">
                 <div className="modal-productInfo-header">
                     <div className="modal-header-title">产品类型</div>
@@ -154,10 +191,10 @@ const ProductInfo =(props)=>{
                                                 <div className="normal-column" key={cIndex}>
                                                     <div className="product-name">{cItem.ProductNames}</div>
                                                     <div className="product-name">
-                                                        <InputNumber size="small" min={0} max={99999} defaultValue={cItem.count} onChange={value => productNumberOnChange(value,item.ProductType, cItem.ProductNames, cItem.ProductCode)} />
+                                                        <InputNumber size="small" min={0} max={99999} defaultValue={cItem.Number} onChange={value => productNumberOnChange(value,item.ProductType, cItem.ProductNames, cItem.ProductCode)} />
                                                     </div>
                                                     <div className="product-name">
-                                                        <InputNumber size="small" min={0} max={99999} defaultValue={cItem.price} onChange={value=> productPriceOnChange(value,item.ProductType, cItem.ProductNames, cItem.ProductCode)} />
+                                                        <InputNumber size="small" min={0} max={99999} defaultValue={cItem.Price} onChange={value=> productPriceOnChange(value,item.ProductType, cItem.ProductNames, cItem.ProductCode)} />
                                                     </div>
                                                 </div>
                                             )

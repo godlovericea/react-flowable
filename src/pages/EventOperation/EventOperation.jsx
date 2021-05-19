@@ -16,6 +16,8 @@ import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
 import SearchSelect from '../../components/SearchSelect/SearchSelect'
 import AMapContainer from '../../components/AMapContainer/AMapContainer'
 import cityPicker from '../../components/CityPicker/CityPicker'
+import multiSelect from '../../components/MultiSelect/MultiSelect'
+import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
 import './EventOperation.less'
 
 const EventOperation = (props) => {
@@ -155,7 +157,8 @@ const EventOperation = (props) => {
                         formData={formData}
                         onChange={setFormData}
                         onValidate={onValidate}
-                        widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker }}
+                        widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, TableAccount: TableAccount, file:UploadFile, editSearch: EditbleSelct, 
+                            mapSelect: AMapContainer,cityPicker: cityPicker,multiSelect: multiSelect, DateTimePicker:DateTimePicker }}
                     />
                 </Col>
             </Row>

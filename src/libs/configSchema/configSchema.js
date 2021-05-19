@@ -1,9 +1,9 @@
 // 处理GetStartForm接口和getFormList接口，返回的内容
+import moment from 'moment';
 class ConfigSchema {
     // 接收配置文件数组，以及表单配置文件
     constructor(columnConfigList, schemaForm, web4Config, values) {
         console.log(columnConfigList, "columnConfigList")
-        console.log(values)
         // 配置文件数组：schema所有字段数组
         this.columnConfigList = columnConfigList
         // schema配置文件
@@ -41,7 +41,7 @@ class ConfigSchema {
         this.schema = this.handleSchema()
     }
     // 处理表单数据
-    handleSchema() {    
+    handleSchema() {
         // let resData = `${schemaForm}` // 这里必须强转字符串，否则无法解析成对象
         let jsonData = JSON.parse(this.schemaForm)
         if (this.columnConfigList && this.columnConfigList.length > 0) {
@@ -60,6 +60,10 @@ class ConfigSchema {
                             // 处理本部门字段
                             if (item.Type === "本部门") {
                                 item.Type = this.web4Config.userDepart
+                            }
+                            // 处理本部门字段
+                            if (item.Type === "当前时间") {
+                                item.Type = moment().format("YYYY-MM-DD HH:mm:ss")
                             }
                             // 给schema设置 默认值
                             properties[key].properties[ckey].default = item.Type

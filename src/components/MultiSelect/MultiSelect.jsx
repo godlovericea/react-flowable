@@ -1,14 +1,29 @@
-import React from 'react'
-import { Select } from 'antd';
+import React, {useState} from 'react'
+import { Select, Checkbox, Input } from 'antd';
 
 const { Option } = Select;
 
 const MultiSelect = (props) => {
+
+    const [selectedValue, setSelectedValue] = useState([])
+
     const handleChange = (value) => {
-        console.log(`selected ${value}`);
+        if (value.includes('全选')) {
+            if (value.length === children.length) {
+                setSelectedValue([])
+                return
+            }
+            let tempArr = childrenArr.splice(1)
+            setSelectedValue(tempArr)
+            
+        } else {
+            setSelectedValue(value)
+        }
+        props.onChange(props.name, selectedValue)
     }
 
     const childrenArr = [
+        "全选",
         "威派格",
         "青岛三利",
         "上海凯泉",
@@ -52,7 +67,7 @@ const MultiSelect = (props) => {
         "中地"
     ]
     let children = []
-    for (let i = 10; i < childrenArr.length; i++) {
+    for (let i = 0; i < childrenArr.length; i++) {
         children.push(<Option key={childrenArr[i]}>{childrenArr[i]}</Option>);
     }
     return (
@@ -60,7 +75,9 @@ const MultiSelect = (props) => {
             mode="multiple"
             allowClear
             style={{ width: '100%' }}
-            placeholder="Please select"
+            placeholder="请选择竞争对手"
+            value={selectedValue}
+            defaultValue={props.value}
             onChange={handleChange}
         >
             {children}

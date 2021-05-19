@@ -1,7 +1,7 @@
 // 自定义FR-Generator组件——台账选择器——查询所有台账
 import React from 'react';
 import { Modal, Button, Input, Table, message } from 'antd';
-import { GetLedgerAccountList } from '../../apis/process';
+import { GetTZInfo } from '../../apis/process';
 const { Search } = Input;
 
 class LedgerAccount extends React.Component {
@@ -23,7 +23,7 @@ class LedgerAccount extends React.Component {
         this.getData()
     }
     getData = async() => {
-        let result = await GetLedgerAccountList()
+        let result = await GetTZInfo()
         // console.log(result.data.root)
         const columnsArr = [
             {

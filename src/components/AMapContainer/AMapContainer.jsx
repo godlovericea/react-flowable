@@ -60,7 +60,7 @@ class AMapContainer extends React.Component{
         this.state.placeSearch.search(data)
     }
     componentDidMount(){
-        console.log(this.props)
+        // console.log(this.props)
     }
     render(){
         return(

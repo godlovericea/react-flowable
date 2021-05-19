@@ -11,6 +11,9 @@ import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
 import SearchSelect from '../../components/SearchSelect/SearchSelect'
 import AMapContainer from '../../components/AMapContainer/AMapContainer'
 import cityPicker from '../../components/CityPicker/CityPicker'
+import multiSelect from '../../components/MultiSelect/MultiSelect'
+import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
+
 
 const ShowForm = (props) => {
     // FormRender的formData
@@ -66,7 +69,8 @@ const ShowForm = (props) => {
                 onChange={setFormData}
                 onValidate={onValidate}
                 showValidate={false}
-                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, table: TableAccount, file:UploadFile, editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker }}
+                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, TableAccount: TableAccount, file:UploadFile, 
+                    editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker,multiSelect: multiSelect, DateTimePicker:DateTimePicker }}
             />
             <div style={{textAlign: 'right',marginRight: '20px',padding: '30px 0'}}>
                 <Button type="primary" style={{ marginLeft: 30 }} className="table-oper-btn" onClick={handleClickReback}>返回列表</Button>
