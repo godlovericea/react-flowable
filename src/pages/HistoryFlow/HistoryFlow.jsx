@@ -126,7 +126,7 @@ const NeedToDeal = (props) => {
     }
     // 子组件传值给父组件
     const getProductInfo=(data)=>{
-        console.log(data, "产品信息")
+        // console.log(data, "产品信息")
     }
     // 拉取数据
     const getData =()=>{
@@ -146,7 +146,7 @@ const NeedToDeal = (props) => {
         })
         GetFormList(cookieScope, taskIdScope)
         .then((res)=>{
-            console.log(res)
+            // console.log(res)
             if (res.status === 200) {
                 let fieldData = res.data
                 setFormType(fieldData.Type)

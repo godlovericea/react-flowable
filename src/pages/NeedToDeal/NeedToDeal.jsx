@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
 import FormTransfer from '../../libs/transform/transform'
+import FormDataValid from '../../libs/FormDataValid/FormDataValid'
 import ConfigSchemaClass from '../../libs/configSchema/configSchema'
 import configData from '../../utils/config'
 import { Button, message, Modal, Radio, Input, Table, Space} from 'antd';
@@ -131,7 +132,7 @@ const NeedToDeal = (props) => {
     }
     // 子组件传值给父组件
     const getProductInfo=(data)=>{
-        console.log(data, "产品信息")
+        // console.log(data, "产品信息")
     }
     const getData =()=>{
         // cookie
@@ -182,7 +183,7 @@ const NeedToDeal = (props) => {
         })
         GetFormList(cookieScope, taskIdScope)
         .then((res)=>{
-            console.log(res)
+            // console.log(res)
             if (res.status === 200) {
 
                 let fieldData = res.data
@@ -212,9 +213,9 @@ const NeedToDeal = (props) => {
                     // let values = {}
                     const testData = new ConfigSchemaClass(fieldData.ColumnConfig, fieldData.Config, web4Config, values)
                     setSchema(testData.schema)
-                    console.log(fieldData.ColumnConfig, "fieldData.ColumnConfig")
+                    // console.log(fieldData.ColumnConfig, "fieldData.ColumnConfig")
 
-                    console.log(testData.schema, "testData.schema")
+                    // console.log(testData.schema, "testData.schema")
                 }
             }
         })
@@ -253,7 +254,7 @@ const NeedToDeal = (props) => {
         const searchArr = search.split("&")
         searchArr.forEach((item)=>{
             if (item.indexOf("processInstanceId") > -1) {
-                console.log(item)
+                // console.log(item)
                 setProcessDefinitionId(item.split("=")[1])
             } else if (item.indexOf("userId") > -1) {
                 setUserId(item.split("=")[1])
@@ -346,10 +347,11 @@ const NeedToDeal = (props) => {
     // 保存
     const saveTask=()=>{
         // console.log(formData)
-        // if (valid.length > 0) {
-        //     message.error("提交失败,请按照提示填写表单")
-        //     return
-        // }
+        if (valid.length > 0) {
+            const validData = new FormDataValid(valid, configSchema)
+            message.error(validData.validMsg)
+            return
+        }
         // let obj = {}
         // if (prevSchemaValues) {
         //     for(let pkey in prevSchemaValues) {
@@ -378,8 +380,8 @@ const NeedToDeal = (props) => {
     // 这里的逻辑：点击完成时候，调取GetTransferList接口查询，下一个节点是否有会签，如果没有，该节点直接完成提交，否则，返回下一个节点的候选人
     const completeTask=()=>{
         if (valid.length > 0) {
-            console.log(valid)
-            message.error("提交失败,请按照提示填写表单")
+            const validData = new FormDataValid(valid, configSchema)
+            message.error(validData.validMsg)
             return
         }
         const myData = {
@@ -399,7 +401,7 @@ const NeedToDeal = (props) => {
                     // 打开Modal
                     setNextPersonVisible(true)
                     // 拿去候选人数组
-                    console.log(res.data.getMe)
+                    // console.log(res.data.getMe)
                     setAssigneeList(res.data.getMe)
                 } else {
                     message.success("当前节点已完成")
@@ -412,8 +414,8 @@ const NeedToDeal = (props) => {
     }
     // 选择候选人
     const hanldeAssignChange=(e)=>{
-        console.log(e, "e")
-        console.log(assigneeList, "assigneeList")
+        // console.log(e, "e")
+        // console.log(assigneeList, "assigneeList")
         actArr.push({
             ActID: e.target.actid,
             UserID: e.target.value
@@ -646,7 +648,7 @@ const NeedToDeal = (props) => {
     }
     // 获取上传的文件
     const hanldeFileUpload=(e)=>{
-        console.log(e.target.files[0])
+        // console.log(e.target.files[0])
         setUpFileName(e.target.files[0])
     }
     // 关闭上传文件的Modal

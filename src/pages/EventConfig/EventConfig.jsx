@@ -85,7 +85,7 @@ class EventConfig extends React.Component {
         // console.log(this.state.flowArr)
         // console.log(this.state.EndType)
         let arr = []
-        console.log(this.state.flowArr, "flowArr")
+        // console.log(this.state.flowArr, "flowArr")
         this.state.flowArr.forEach((item)=>{
             if (item.id === this.state.curFlowId) {
                 arr.push({
@@ -99,7 +99,7 @@ class EventConfig extends React.Component {
                 arr.push(item)
             }
         })
-        console.log(arr, "arr")
+        // console.log(arr, "arr")
         this.setState({
             flowArr: arr,
             configedFlowArr: arr,
@@ -139,7 +139,7 @@ class EventConfig extends React.Component {
     // 把流程挂接到某人身上，分配流程发起的权限
     linkToEvent=()=>{
         let keyList = []
-        console.log(this.state.configedFlowArr)
+        // console.log(this.state.configedFlowArr)
         this.state.configedFlowArr.forEach((item)=>{
             if (item.checked) {
                 keyList.push({

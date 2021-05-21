@@ -53,7 +53,7 @@ const SetFlowForm =(props)=> {
                 .then((res)=>{
                     let resData = res.data.FormJson
                     let config = JSON.parse(resData).schema
-                    console.log(config)
+                    // console.log(config)
                     setSchema(config)
                     hanldleNodeForm(config)
                 })
@@ -105,7 +105,7 @@ const SetFlowForm =(props)=> {
     }
 
     const linkToModeler = () => {
-        console.log(beenConfiged)
+        // console.log(beenConfiged)
         const keys = checkedKeys.toString()
         SaveColumnConfig(actId, formKey, keys)
         .then((res)=>{
@@ -113,7 +113,7 @@ const SetFlowForm =(props)=> {
         })
     }
     const onExpand = (expandedKeys) => {
-        console.log('onExpand', expandedKeys); // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+        // console.log('onExpand', expandedKeys); // if not set autoExpandParent to false, if children expanded, parent can not collapse.
         // or, you can remove all expanded children keys.
 
         setExpandedKeys(expandedKeys);
@@ -121,17 +121,17 @@ const SetFlowForm =(props)=> {
     };
 
     const onCheck = (checkedKeys) => {
-        console.log('onCheck', checkedKeys);
+        // console.log('onCheck', checkedKeys);
         setCheckedKeys(checkedKeys);
     };
 
     const onSelect = (selectedKeys, info) => {
-        console.log('selectedKeys', selectedKeys)
+        // console.log('selectedKeys', selectedKeys)
         if (selectedKeys) {
             setInputVisible(true)
             setCurNodeKey(info.node.key)
         }
-        console.log('onSelect', info);
+        // console.log('onSelect', info);
         setSelectedKeys(selectedKeys);
     };
 

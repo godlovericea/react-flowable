@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
 import { Button, message, Input, Modal, Radio } from 'antd';
 import FormTransfer from '../../libs/transform/transform'
+import FormDataValid from '../../libs/FormDataValid/FormDataValid'
 import ConfigSchemaClass from '../../libs/configSchema/configSchema'
 import { GetStartForm, WorkflowStart, getTableName, GetTransferList_FirstNode, AddProduct } from '../../apis/process'
 import "./StartForm.less"
@@ -164,9 +165,10 @@ const StartForm = (props) => {
 
     // 提交
     const handleSubmitFirst = () =>{
-        console.log(valid)
+        // console.log(valid)
         if (valid.length > 0) {
-            message.error("提交失败,请按照提示填写表单！")
+            const validData = new FormDataValid(valid, configSchema)
+            message.error(validData.validMsg)
             return
         }
         if(!formId){
@@ -235,7 +237,7 @@ const StartForm = (props) => {
                         // 打开Modal
                         setNextPersonVisible(true)
                         // 拿取候选人数组
-                        console.log(res.data.getMe)
+                        // console.log(res.data.getMe)
                         setAssigneeList(res.data.getMe)
                     }
                 } else {
@@ -277,8 +279,8 @@ const StartForm = (props) => {
 
     // 选择候选人
     const hanldeAssignChange=(e)=>{
-        console.log(e, "e")
-        console.log(assigneeList, "assigneeList")
+        // console.log(e, "e")
+        // console.log(assigneeList, "assigneeList")
         actArr.push({
             ActID: e.target.actid,
             UserID: e.target.value
@@ -336,7 +338,7 @@ const StartForm = (props) => {
         // flowable-engine内部鉴权使用的cookie
         let cookie = ""
         let winCookie = window.document.cookie
-        console.log(winCookie)
+        // console.log(winCookie)
         let winCookieArr = winCookie.split(";")
         winCookieArr.forEach((item)=>{
             if (item.indexOf("FLOWABLE_REMEMBER_ME") > -1) {

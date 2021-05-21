@@ -31,7 +31,7 @@ const EventTypeList = (props) => {
     })
     // 搜索按钮
     const onSearch =(data) =>{
-        console.log(data)
+        // console.log(data)
     }
     // 打开弹框
     const openDialog=()=>{
@@ -39,8 +39,8 @@ const EventTypeList = (props) => {
     }
     // 点击确定新增事件类型
     const handleOk=()=>{
-        console.log(eventDescRef.current.state.value)
-        console.log(eventNameRef.current.state.value)
+        // console.log(eventDescRef.current.state.value)
+        // console.log(eventNameRef.current.state.value)
         setIsModalVisible(false)
     }
     // 点击取消按钮，取消新增
@@ -53,14 +53,14 @@ const EventTypeList = (props) => {
     // 删除事件类型
     const handleDel = (id) => {
         return ()=>{
-            console.log(id)
+            // console.log(id)
         }
         
     }
      // 编辑事件类型
     const handleEdit=(id, name, desc) => {
         return ()=>{
-            console.log(id, name, desc)
+            // console.log(id, name, desc)
         }
     }
     // 点击配置流程

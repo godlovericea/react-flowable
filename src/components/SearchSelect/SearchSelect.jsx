@@ -11,7 +11,7 @@ const SearchSelect =(myOptions)=> {
         myOptions.onChange(myOptions.name, value)
     }
     const onSearch=(e)=>{
-        console.log(e)
+        // console.log(e)
     }
     const getData = ()=>{
         let str = ""

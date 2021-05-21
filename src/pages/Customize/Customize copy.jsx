@@ -10,7 +10,7 @@ const NewWidget = ({ value = 0, onChange }) => (
 );
 
 const Customize = () => {
-  console.log(defaultSettings, defaultCommonSettings, defaultGlobalSettings);
+  // console.log(defaultSettings, defaultCommonSettings, defaultGlobalSettings);
 
   return (
     <div style={{ height: '100vh' }}>

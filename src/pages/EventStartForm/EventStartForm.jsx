@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
 import { Button, message } from 'antd';
 import FormTransfer from '../../libs/transform/transform'
+import FormDataValid from '../../libs/FormDataValid/FormDataValid'
 import EventSchema from '../../libs/eventSchema/eventSchema'
 import ConfigSchemaClass from '../../libs/configSchema/configSchema'
 import { GetStartForm, WorkflowStart, getTableName, GetEvent, CreateEvent } from '../../apis/process'
@@ -86,7 +87,8 @@ const StartForm = (props) => {
     // 提交
     const handleSubmit = () => {
         if (valid.length > 0) {
-            message.error("提交失败,请按照提示填写表单！")
+            const validData = new FormDataValid(valid, configSchema)
+            message.error(validData.validMsg)
             return
         }
         // 事件名称

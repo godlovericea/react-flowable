@@ -13,7 +13,7 @@ const UploadFile =(props)=> {
     const handleChange=(e)=>{
         
         setUpFileName(e.target.files[0])
-        console.log(upFileName)
+        // console.log(upFileName)
     }
 
     // 确定上传附件

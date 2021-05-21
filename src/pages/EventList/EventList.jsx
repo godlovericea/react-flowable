@@ -146,7 +146,7 @@ const EventList = (props) => {
         setClientHeight(height - 190)
     }
     const handleOnChange=(e)=>{
-        console.log(e)
+        // console.log(e)
         setEventName(e.target.value)
     }
 

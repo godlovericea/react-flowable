@@ -69,7 +69,7 @@ class LedgerAccount extends React.Component {
         })
     }
     hanldeInputChange=(e)=>{
-        console.log(e)
+        // console.log(e)
     }
     render() {
         return (

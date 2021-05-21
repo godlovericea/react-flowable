@@ -127,7 +127,7 @@ const NeedToDeal = (props) => {
     }
     // 子组件传值给父组件
     const getProductInfo=(data)=>{
-        console.log(data, "产品信息")
+        // console.log(data, "产品信息")
     }
     // 拉取数据
     const getData =()=>{
@@ -179,7 +179,7 @@ const NeedToDeal = (props) => {
         })
         GetFormList(cookieScope, taskIdScope)
         .then((res)=>{
-            console.log(res)
+            // console.log(res)
             if (res.status === 200) {
 
                 let fieldData = res.data
@@ -242,11 +242,11 @@ const NeedToDeal = (props) => {
         } else {
             search = window.location.search.slice(1)
         }
-        console.log(search)
+        // console.log(search)
         const searchArr = search.split("&")
         searchArr.forEach((item)=>{
             if (item.indexOf("processInstanceId") > -1) {
-                console.log(item)
+                // console.log(item)
                 setProcessDefinitionId(item.split("=")[1])
             } else if (item.indexOf("userId") > -1) {
                 setUserId(item.split("=")[1])
@@ -291,7 +291,7 @@ const NeedToDeal = (props) => {
                             state: "上传成功"
                         })
                     }
-                    console.log(arr)
+                    // console.log(arr)
                     setFileTableData(arr)
                 }
                 setFileVisible(true)

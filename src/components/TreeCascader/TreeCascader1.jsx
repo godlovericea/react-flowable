@@ -8,7 +8,7 @@ const TreeCascader = (myoptions) => {
     const [options, setOptions] = useState([])
 
     const getfirstData =()=>{
-        console.log(myoptions)
+        // console.log(myoptions)
         let arr = myoptions.name.split('_')
         let str = arr[arr.length - 1]
         let arr2 = str.split('.')

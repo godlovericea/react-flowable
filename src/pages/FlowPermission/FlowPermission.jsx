@@ -34,7 +34,7 @@ class FlowPermission extends React.Component {
             }
             updateData.push(item)
         })
-        console.log(updateData)
+        // console.log(updateData)
         this.setState({
             flowArr: updateData
         })
@@ -138,7 +138,7 @@ class FlowPermission extends React.Component {
         }
         // console.log(search)
         const searchArr = search.split("&")
-        console.log(searchArr)
+        // console.log(searchArr)
         searchArr.forEach((item)=>{
             if (item.indexOf("userName") > -1) {
                 userName = decodeURI(item.split("=")[1])

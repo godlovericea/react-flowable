@@ -31,7 +31,7 @@ const ShowForm = (props) => {
     const getData =async()=>{
         const name = props.location.state.name
         let result = await GetEvent(name)
-        console.log(result.data.getMe[0].EventJson)
+        // console.log(result.data.getMe[0].EventJson)
         let schema = {...JSON.parse(result.data.getMe[0].EventJson),column: 3,labelWidth: 120}
         setSchema(schema)
     }

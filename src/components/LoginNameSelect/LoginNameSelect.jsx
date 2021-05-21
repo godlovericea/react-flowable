@@ -39,12 +39,12 @@ const LoginNameSelect =(props)=> {
         setPerson(e.target.value)
     }
     const handleChange=(e)=>{
-        console.log(e)
+        // console.log(e)
         setPerson(e.target.value)
         setLoginName(e.target.loginName)
         setUserID(e.target.userID)
-        console.log(person)
-        console.log(loginName)
+        // console.log(person)
+        // console.log(loginName)
     }
     const onSearch=(e)=>{
         let arr = []

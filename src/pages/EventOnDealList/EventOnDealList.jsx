@@ -275,7 +275,7 @@ const EventOnDealList = (props) => {
 
     const computeHeight=()=>{
         var height = document.documentElement.clientHeight;
-        console.log(height)
+        // console.log(height)
         setClientHeight(height - 190)
     }
 
@@ -309,7 +309,7 @@ const EventOnDealList = (props) => {
                 setUserDepart(userDepart)
             } else if (item.indexOf("loginName") > -1) {
                 loginName = item.split("=")[1]
-                console.log(loginName, "loginName")
+                // console.log(loginName, "loginName")
                 setLoginName(loginName)
             }
         })

@@ -24,7 +24,7 @@ class Demo extends React.Component {
             const { id } = treeNode.props;
             let len = treeNode.pos.split('-')
             let clickIndex = len.length - 1
-            console.log(treeNode)
+            // console.log(treeNode)
             getSelectName(routeArr[clickIndex])
             .then((res)=>{
                 res.data.forEach((item)=>{
@@ -41,7 +41,7 @@ class Demo extends React.Component {
         });
 
     onChange = value => {
-        console.log(value);
+        // console.log(value);
         this.setState({ value });
         this.props.onChange(this.props.name, value)
     };

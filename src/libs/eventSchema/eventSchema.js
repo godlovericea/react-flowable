@@ -4,7 +4,7 @@ class EventSchema {
     constructor(schemaForm, columnConfigList) {
         // schema配置文件
         this.schemaForm = schemaForm
-        console.log(schemaForm)
+        // console.log(schemaForm)
         // schema表单的数据，formData的值
         this.columnConfigList = columnConfigList
         // 要导出的schema值
@@ -28,7 +28,7 @@ class EventSchema {
                 for(let ckey in properties[key].properties) {
                     // 遍历配置文件
                     this.columnConfigList.forEach((item)=>{
-                        console.log(item, ckey)
+                        // console.log(item, ckey)
                         if(item.Name === properties[key].properties[ckey].title) {
                             // 给schema设置 默认值
                             properties[key].properties[ckey].default = item.Value

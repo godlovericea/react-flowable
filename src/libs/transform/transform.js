@@ -19,7 +19,7 @@ class FormTransfer {
             // 处理每一种台账的数据类型
             let objData =await this.handleEveryGroup(this.dataArr[i].Schema)
             // 对象的value值
-            console.log(objData)
+            // console.log(objData)
             obj[key] = {
                 type:"object",
                 title: this.dataArr[i].GroupName,
@@ -377,7 +377,7 @@ class FormTransfer {
     }
     // 台账选择器
     handleTableAccount(dataObj){
-        console.log(dataObj)
+        // console.log(dataObj)
         const { required } = this.handlePattern(dataObj.ValidateRule)
         return {
             title: dataObj.Alias,
@@ -394,7 +394,7 @@ class FormTransfer {
     }
     // 判断是否是必填字段
     judgeRequired(objData){
-        console.log(objData)
+        // console.log(objData)
         let requireList = []
         for(let ckey in objData) {
             

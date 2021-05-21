@@ -19,10 +19,10 @@ class Demo extends React.Component {
     };
 
     onValidate = valid => {
-        console.log(valid);
+        // console.log(valid);
     }
     listenChange=(params)=>{
-        console.log(params)
+        // console.log(params)
     }
     render(){
         return (

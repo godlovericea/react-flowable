@@ -7,7 +7,7 @@ import './StaffSelect.less';
 const { Search } = Input;
 
 const StaffSelect =(props)=> {
-    console.log(props)
+    // console.log(props)
     const [visible, setVisible] = useState(false)
     const [personArr, setPersonArr] = useState([])
     const [personList, setPersonList] = useState([])

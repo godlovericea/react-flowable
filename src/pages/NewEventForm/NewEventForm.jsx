@@ -112,7 +112,7 @@ class NewEventForm extends React.Component{
     // 判断是否是分组类型的表单——>格式保持与台账一致
     handleObject=(formData)=>{
         let flag = false
-        console.log(JSON.stringify(formData))
+        // console.log(JSON.stringify(formData))
         const {properties} = formData.schema
         for (let key in properties) {
             if (!properties[key].hasOwnProperty('properties')) {

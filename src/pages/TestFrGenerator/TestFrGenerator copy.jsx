@@ -15,8 +15,8 @@ const customizeSetting = {
 
 const Demo = () => {
 
-    console.log(defaultSettings, "defaultSettings");
-    console.log(defaultCommonSettings, "defaultCommonSettings");
+    // console.log(defaultSettings, "defaultSettings");
+    // console.log(defaultCommonSettings, "defaultCommonSettings");
 
 
 
