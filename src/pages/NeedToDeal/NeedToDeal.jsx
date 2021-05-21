@@ -19,6 +19,7 @@ import AMapContainer from '../../components/AMapContainer/AMapContainer'
 import cityPicker from '../../components/CityPicker/CityPicker'
 import multiSelect from '../../components/MultiSelect/MultiSelect'
 import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
+import CodeGenerator from '../../components/CodeGenerator/CodeGenerator'
 import ProductInfo from '../../components/ProductInfo/ProductInfo'
 const { Search } = Input;
 const { Column } = Table;
@@ -141,6 +142,7 @@ const NeedToDeal = (props) => {
         let winCookie = window.document.cookie
         let winCookieArr = winCookie.split(";")
         let userNameScope = ""
+        let siteScope = ""
         let userDepartScope = ""
         winCookieArr.forEach((item)=>{
             if (item.indexOf("FLOWABLE_REMEMBER_ME") > -1) {
@@ -174,6 +176,8 @@ const NeedToDeal = (props) => {
             } else if (item.indexOf("userName") > -1) {
                 userNameScope = decodeURI(item.split("=")[1])
                 setUserName(decodeURI(item.split("=")[1]))
+            } else if (item.indexOf("site") > -1) {
+                siteScope = decodeURI(item.split("=")[1])
             }
         })
         GetFormList(cookieScope, taskIdScope)
@@ -199,7 +203,8 @@ const NeedToDeal = (props) => {
                     setConfigSchema(fieldData.Config)
                     const web4Config = {
                         userName: userNameScope,
-                        userDepart: userDepartScope
+                        userDepart: userDepartScope,
+                        site: siteScope
                     }
                     // 上一个节点带过来的values
                     
@@ -314,16 +319,21 @@ const NeedToDeal = (props) => {
                     for(const ckey in properties[key].properties){
                         for(const cfkey in formData[fkey]) {
                             if (ckey === cfkey) {
-                                let tempValue = ""
+                                // let tempValue = ""
+                                // if (Array.isArray(formData[fkey][cfkey])) {
+                                //     tempValue = handleArray(formData[fkey][cfkey])
+                                // } else {
+                                //     tempValue = formData[fkey][cfkey]
+                                // }
+                                let tempValue = formData[fkey][cfkey]
                                 if (Array.isArray(formData[fkey][cfkey])) {
                                     tempValue = handleArray(formData[fkey][cfkey])
-                                } else {
-                                    tempValue = formData[fkey][cfkey]
                                 }
                                 arr.push({
                                     Type: properties[key].properties[ckey].type,
                                     Name: properties[key].properties[ckey].title,
-                                    Value: tempValue
+                                    Value: tempValue,
+                                    Code: properties[key].properties[ckey].hasOwnProperty("code") && properties[key].properties[ckey].code ? properties[key].properties[ckey].code : ""
                                 })
                             }
                         }
@@ -958,7 +968,8 @@ const NeedToDeal = (props) => {
                 onChange={setFormData}
                 onValidate={onValidate}
                 widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, TableAccount: TableAccount, file:UploadFile, 
-                    editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker, multiSelect: multiSelect, DateTimePicker:DateTimePicker }}
+                    editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker, multiSelect: multiSelect, 
+                    DateTimePicker:DateTimePicker, CodeGenerator:CodeGenerator }}
             />
             {
                 isShowProduct ? 

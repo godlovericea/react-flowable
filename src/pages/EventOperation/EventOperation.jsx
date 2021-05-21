@@ -18,6 +18,7 @@ import AMapContainer from '../../components/AMapContainer/AMapContainer'
 import cityPicker from '../../components/CityPicker/CityPicker'
 import multiSelect from '../../components/MultiSelect/MultiSelect'
 import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
+import CodeGenerator from '../../components/CodeGenerator/CodeGenerator'
 import './EventOperation.less'
 
 const EventOperation = (props) => {
@@ -158,7 +159,7 @@ const EventOperation = (props) => {
                         onChange={setFormData}
                         onValidate={onValidate}
                         widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, TableAccount: TableAccount, file:UploadFile, editSearch: EditbleSelct, 
-                            mapSelect: AMapContainer,cityPicker: cityPicker,multiSelect: multiSelect, DateTimePicker:DateTimePicker }}
+                            mapSelect: AMapContainer,cityPicker: cityPicker,multiSelect: multiSelect, DateTimePicker:DateTimePicker,CodeGenerator:CodeGenerator }}
                     />
                 </Col>
             </Row>

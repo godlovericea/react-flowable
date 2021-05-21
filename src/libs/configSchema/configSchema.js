@@ -65,6 +65,10 @@ class ConfigSchema {
                             if (item.Type === "当前时间") {
                                 item.Type = moment().format("YYYY-MM-DD HH:mm:ss")
                             }
+                            // 处理所属站点
+                            if (item.Type === "所属站点") {
+                                item.Type = this.web4Config.site
+                            }
                             // 给schema设置 默认值
                             properties[key].properties[ckey].default = item.Type
                             // 给schema设置 单位
@@ -76,6 +80,13 @@ class ConfigSchema {
                                 properties[key].properties[ckey]["ui:hidden"] = false
                             } else {
                                 properties[key].properties[ckey]["ui:hidden"] = true
+                            }
+
+                            // 如果配置了只读
+                            if (item.IsRequired === "true") {
+                                properties[key].properties[ckey]["ui:readonly"] = true
+                            } else {
+                                properties[key].properties[ckey]["ui:readonly"] = false
                             }
                         }
                     })

@@ -17,6 +17,7 @@ import AMapContainer from '../../components/AMapContainer/AMapContainer'
 import cityPicker from '../../components/CityPicker/CityPicker'
 import multiSelect from '../../components/MultiSelect/MultiSelect'
 import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
+import CodeGenerator from '../../components/CodeGenerator/CodeGenerator'
 
 
 const StartForm = (props) => {
@@ -137,7 +138,8 @@ const StartForm = (props) => {
                 onValidate={onValidate}
                 showValidate={false}
                 widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, TableAccount: TableAccount, file:UploadFile, 
-                    editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker,multiSelect: multiSelect, DateTimePicker:DateTimePicker }}
+                    editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker,multiSelect: multiSelect, 
+                    DateTimePicker:DateTimePicker, CodeGenerator:CodeGenerator }}
             />
             <div className="btngroups">
                 <Button type="primary" style={{ marginLeft: 30 }} className="table-oper-btn" onClick={handleSubmit}>发起</Button>

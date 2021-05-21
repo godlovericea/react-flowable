@@ -19,6 +19,7 @@ import AMapContainer from '../../components/AMapContainer/AMapContainer'
 import cityPicker from '../../components/CityPicker/CityPicker'
 import multiSelect from '../../components/MultiSelect/MultiSelect'
 import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
+import CodeGenerator from '../../components/CodeGenerator/CodeGenerator'
 import ProductInfo from '../../components/ProductInfo/ProductInfo'
 const { Search } = Input;
 const { Column } = Table;
@@ -200,6 +201,7 @@ const NeedToDeal = (props) => {
                     <p className="detail-items">截止时间：{ETime}</p>
                 </div>
             </div>
+            <div className="divider-box"></div>
             <FormRender
                 ref={formRef}
                 {...schema}
@@ -208,7 +210,8 @@ const NeedToDeal = (props) => {
                 onValidate={onValidate}
                 showValidate={false}
                 widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, TableAccount: TableAccount, file:UploadFile, 
-                    editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker,multiSelect: multiSelect, DateTimePicker:DateTimePicker }}
+                    editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker,multiSelect: multiSelect, 
+                    DateTimePicker:DateTimePicker,CodeGenerator:CodeGenerator }}
             />
             {
                 isShowProduct ? 

@@ -3,7 +3,7 @@ import MyRouter from './router/Router'
 
 function App() {
   return (
-    <div>
+    <div style={{height: '100%'}}>
       <MyRouter></MyRouter>
     </div>
   )

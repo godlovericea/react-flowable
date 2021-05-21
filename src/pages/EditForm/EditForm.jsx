@@ -178,10 +178,10 @@ const customizeSetting = {
             },
         },
         {
-            text: '竞争对手',
+            text: '自定义多选',
             name: 'multiSelect',
             schema: {
-                title: '竞争对手',
+                title: '自定义多选',
                 type: 'string',
                 'ui:widget': 'multiSelect',
             },
@@ -217,11 +217,32 @@ const customizeSetting = {
                 }
             },
         },
+        {
+            text: '编码生成器',
+            name: 'CodeGenerator',
+            schema: {
+                title: '编码生成器',
+                type: 'string',
+                'ui:widget': 'CodeGenerator',
+            },
+            widget: 'CodeGenerator',
+            setting: {
+                code:{
+                    title: "编码前缀",
+                    type: 'string'
+                },
+                isRequired:{
+                    title: '必填',
+                    type: 'boolean'
+                }
+            },
+        },
     ],
 }
 
 
 defaultSettings.forEach((item)=>{
+    // console.log(item)
     item.widgets.forEach((cItem)=>{
         cItem.setting = {...cItem.setting,
             api:{
@@ -237,8 +258,6 @@ defaultSettings.forEach((item)=>{
 })
 
 const settings = defaultSettings.push(customizeSetting)
-
-// const commonSettings = defaultCommonSettings["ui:options"] = customerCommonSettings["ui:options"]
 
 const EditForm = (props) => {
     const [isModalVisible, setIsModalVisible] = useState(false)
@@ -368,7 +387,7 @@ const EditForm = (props) => {
         for(let key in properties) {
             for(let cKey in properties[key].properties) {
                 if (properties[key].properties[cKey].hasOwnProperty("api") && properties[key].properties[cKey].api && properties[key].properties[cKey].enum) {
-                    console.log(properties[key].properties[cKey])
+                    // console.log(properties[key].properties[cKey])
                     properties[key].properties[cKey].enum = []
                     properties[key].properties[cKey].enumNames = []
                     let res =await getSelectName(properties[key].properties[cKey].api)
@@ -404,15 +423,15 @@ const EditForm = (props) => {
         // Generator的值
         const FormInfo = genRef.current && genRef.current.getValue()
 
-        console.log(FormInfo, "FormInfo")
+        // console.log(FormInfo, "FormInfo")
         // 处理必填
         let requiredData = handleIsRequired(FormInfo)
 
-        console.log(requiredData, "requiredData")
+        // console.log(requiredData, "requiredData")
         // 处理数据字典
         let handledData =await handleFormInfoApi(requiredData)
 
-        console.log(handledData, "handledData")
+        // console.log(handledData, "handledData")
 
         if (!handleObject(handledData)) {
             return

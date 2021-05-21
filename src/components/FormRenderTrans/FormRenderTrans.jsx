@@ -14,6 +14,7 @@ import AMapContainer from '../../components/AMapContainer/AMapContainer'
 import cityPicker from '../../components/CityPicker/CityPicker'
 import multiSelect from '../../components/MultiSelect/MultiSelect'
 import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
+import CodeGenerator from '../../components/CodeGenerator/CodeGenerator'
 import "./FormRenderTrans.less"
 
 
@@ -33,6 +34,7 @@ const FormRenderTrans=(props)=>{
                 let formTransfer = new FormTransfer(dataArr)
                 let schema =await formTransfer.handleGroup()
                 setSchema(schema)
+                props.handleSchema(schema)
             } else {
                 message.error(res.data.say.errMsg)
             }
@@ -41,10 +43,6 @@ const FormRenderTrans=(props)=>{
 
     const onValidate=(valid)=>{
         setValid(valid)
-    }
-
-    const transfer = () => {
-        props.handleSchema(schema)
     }
 
     useEffect(()=>{
@@ -61,11 +59,15 @@ const FormRenderTrans=(props)=>{
                 onValidate={onValidate}
                 showValidate={false}
                 widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, TableAccount: TableAccount, file:UploadFile, 
-                    editSearch: EditbleSelct, mapSelect: AMapContainer, cityPicker: cityPicker, multiSelect: multiSelect, DateTimePicker:DateTimePicker }}
+                    editSearch: EditbleSelct, mapSelect: AMapContainer, cityPicker: cityPicker, multiSelect: multiSelect, 
+                    DateTimePicker:DateTimePicker, CodeGenerator: CodeGenerator }}
             />
-            <div className="gobackBtntrans">
+            {/* <div className="gobackBtntrans">
                 <Button  type="primary" style={{marginLeft:'10px',width:'100px'}} onClick={transfer}>转换</Button>
-            </div>
+                <Button style={{width:'100px'}} onClick={this.handleClickReback}>
+                        返回列表
+                    </Button>
+            </div> */}
         </div>
     );
 }

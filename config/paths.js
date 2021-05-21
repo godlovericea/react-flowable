@@ -69,6 +69,4 @@ module.exports = {
   // publicUrlOrPath // 本地调试环境
 };
 
-
-
 module.exports.moduleFileExtensions = moduleFileExtensions;

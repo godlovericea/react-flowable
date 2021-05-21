@@ -3,7 +3,6 @@ import { DatePicker } from 'antd';
 import moment from 'moment'
 
 const DateTimePicker=(props)=>{
-    console.log(props)
     const onChange = (value, dateString) =>{
         // console.log('Formatted Selected Time: ', dateString);
         props.onChange(props.name, dateString)

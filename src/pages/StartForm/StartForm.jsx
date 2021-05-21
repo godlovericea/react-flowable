@@ -16,6 +16,7 @@ import AMapContainer from '../../components/AMapContainer/AMapContainer'
 import cityPicker from '../../components/CityPicker/CityPicker'
 import multiSelect from '../../components/MultiSelect/MultiSelect'
 import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
+import CodeGenerator from '../../components/CodeGenerator/CodeGenerator'
 import ProductInfo from '../../components/ProductInfo/ProductInfo'
 const { Search } = Input;
 
@@ -71,6 +72,8 @@ const StartForm = (props) => {
         let FlowDefID = props.location.state.FlowDefID
         // 用户名
         let userName = props.location.state.userName
+        // 站点
+        let site = props.location.state.site
         setMyUserName(userName)
         // 用户部门
         let userDepart = props.location.state.userDepart
@@ -106,7 +109,8 @@ const StartForm = (props) => {
             // web4配置文件，用户名，用户部门
             const web4Config = {
                 userName: userName,
-                userDepart: userDepart
+                userDepart: userDepart,
+                site: site
             }
             // 处理表单数据
             const testData = new ConfigSchemaClass(fieldData.ColumnConfig, fieldData.Form, web4Config)
@@ -139,16 +143,15 @@ const StartForm = (props) => {
                     for(const ckey in properties[key].properties){
                         for(const cfkey in formData[fkey]) {
                             if (ckey === cfkey) {
-                                let tempValue = ""
+                                let tempValue = formData[fkey][cfkey]
                                 if (Array.isArray(formData[fkey][cfkey])) {
                                     tempValue = handleArray(formData[fkey][cfkey])
-                                } else {
-                                    tempValue = formData[fkey][cfkey]
                                 }
                                 arr.push({
                                     Type: properties[key].properties[ckey].type,
                                     Name: properties[key].properties[ckey].title,
-                                    Value: tempValue
+                                    Value: tempValue,
+                                    Code: properties[key].properties[ckey].hasOwnProperty("code") && properties[key].properties[ckey].code ? properties[key].properties[ckey].code : ""
                                 })
                             }
                         }
@@ -186,7 +189,6 @@ const StartForm = (props) => {
         // flowable-engine内部鉴权使用的cookie
         let cookie = ""
         let winCookie = window.document.cookie
-        console.log(winCookie)
         let winCookieArr = winCookie.split(";")
         winCookieArr.forEach((item)=>{
             if (item.indexOf("FLOWABLE_REMEMBER_ME") > -1) {
@@ -240,86 +242,25 @@ const StartForm = (props) => {
                     message.success("当前节点已完成")
                     setNextPersonVisible(false)
                 }
-                let sayInfoArr = res.data.say.info.split(",")
-                let params = {
-                    WorkId: sayInfoArr[1],
-                    tableName: FormKey,
-                    InputPerson: myUserName,
-                    ProductModels: ProductModels
-                }
-                AddProduct(params)
-                .then((response)=>{
+                if (isShowProduct) {
+                    let sayInfoArr = res.data.say.info.split(",")
+                    let params = {
+                        WorkId: sayInfoArr[1],
+                        tableName: FormKey,
+                        InputPerson: myUserName,
+                        ProductModels: ProductModels
+                    }
+                    AddProduct(params)
+                    .then((response)=>{
 
-                })
+                    })
+                }
             } else {
                 message.error(res.data.say.errMsg)
             }
         })
     }
 
-    // 提交
-    const handleSubmit = () => {
-        if (valid.length > 0) {
-            console.log(valid)
-            message.error("提交失败,请按照提示填写表单！")
-            return
-        }
-        if(!formId){
-            message.error("提交失败！原因：该表单未部署成功，请联系系统管理员！")
-            return
-        }
-        // 流程定义ID
-        let processDefinitionId = props.location.state.FlowDefID
-
-        let arr = processDefinitionId.split(":")
-
-        // 流程名称
-        let flowName = arr[0]
-        // 用户ID
-        let userId = props.location.state.userId
-        // 事件编号
-        let evCode = props.location.state.evCode || ""
-        // 登录名
-        let loginName = props.location.state.loginName || ""
-        // flowable-engine内部鉴权使用的cookie
-        let cookie = ""
-        let winCookie = window.document.cookie
-        console.log(winCookie)
-        let winCookieArr = winCookie.split(";")
-        winCookieArr.forEach((item)=>{
-            if (item.indexOf("FLOWABLE_REMEMBER_ME") > -1) {
-                let itemArr = item.split("=")
-                cookie = itemArr[1]
-            }
-        })
-        const dateEn = ["January","February","March","April","May","June", "July", "August", "September", "October", "November","December"]
-        let monthName = ""
-        const date = new Date()
-        const month = date.getMonth()
-        dateEn.forEach((item,index)=>{
-            if (index === month) {
-                monthName = item
-            }
-        })
-        const day = date.getDate()
-        const year = date.getFullYear()
-        var FormInfo=JSON.stringify({
-            formId,
-            values: formData
-        })
-        const myData = {
-            formId,
-            FormInfo,
-            Config: configSchema,
-            processDefinitionId,
-            name: `${flowName} - ${monthName} ${day}th ${year}`,
-            FormKey: FormKey
-        }
-        WorkflowStart(cookie, userId, evCode, loginName, myData)
-        .then((res)=>{
-            message.success("提交成功")
-        })
-    };
     // 重置按钮
     const handleClick = () => {
         formRef.current.resetData({}).then(res => {
@@ -456,7 +397,7 @@ const StartForm = (props) => {
     }
 
     return (
-        <div className="startwrap">
+        <div className="startwrap-page">
             <div className="form-info-box">
                 <div className="form-info-before"></div>
                 <div>{props.location.state.name}</div>
@@ -470,7 +411,7 @@ const StartForm = (props) => {
                 onValidate={onValidate}
                 showValidate={false}
                 widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, TableAccount: TableAccount, file:UploadFile, editSearch: EditbleSelct, 
-                    mapSelect: AMapContainer,cityPicker: cityPicker, multiSelect: multiSelect, DateTimePicker: DateTimePicker }}
+                    mapSelect: AMapContainer,cityPicker: cityPicker, multiSelect: multiSelect, DateTimePicker: DateTimePicker,CodeGenerator:CodeGenerator }}
             />
             {
                 isShowProduct ? 

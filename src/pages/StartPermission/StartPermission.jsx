@@ -17,6 +17,7 @@ class StartPermission extends React.Component {
         defaultVal: [], // 默认值
         keyList: [], // 选中的数组
         userId: '', // web4登录的用户ID
+        site: '', // 站点
         userDepart: '' // web4登录的用户所在部门
     }
     // 处理监听选中的值
@@ -89,6 +90,7 @@ class StartPermission extends React.Component {
         // 用户部门
         let userDepart = ""
         let loginName = ""
+        let site = ""
         // 路由的search
         let hashData = ""
         let searchData = ""
@@ -111,13 +113,16 @@ class StartPermission extends React.Component {
                 userDepart = decodeURI(item.split("=")[1])
             } else if (item.indexOf("loginName") > -1) {
                 loginName = item.split("=")[1]
+            } else if (item.indexOf("site") > -1) {
+                site = decodeURI(item.split("=")[1])
             }
         })
         this.setState({
             userId: userId,
             userName: userName,
             userDepart: userDepart,
-            loginName: loginName
+            loginName: loginName,
+            site: site
         },()=>{
             this.getData()
             this.LoginToFlowable()
@@ -133,7 +138,8 @@ class StartPermission extends React.Component {
                     FlowDefID: FlowDefID,
                     userId: this.state.userId,
                     userName: this.state.userName,
-                    userDepart: this.state.userDepart
+                    userDepart: this.state.userDepart,
+                    site: this.state.site
                 }
             })
         }

@@ -36,12 +36,13 @@ export default class Transform extends Component {
             }
         })
     }
+    transfer=()=>{
+        this.handleOk()
+    }
     handleSchema = (data) => {
         // console.log(schema)
         this.setState({
             formSchema: data
-        },()=>{
-            this.handleOk()
         })
     }
     // 判断表单中是否有重复名称的字段
@@ -136,6 +137,9 @@ export default class Transform extends Component {
                 <div className="header-content-divider"></div>
                 <FormRenderTrans tableName={this.props.location.state.name} handleSchema={this.handleSchema}/>
                 <div className="gobackBtn">
+                    <Button type="primary" style={{width:'100px',marginRight: '10px'}} onClick={this.transfer}>
+                        转换
+                    </Button>
                     <Button style={{width:'100px'}} onClick={this.handleClickReback}>
                         返回列表
                     </Button>

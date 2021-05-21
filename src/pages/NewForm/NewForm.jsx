@@ -137,7 +137,7 @@ class NewForm extends React.Component{
     }
     // 遍历生成的schema
     hanldeDeepObject = (properties) => {
-        let BaseTypeList = []
+        let BaseTypeList = [{Name: 'ProcID',Type: 'string'}]
         for(let key in properties) {
             if (properties[key].hasOwnProperty('properties')) {
                 for(let childkey in properties[key].properties) {

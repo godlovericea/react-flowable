@@ -1,6 +1,7 @@
 // 展示表单类型
 import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
+import './ShowForm.less'
 import { Button } from 'antd';
 import { GetFormJson } from '../../apis/process'
 import TreeCascader from '../../components/TreeCascader/TreeCascader'
@@ -13,6 +14,7 @@ import AMapContainer from '../../components/AMapContainer/AMapContainer'
 import cityPicker from '../../components/CityPicker/CityPicker'
 import multiSelect from '../../components/MultiSelect/MultiSelect'
 import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
+import CodeGenerator from '../../components/CodeGenerator/CodeGenerator'
 
 
 const ShowForm = (props) => {
@@ -62,16 +64,19 @@ const ShowForm = (props) => {
                 <div>{props.location.state.name}</div>
             </div>
             <div className="header-content-divider"></div>
-            <FormRender
-                ref={formRef}
-                {...schema}
-                formData={formData}
-                onChange={setFormData}
-                onValidate={onValidate}
-                showValidate={false}
-                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, TableAccount: TableAccount, file:UploadFile, 
-                    editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker,multiSelect: multiSelect, DateTimePicker:DateTimePicker }}
-            />
+            <div className="showform-box">
+                <FormRender
+                    ref={formRef}
+                    {...schema}
+                    formData={formData}
+                    onChange={setFormData}
+                    onValidate={onValidate}
+                    showValidate={false}
+                    widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, TableAccount: TableAccount, file:UploadFile, 
+                        editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker,multiSelect: multiSelect, 
+                        DateTimePicker:DateTimePicker, CodeGenerator:CodeGenerator }}
+                />
+            </div>
             <div style={{textAlign: 'right',marginRight: '20px',padding: '30px 0'}}>
                 <Button type="primary" style={{ marginLeft: 30 }} className="table-oper-btn" onClick={handleClickReback}>返回列表</Button>
             </div>
