@@ -355,10 +355,18 @@ export function GetAccountPageList(pageIndex, pageSize, accountName, info){
     })
 }
 
-// 查询产品信息
+// 查询产品列表
 export function GetProduct(){
     return request({
         url: `/GetProduct?tableName=销售管理_产品信息表&plateName=项目`,
+        method: 'get'
+    })
+}
+
+// 查询产品信息
+export function GetProductBusiness(TASKID){
+    return request({
+        url: `/GetProductBusiness?TaskID=${TASKID}`,
         method: 'get'
     })
 }

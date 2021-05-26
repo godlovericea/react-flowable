@@ -16,6 +16,7 @@ import multiSelect from '../../components/MultiSelect/MultiSelect'
 import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
 import CodeGenerator from '../../components/CodeGenerator/CodeGenerator'
 import "./FormRenderTrans.less"
+import FormRenderWidgets from '../../libs/FormRenderWidgets/FormRenderWidgets'
 
 
 const FormRenderTrans=(props)=>{
@@ -51,7 +52,7 @@ const FormRenderTrans=(props)=>{
 
     return (
         <div className="startwrap">
-            <FormRender
+            {/* <FormRender
                 ref={formRef}
                 {...schema}
                 formData={formData}
@@ -61,13 +62,16 @@ const FormRenderTrans=(props)=>{
                 widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, TableAccount: TableAccount, file:UploadFile, 
                     editSearch: EditbleSelct, mapSelect: AMapContainer, cityPicker: cityPicker, multiSelect: multiSelect, 
                     DateTimePicker:DateTimePicker, CodeGenerator: CodeGenerator }}
+            /> */}
+            <FormRender
+                ref={formRef}
+                {...schema}
+                formData={formData}
+                onChange={setFormData}
+                onValidate={onValidate}
+                showValidate={false}
+                widgets={FormRenderWidgets}
             />
-            {/* <div className="gobackBtntrans">
-                <Button  type="primary" style={{marginLeft:'10px',width:'100px'}} onClick={transfer}>转换</Button>
-                <Button style={{width:'100px'}} onClick={this.handleClickReback}>
-                        返回列表
-                    </Button>
-            </div> */}
         </div>
     );
 }

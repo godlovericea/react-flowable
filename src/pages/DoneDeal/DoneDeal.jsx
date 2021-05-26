@@ -21,6 +21,7 @@ import multiSelect from '../../components/MultiSelect/MultiSelect'
 import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
 import CodeGenerator from '../../components/CodeGenerator/CodeGenerator'
 import ProductInfo from '../../components/ProductInfo/ProductInfo'
+import FormRenderWidgets from '../../libs/FormRenderWidgets/FormRenderWidgets'
 
 const { Search } = Input;
 const { Column } = Table;
@@ -205,7 +206,7 @@ const NeedToDeal = (props) => {
                     }
                     // 上一个节点带过来的values
                     let values = JSON.parse(fieldData.formId).values
-                    const testData = new ConfigSchemaClass(fieldData.ColumnConfig, fieldData.Config, web4Config, values)
+                    const testData = new ConfigSchemaClass(fieldData.ColumnConfig, fieldData.Config, web4Config, fieldData.BackFillList,values)
                     setSchema(testData.schema)
                 }
             }
@@ -254,6 +255,7 @@ const NeedToDeal = (props) => {
                 setUserName(decodeURI(item.split("=")[1]))
             } else if (item.indexOf("FormKey") > -1) {
                 setFormKey(decodeURI(item.split("=")[1]))
+                judgeShowProduct(decodeURI(item.split("=")[1]))
             }
         })
     }
@@ -330,7 +332,8 @@ const NeedToDeal = (props) => {
                 state:{
                     taskId: taskId,
                     userName: userName,
-                    userDepart:userDepart
+                    userDepart:userDepart,
+                    FormKey: FormKey
                 }
             })
         }
@@ -444,7 +447,7 @@ const NeedToDeal = (props) => {
                 </Table>
             </Modal>
             
-            <FormRender
+            {/* <FormRender
                 ref={formRef}
                 {...schema}
                 formData={formData}
@@ -454,11 +457,20 @@ const NeedToDeal = (props) => {
                 widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, TableAccount: TableAccount, file:UploadFile, 
                     editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker,multiSelect: multiSelect, 
                     DateTimePicker:DateTimePicker,CodeGenerator: CodeGenerator }}
+            /> */}
+            <FormRender
+                ref={formRef}
+                {...schema}
+                formData={formData}
+                onChange={setFormData}
+                onValidate={onValidate}
+                showValidate={false}
+                widgets={FormRenderWidgets}
             />
             {
                 isShowProduct ? 
                 <div className="product-info-box">
-                    <ProductInfo getProductInfo={getProductInfo} showAddProductButton={false}></ProductInfo>
+                    <ProductInfo getProductInfo={getProductInfo} showAddProductButton={false} taskId={taskId}></ProductInfo>
                 </div>
                 :
                 null

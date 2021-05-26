@@ -12,7 +12,6 @@ class ConfigSchema {
         this.web4Config = web4Config
         // 编码生成器字段回填
         this.BackFillList = BackFillList
-        console.log(this.BackFillList, "this.BackFillList,constructor")
         // schema表单的数据，formData的值
         this.values = values
         // 要导出的schema值
@@ -120,20 +119,6 @@ class ConfigSchema {
                 }
             }
         }
-        
-        if (this.BackFillList && this.BackFillList.length > 0) {
-            const jsonProperties = jsonData.schema.properties
-            for (let key in jsonProperties) {
-                for(let ckey in jsonProperties[key].properties) {
-                    this.BackFillList.forEach((item)=>{
-                        if (item.Name === jsonProperties[key].properties[ckey].title) {
-                            jsonProperties[key].properties[ckey].default = item.Value
-                        }
-                    })
-                }
-            }
-        }
-        console.log(jsonData)
         return jsonData
     }
 }

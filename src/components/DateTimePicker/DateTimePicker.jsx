@@ -13,7 +13,7 @@ const DateTimePicker=(props)=>{
         props.onChange(props.name, value.format("YYYY-MM-DD HH:mm:ss"))
     }
     return(
-        <DatePicker style={{width:'100%'}} showTime onChange={onChange} onOk={onOk} defaultValue={moment(moment(), "YYYY-MM-DD HH:mm:ss")} format="YYYY-MM-DD HH:mm:ss"/>
+        <DatePicker style={{width:'100%'}} showTime onChange={onChange} onOk={onOk} defaultValue={moment(moment(props.value), "YYYY-MM-DD HH:mm:ss")} format="YYYY-MM-DD HH:mm:ss"/>
     )
 }
 

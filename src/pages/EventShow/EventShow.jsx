@@ -15,6 +15,7 @@ import cityPicker from '../../components/CityPicker/CityPicker'
 import multiSelect from '../../components/MultiSelect/MultiSelect'
 import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
 import CodeGenerator from '../../components/CodeGenerator/CodeGenerator'
+import FormRenderWidgets from '../../libs/FormRenderWidgets/FormRenderWidgets'
 
 
 const ShowForm = (props) => {
@@ -62,7 +63,7 @@ const ShowForm = (props) => {
                 <div>{props.location.state.name}</div>
             </div>
             <div className="header-content-divider"></div>
-            <FormRender
+            {/* <FormRender
                 ref={formRef}
                 {...schema}
                 formData={formData}
@@ -73,6 +74,15 @@ const ShowForm = (props) => {
                     editSearch: EditbleSelct, mapSelect: AMapContainer,cityPicker: cityPicker, multiSelect: multiSelect, 
                     DateTimePicker:DateTimePicker,CodeGenerator:CodeGenerator
                 }}
+            /> */}
+            <FormRender
+                ref={formRef}
+                {...schema}
+                formData={formData}
+                onChange={setFormData}
+                onValidate={onValidate}
+                showValidate={false}
+                widgets={FormRenderWidgets}
             />
             <div className="btngroups">
                 <Button type="primary" className="table-oper-btn" style={{ marginLeft: 30 }} onClick={handleClickReback}>

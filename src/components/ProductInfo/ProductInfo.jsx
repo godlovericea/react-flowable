@@ -1,17 +1,20 @@
+// 产品信息组件
 import React, {useState, useEffect} from 'react'
-import { GetProduct } from '../../apis/process'
+import { GetProduct, GetProductBusiness } from '../../apis/process'
 import { InputNumber, Modal, Button } from 'antd'
 import "./ProductInfo.less"
 
 const ProductInfo =(props)=>{
-    const [proVisible, setProVisible] = useState(false)
-    const [productList, setProductList] = useState([])
-    const [copyProductList, setCopyProductList] = useState([])
-    const [addedProduct, setAddedProduct] = useState([])
+    const [proVisible, setProVisible] = useState(false) // 是否显示Modal
+    const [productList, setProductList] = useState([]) // 产品列表 
+    const [copyProductList, setCopyProductList] = useState([]) // 复制的产品列表数据
+    const [addedProduct, setAddedProduct] = useState([]) // 已经添加的数据
 
+    // 拉取数据
     const getData=()=>{
         GetProduct()
         .then((res)=>{
+            // 初始化Number和Price两个值，便于操作
             res.data.getMe.map((item)=>{
                 item.Productes.map(cItem=>{
                     cItem.Number = 0
@@ -20,6 +23,39 @@ const ProductInfo =(props)=>{
             })
             setProductList(res.data.getMe)
             setCopyProductList(res.data.getMe)
+        })
+    }
+
+    // 获取产品列表
+    const getProductList =()=>{
+        GetProductBusiness(props.taskId)
+        .then((res)=>{
+            // console.log(res.data)
+            const arr = res.data.getMe
+            // 拉取去重后的分组的名称
+            const newArr = [...new Set(arr.map(i => i.ProductTypes))]; // 去重的时候需要注意和普通数组不同
+            let list = [];
+            // 筛选去重后的数组，并push对象到list
+            newArr.forEach(i => {
+                list.push(arr.filter(t => t.ProductTypes === i));
+            })
+            let mlist = [];
+            // 遍历list数组，讲分组的数据迭代到新的数组，形成需要的格式
+            list.forEach((item, index) => {
+                const obj = {
+                    ProductType: newArr[index],
+                    Productes: []
+                }
+                item.forEach((el)=>{
+                    obj.Productes.push({
+                        ProductNames: el.ProductName,
+                        Number: el.Number,
+                        Price: el.ProductPrice
+                    })
+                })
+                mlist.push(obj)
+            })
+            setAddedProduct(mlist)
         })
     }
 
@@ -34,6 +70,7 @@ const ProductInfo =(props)=>{
                 ProductType: item.ProductType,
                 Productes: []
             }
+            // 数量和价格只要有一个大于0，则为有效数据，添加到数组中
             item.Productes.map(cItem=>{
                 if (cItem.Number > 0 || cItem.Price > 0) {
                     obj.Productes.push(cItem)
@@ -45,6 +82,7 @@ const ProductInfo =(props)=>{
         })
         setAddedProduct(arr)
         setProVisible(false)
+        
         let arrList = []
         arr.forEach((item)=>{
             let myObj = {
@@ -62,21 +100,6 @@ const ProductInfo =(props)=>{
             })
             arrList.push(myObj)
         })
-        // let dataArr =[...arr]
-        // dataArr.map((item)=>{
-        //     let myObj = {
-        //         ProductType: item.ProductType,
-        //         ProductDetails: []
-        //     }
-        //     item.Productes.map(cItem=>{
-        //         myObj.ProductDetails.push({
-        //             ProductName: cItem.ProductNames,
-        //             ProductCode: cItem.ProductCode,
-        //             Price: cItem.Price,
-        //             Number: cItem.Number || 0 + ""
-        //         })
-        //     })
-        // })
         props.getProductInfo(arrList);
     }
 
@@ -107,7 +130,9 @@ const ProductInfo =(props)=>{
     }
 
     useEffect(()=>{
+        console.log(props, "props")
         getData()
+        getProductList()
     }, [])
 
 

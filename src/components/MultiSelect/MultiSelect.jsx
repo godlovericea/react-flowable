@@ -1,3 +1,4 @@
+// 自定义FormRender组件——自定义多选（数据字典）
 import React from 'react'
 import { Select } from 'antd';
 import { getSelectName } from '../../apis/process'

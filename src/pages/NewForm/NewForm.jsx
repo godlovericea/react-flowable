@@ -137,7 +137,8 @@ class NewForm extends React.Component{
     }
     // 遍历生成的schema
     hanldeDeepObject = (properties) => {
-        let BaseTypeList = [{Name: 'ProcID',Type: 'string'}]
+        let BaseTypeList = []
+        // let BaseTypeList = [{Name: 'ProcID',Type: 'string', Code: ''}]
         for(let key in properties) {
             if (properties[key].hasOwnProperty('properties')) {
                 for(let childkey in properties[key].properties) {
@@ -147,9 +148,11 @@ class NewForm extends React.Component{
                             objType = "dateTime"
                         }
                     }
+                    // console.log(properties[key].properties[childkey], "properties[key].properties[childkey]")
                     BaseTypeList.push({
                         Name:properties[key].properties[childkey].title,
-                        Type: objType
+                        Type: objType,
+                        Code: properties[key].properties[childkey].hasOwnProperty("code") && properties[key].properties[childkey].code ? properties[key].properties[childkey].code : ""
                     })
                 }
             } else {
@@ -161,7 +164,8 @@ class NewForm extends React.Component{
                 }
                 BaseTypeList.push({
                     Name:properties[key].title,
-                    Type: outType
+                    Type: outType,
+                    Code: properties[key].hasOwnProperty("code") && properties[key].code ? properties[key].code : ""
                 })
             }
         }

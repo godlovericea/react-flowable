@@ -20,6 +20,7 @@ import multiSelect from '../../components/MultiSelect/MultiSelect'
 import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
 import CodeGenerator from '../../components/CodeGenerator/CodeGenerator'
 import './EventOperation.less'
+import FormRenderWidgets from '../../libs/FormRenderWidgets/FormRenderWidgets'
 
 const EventOperation = (props) => {
     // 人员选择器modal
@@ -152,7 +153,7 @@ const EventOperation = (props) => {
             <div className="header-content-divider"></div>
             <Row justify="start">
                 <Col span={24}>
-                    <FormRender
+                    {/* <FormRender
                         ref={formRef}
                         {...schema}
                         formData={formData}
@@ -160,6 +161,14 @@ const EventOperation = (props) => {
                         onValidate={onValidate}
                         widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, TableAccount: TableAccount, file:UploadFile, editSearch: EditbleSelct, 
                             mapSelect: AMapContainer,cityPicker: cityPicker,multiSelect: multiSelect, DateTimePicker:DateTimePicker,CodeGenerator:CodeGenerator }}
+                    /> */}
+                    <FormRender
+                        ref={formRef}
+                        {...schema}
+                        formData={formData}
+                        onChange={setFormData}
+                        onValidate={onValidate}
+                        widgets={FormRenderWidgets}
                     />
                 </Col>
             </Row>

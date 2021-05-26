@@ -2,13 +2,14 @@
 import React, {useState, useEffect, useRef} from 'react'
 import { Cascader } from 'antd';
 import './CityPicker.less'
-import ChineseDistricts from '../../libs/ChineseDistricts/ChineseDistricts';
+import ChineseDistricts from '../../libs/ChineseDistricts/ChineseDistricts';// 数据源
 
 class CityPicker extends React.Component{
     state={
-        chinaData: [],
-        address: ''
+        chinaData: [],//cascader数据源
+        address: '', // 地址
     }
+    // 拉取第一层数据：省份
     handleData=()=>{
         let province = []
         ChineseDistricts['86'].forEach((item)=>{
@@ -23,9 +24,11 @@ class CityPicker extends React.Component{
             chinaData: province
         })
     }
+    // 处理第二层级数据：城市
     handleCity=(code)=>{
         let city = []
         for(let key in ChineseDistricts) {
+            // 判断各自的分区
             if (key === code) {
                 for(let cKey in ChineseDistricts[key]) {
                     city.push({
@@ -38,6 +41,7 @@ class CityPicker extends React.Component{
         }
         return city
     }
+    // 处理第三层级数据：区或者县
     handCounty=(code)=>{
         let country = []
         for(let key in ChineseDistricts) {
@@ -52,6 +56,7 @@ class CityPicker extends React.Component{
         }
         return country
     }
+    // 监听数据改变的方法
     chinaChange=(data)=>{
         this.setState({
             address: data
