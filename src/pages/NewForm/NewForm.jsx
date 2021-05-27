@@ -253,7 +253,7 @@ class NewForm extends React.Component{
     }
     render(){
         return(
-            <div style={{ height: '100vh' }}>
+            <div style={{ height: '98vh' }}>
                 <Generator ref={this.genRef} defaultValue={defaultValue} templates={templates} extraButtons={this.extraButtons}/>
                 <Modal title="保存表单" visible={this.state.isModalVisible} onOk={this.handleOk} onCancel={this.handleCancel}>
                     <Form layout={"horizontal"}>

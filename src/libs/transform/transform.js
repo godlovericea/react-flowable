@@ -52,7 +52,7 @@ class FormTransfer {
             const itemObj = schemaList[i]
             const ConfigInfo = schemaList[i].ConfigInfo
             
-            if ((shape === "文本" || shape === "编码") && type === "文本") {
+            if (shape === "文本" && type === "文本") {
                 objKey =  `inputName_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.handleInput(itemObj)
             } else if (shape === "多行文本") {
@@ -108,6 +108,9 @@ class FormTransfer {
             } else if (shape === "城市选择器") {
                 objKey = `cityPicker_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.handleCityPicker(itemObj)
+            } else if (shape === "编码") {
+                objKey = `CodeGenerator_${i}_${itemObj.Alias}`
+                obj[objKey] = await this.handleCodeGenerator(itemObj)
             } else {
                 objKey = `unrecognized_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.handleUnrecognized(itemObj)
@@ -329,6 +332,15 @@ class FormTransfer {
         return {
             title: dataObj.Alias,
             "ui:widget": "cityPicker"
+        }
+    }
+    // 编码生成器
+    handleCodeGenerator(dataObj) {
+        return {
+            title: dataObj.Alias,
+            "ui:widget": "CodeGenerator",
+            "ui:readonly": true,
+            type: "string"
         }
     }
     // 本人姓名

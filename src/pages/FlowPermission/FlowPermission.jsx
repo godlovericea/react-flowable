@@ -94,7 +94,7 @@ class FlowPermission extends React.Component {
     // 登录到Flowable
     LoginToFlowable = ()=>{
         let obj = reactCookie.loadAll()
-        if (obj.FLOWABLE_REMEMBER_ME) {
+        if (obj.FLOWABLE_REMEMBER_ME && obj.FLOWABLE_REMEMBER_ME !== 'undefined') {
             return
         }
         const myData = {

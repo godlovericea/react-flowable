@@ -8,17 +8,6 @@ import EventSchema from '../../libs/eventSchema/eventSchema'
 import ConfigSchemaClass from '../../libs/configSchema/configSchema'
 import { GetStartForm, WorkflowStart, getTableName, GetEvent, CreateEvent } from '../../apis/process'
 import "./EventStartForm.less"
-import TreeCascader from '../../components/TreeCascader/TreeCascader'
-import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
-import TableAccount from '../../components/TableAccount/TableAccount'
-import UploadFile from '../../components/UploadFile/UploadFile'
-import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
-import SearchSelect from '../../components/SearchSelect/SearchSelect'
-import AMapContainer from '../../components/AMapContainer/AMapContainer'
-import cityPicker from '../../components/CityPicker/CityPicker'
-import multiSelect from '../../components/MultiSelect/MultiSelect'
-import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
-import CodeGenerator from '../../components/CodeGenerator/CodeGenerator'
 import FormRenderWidgets from '../../libs/FormRenderWidgets/FormRenderWidgets'
 
 

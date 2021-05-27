@@ -3,27 +3,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
 import FormTransfer from '../../libs/transform/transform'
 import ConfigSchemaClass from '../../libs/configSchema/configSchema'
-import configData from '../../utils/config'
-import { Button, message, Modal, Radio, Input, Table, Space} from 'antd';
-import { getTableName, GetFormList, GetTransferList, SaveFormInfoTransfer, TaskSave, 
-    GetTaskBaseInfo, getUserName, UpdateTaskInfo, TaskGoBack, WorkflowUrging, GetFlowProcessInfo, 
-    WorkflowFileOperation, uploadToService, WorkflowDelete} from '../../apis/process'
+import { Button} from 'antd';
+import { getTableName, GetFormList, GetTaskBaseInfo} from '../../apis/process'
 import './HistoryFlow.less'
-import TreeCascader from '../../components/TreeCascader/TreeCascader'
-import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
-import TableAccount from '../../components/TableAccount/TableAccount'
-import UploadFile from '../../components/UploadFile/UploadFile'
-import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
-import SearchSelect from '../../components/SearchSelect/SearchSelect'
-import AMapContainer from '../../components/AMapContainer/AMapContainer'
-import cityPicker from '../../components/CityPicker/CityPicker'
-import multiSelect from '../../components/MultiSelect/MultiSelect'
-import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
-import CodeGenerator from '../../components/CodeGenerator/CodeGenerator'
 import ProductInfo from '../../components/ProductInfo/ProductInfo'
 import FormRenderWidgets from '../../libs/FormRenderWidgets/FormRenderWidgets'
-const { Search } = Input;
-const { Column } = Table;
 
 const NeedToDeal = (props) => {
     // FormRender提交表单校验

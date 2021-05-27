@@ -11,7 +11,6 @@ import DoneDeal from '../pages/DoneDeal/DoneDeal'// 已办流程页面
 import HistoryFlow from '../pages/HistoryFlow/HistoryFlow'// 历史已办查询
 import FlowPermission from '../pages/FlowPermission/FlowPermission'// 流程权限配置
 import StartPermission from '../pages/StartPermission/StartPermission'// 流程发起权限配置
-import EditbleSelct from '../components/EditbleSelct/EditbleSelct'// 可编辑搜索
 import SetFlowForm from '../pages/SetFlowForm/SetFlowForm'// 设置流程表单
 import TestFrGenerator from '../pages/TestFrGenerator/TestFrGenerator'// 测试Generator
 import EventList from '../pages/EventList/EventList'// 事件列表
@@ -24,8 +23,8 @@ import EventStartForm from '../pages/EventStartForm/EventStartForm'// 事件发�
 import EventStartPage from '../pages/EventStartPage/EventStartPage'// 事件发起权限列表
 import EventOnDealList from '../pages/EventOnDealList/EventOnDealList'// 在办事件
 import EventOperation from '../pages/EventOperation/EventOperation'// 操作在办事件
-import ProductInfo from '../components/ProductInfo/ProductInfo'// 操作在办事件
-import TableAccount from '../components/TableAccount/TableAccount'// 台账选择器测试
+import ExtraForm from '../pages/ExtraForm/ExtraForm'// 台账选择器测试
+
 import {Switch, Route, Redirect} from 'react-router-dom'
 
 
@@ -44,10 +43,8 @@ function MyRouter(){
             <Route exact path="/form-render/hisflow" component={HistoryFlow}/>
             <Route exact path="/form-render/permis" component={FlowPermission}/>
             <Route exact path="/form-render/stpermis" component={StartPermission}/>
-            <Route exact path="/form-render/cascader" component={EditbleSelct}/>
             <Route exact path="/form-render/setform" component={SetFlowForm}/>
             <Route exact path="/form-render/testfr" component={TestFrGenerator}/>
-            <Route exact path="/form-render/product" component={ProductInfo}/> 
             <Route exact path="/form-render/eventlist" component={EventList}/>
             <Route exact path="/form-render/eventtype" component={EventTypeList}/>
             <Route exact path="/form-render/eventconfig" component={EventConfig}/>
@@ -58,7 +55,7 @@ function MyRouter(){
             <Route exact path="/form-render/eventstart" component={EventStartPage}/>
             <Route exact path="/form-render/eventondeal" component={EventOnDealList}/>
             <Route exact path="/form-render/eventoper" component={EventOperation}/>
-            <Route exact path="/form-render/map" component={TableAccount}/>
+            <Route exact path="/form-render/extraform" component={ExtraForm}/>
             <Redirect to="/form-render/home"></Redirect>
         </Switch>
     )

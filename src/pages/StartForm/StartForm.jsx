@@ -7,17 +7,6 @@ import FormDataValid from '../../libs/FormDataValid/FormDataValid'
 import ConfigSchemaClass from '../../libs/configSchema/configSchema'
 import { GetStartForm, WorkflowStart, getTableName, GetTransferList_FirstNode, AddProduct } from '../../apis/process'
 import "./StartForm.less"
-import TreeCascader from '../../components/TreeCascader/TreeCascader'
-import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
-import TableAccount from '../../components/TableAccount/TableAccount'
-import UploadFile from '../../components/UploadFile/UploadFile'
-import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
-import SearchSelect from '../../components/SearchSelect/SearchSelect'
-import AMapContainer from '../../components/AMapContainer/AMapContainer'
-import cityPicker from '../../components/CityPicker/CityPicker'
-import multiSelect from '../../components/MultiSelect/MultiSelect'
-import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
-import CodeGenerator from '../../components/CodeGenerator/CodeGenerator'
 import ProductInfo from '../../components/ProductInfo/ProductInfo'
 import FormRenderWidgets from '../../libs/FormRenderWidgets/FormRenderWidgets'
 const { Search } = Input;
@@ -164,6 +153,15 @@ const StartForm = (props) => {
         return arr;
     }
 
+    const handleCondition=(formData, configSchema)=> {
+        let arr = handleFormRenderBaseType(formData, configSchema)
+        let obj = {}
+        arr.forEach((item)=>{
+            obj[item.Name] = item.Value
+        })
+        return obj
+    }
+
     // 提交
     const handleSubmitFirst = () =>{
         // console.log(valid)
@@ -221,7 +219,8 @@ const StartForm = (props) => {
             processDefinitionId,
             name: `${flowName} - ${monthName} ${day}th ${year}`,
             FormKey: FormKey,
-            FormRenderBaseList: handleFormRenderBaseType(formData, configSchema)
+            FormRenderBaseList: handleFormRenderBaseType(formData, configSchema),
+            ConditionInfo: JSON.stringify(handleCondition(formData, configSchema))
         }
         GetTransferList_FirstNode(cookie, userId, evCode, myData)
         .then((res)=>{

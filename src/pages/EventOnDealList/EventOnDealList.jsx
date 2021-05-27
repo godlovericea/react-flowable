@@ -243,7 +243,7 @@ const EventOnDealList = (props) => {
     // 登录到Flowable
     const LoginToFlowable = (userLoginName)=>{
         let obj = reactCookie.loadAll()
-        if (obj.FLOWABLE_REMEMBER_ME) {
+        if (obj.FLOWABLE_REMEMBER_ME && obj.FLOWABLE_REMEMBER_ME !== 'undefined') {
             return
         }
         const myData = {
