@@ -1,38 +1,9 @@
 // 编辑form render表单
 import React,{useState, useRef, useEffect} from 'react';
-import Generator, {
-    defaultSettings,
-    defaultCommonSettings,
-    defaultGlobalSettings,
-} from 'fr-generator';
+import Generator from 'fr-generator';
 import { GetFormJson, UpdateFormDef, getSelectName } from '../../apis/process'
 import {Modal, Form, Input, message} from 'antd'
-import TreeCascader from '../../components/TreeCascader/TreeCascader'
-import StaffSelectWidget from '../../components/StaffSelectWidget/StaffSelectWidget'
-import UploadFile from '../../components/UploadFile/UploadFile'
-import EditbleSelct from '../../components/EditbleSelct/EditbleSelct'
-import SearchSelect from '../../components/SearchSelect/SearchSelect'
-// import LedgerAccount from '../../components/LedgerAccount/LedgerAccount'
-import customizeSetting from '../../libs/frGeneratorConfig/frGeneratorConfig'
-
-
-defaultSettings.forEach((item)=>{
-    // console.log(item)
-    item.widgets.forEach((cItem)=>{
-        cItem.setting = {...cItem.setting,
-            api:{
-                title: "数据字典",
-                type: 'string'
-            },
-            isRequired:{
-                title: '必填',
-                type: 'boolean'
-            }
-        }
-    })
-})
-
-const settings = defaultSettings.push(customizeSetting)
+import settings from '../../libs/frGeneratorConfig/frGeneratorConfig' // 可视化表单配置文件
 
 const EditForm = (props) => {
     const [isModalVisible, setIsModalVisible] = useState(false)
@@ -51,7 +22,7 @@ const EditForm = (props) => {
             type: 'primary',
             onClick: () => handleScheam()
         },
-        { 
+        {
             text: '返回列表',
             type: 'primary',
             onClick: () => goBackToHome()
@@ -236,7 +207,7 @@ const EditForm = (props) => {
     return(
         <div style={{ height: '98vh' }}>
             <Generator 
-                widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, file:UploadFile, editSearch: EditbleSelct,  }} 
+                // widgets={{ staff: StaffSelectWidget, cascader: TreeCascader, search: SearchSelect, file:UploadFile, editSearch: EditbleSelct,  }} 
                 ref={genRef} 
                 defaultValue={defaultValue} 
                 templates={templates} 
@@ -259,7 +230,9 @@ const EditForm = (props) => {
             </Modal>
         </div>
     )
-    
 }
 
 export default EditForm;
+
+
+

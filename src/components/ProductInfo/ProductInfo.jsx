@@ -201,24 +201,24 @@ const ProductInfo =(props)=>{
                     <div className="modal-header-product">数量</div>
                     <div className="modal-header-product">价格（万元）</div>
                 </div>
-                <div className="productInfo-content">
+                <div className="modal-productInfo-content">
                 {
                     productList.map((item,index)=>{
                         return (
-                            <div className="product-rows" key={index}>
-                                <div className="first-column">
+                            <div className="modal-product-rows" key={index}>
+                                <div className="modal-first-column">
                                     {item.ProductType}
                                 </div>
-                                <div className="other-column">
+                                <div className="modal-other-column">
                                     {
                                         item.Productes.map((cItem,cIndex)=>{
                                             return(
-                                                <div className="normal-column" key={cIndex}>
-                                                    <div className="product-name">{cItem.ProductNames}</div>
-                                                    <div className="product-name">
+                                                <div className="modal-normal-column" key={cIndex}>
+                                                    <div className="modal-product-name">{cItem.ProductNames}</div>
+                                                    <div className="modal-product-name">
                                                         <InputNumber size="small" min={0} max={99999} defaultValue={cItem.Number} onChange={value => productNumberOnChange(value,item.ProductType, cItem.ProductNames, cItem.ProductCode)} />
                                                     </div>
-                                                    <div className="product-name">
+                                                    <div className="modal-product-name">
                                                         <InputNumber size="small" min={0} max={99999} defaultValue={cItem.Price} onChange={value=> productPriceOnChange(value,item.ProductType, cItem.ProductNames, cItem.ProductCode)} />
                                                     </div>
                                                 </div>

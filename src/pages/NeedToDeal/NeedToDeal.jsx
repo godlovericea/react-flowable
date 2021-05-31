@@ -8,9 +8,9 @@ import configData from '../../utils/config'
 import { Button, message, Modal, Radio, Input, Table, Space} from 'antd';
 import { getTableName, GetFormList, GetTransferList, SaveFormInfoTransfer, TaskSave, 
     GetTaskBaseInfo, getUserName, UpdateTaskInfo, TaskGoBack, WorkflowUrging, GetFlowProcessInfo, 
-    WorkflowFileOperation, uploadToService, WorkflowDelete} from '../../apis/process'
+    WorkflowFileOperation, uploadToService, WorkflowDelete, GetAssemblyByTaskID} from '../../apis/process'
 import './NeedToDeal.less'
-import ProductInfo from '../../components/ProductInfo/ProductInfo'
+import {ProductInfo} from '../../libs/extraFormMapping/extraFormMapping'
 import FormRenderWidgets from '../../libs/FormRenderWidgets/FormRenderWidgets'
 const { Search } = Input;
 const { Column } = Table;
@@ -92,8 +92,6 @@ const NeedToDeal = (props) => {
     const [workCode, setWorkCode] = useState("")
     // 配置schema，传递给下一个节点
     const [configSchema, setConfigSchema] = useState('')
-    // 前一个节点带过来的values值
-    const [prevSchemaValues, setPrevSchemaValues] = useState({})
     // 表单类型：台账或者表单
     const [formType, setFormType] = useState("")
     // 
@@ -113,12 +111,21 @@ const NeedToDeal = (props) => {
         setValid(valid)
     }
     // 判断是否要加产品信息组件
-    const judgeShowProduct=(formKey)=>{
-        if (formKey === "事件_销售管理_项目新建审批表_技术员"){
-            setIsShowProduct(true)
-        } else {
-            setIsShowProduct(false)
-        }
+    const judgeShowExtraForm=(taskIdArg)=>{
+        GetAssemblyByTaskID(taskIdArg)
+        .then((res)=>{
+            if (res.data.say.statusCode === "0000") {
+                if (res.data.getMe.length > 0) {
+                    res.data.getMe.forEach((item)=>{
+                        if (item.AssemblyName === '产品信息') {
+                            setIsShowProduct(true)
+                        }
+                    })
+                }
+            } else {
+                message.error(res.data.say.errMsg)
+            }
+        })
     }
     // 子组件传值给父组件
     const getProductInfo=(data)=>{
@@ -158,6 +165,8 @@ const NeedToDeal = (props) => {
             if (item.indexOf("taskId") > -1) {
                 taskIdScope = decodeURI(item.split("=")[1])
                 setTaskId(taskIdScope)
+                // 根据任务ID去查节点ID，然后是否显示视图
+                judgeShowExtraForm(taskIdScope)
                 window.taskId = taskIdScope
             } else if (item.indexOf("formId") > -1) {
                 setFormId(decodeURI(item.split("=")[1]))
@@ -251,7 +260,6 @@ const NeedToDeal = (props) => {
             } else if (item.indexOf("loginName") > -1) {
                 setUserName(decodeURI(item.split("=")[1]))
             } else if (item.indexOf("FormKey") > -1) {
-                judgeShowProduct(decodeURI(item.split("=")[1]))
                 setFormKey(decodeURI(item.split("=")[1]))
             }
         })
@@ -335,6 +343,16 @@ const NeedToDeal = (props) => {
         }
         return arr;
     }
+    // 处理参数
+    const handleCondition=(formData, configSchema)=> {
+        let arr = handleFormRenderBaseType(formData, configSchema)
+        let obj = {}
+        arr.forEach((item)=>{
+            obj[item.Name] = item.Value
+        })
+        return obj
+    }
+
     // 保存
     const saveTask=()=>{
         // console.log(formData)
@@ -383,7 +401,8 @@ const NeedToDeal = (props) => {
             formId_Post: formId,
             Config: configSchema,
             FormKey: FormKey,
-            FormRenderBaseList: handleFormRenderBaseType(formData, configSchema)
+            FormRenderBaseList: handleFormRenderBaseType(formData, configSchema),
+            ConditionInfo: JSON.stringify(handleCondition(formData, configSchema))
         }
         GetTransferList(taskId, userId, cookie, myData)
         .then((res)=>{

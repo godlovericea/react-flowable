@@ -3,8 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
 import FormTransfer from '../../libs/transform/transform'
 import ConfigSchemaClass from '../../libs/configSchema/configSchema'
-import { Button} from 'antd';
-import { getTableName, GetFormList, GetTaskBaseInfo} from '../../apis/process'
+import { Button, message} from 'antd';
+import { getTableName, GetFormList, GetTaskBaseInfo, GetAssemblyByTaskID} from '../../apis/process'
 import './HistoryFlow.less'
 import ProductInfo from '../../components/ProductInfo/ProductInfo'
 import FormRenderWidgets from '../../libs/FormRenderWidgets/FormRenderWidgets'
@@ -102,12 +102,21 @@ const NeedToDeal = (props) => {
         setValid(valid)
     }
     // 判断是否要加产品信息组件
-    const judgeShowProduct=(formKey)=>{
-        if (formKey === "事件_销售管理_项目新建审批表_技术员"){
-            setIsShowProduct(true)
-        } else {
-            setIsShowProduct(false)
-        }
+    const judgeShowExtraForm=(taskIdArg)=>{
+        GetAssemblyByTaskID(taskIdArg)
+        .then((res)=>{
+            if (res.data.say.statusCode === "0000") {
+                if (res.data.getMe.length > 0) {
+                    res.data.getMe.forEach((item)=>{
+                        if (item.AssemblyName === '产品信息') {
+                            setIsShowProduct(true)
+                        }
+                    })
+                }
+            } else {
+                message.error(res.data.say.errMsg)
+            }
+        })
     }
     // 子组件传值给父组件
     const getProductInfo=(data)=>{
@@ -116,11 +125,12 @@ const NeedToDeal = (props) => {
     // 拉取数据
     const getData =()=>{
         const FormKey = props.location.state.FormKey
-        judgeShowProduct(FormKey)
+        
         // cookie
         let cookieScope = ""
         // 任务ID
         let taskIdScope = props.location.state.taskId
+        judgeShowExtraForm(taskIdScope)
         setTaskId(taskIdScope)
         // 处理cookie
         let winCookie = window.document.cookie

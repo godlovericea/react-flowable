@@ -388,3 +388,46 @@ export function AddProduct(data){
     })
 }
 
+// 组件信息查询接口
+export function GetAssemblyModel(ASSEMBLYNAME, ACTID){
+    return request({
+        url: `/GetAssemblyModel?AssemblyName=${ASSEMBLYNAME}&pageIndex=1&pageSize=1000&sortFields=&direction=&ActID=${ACTID}`,
+        method: 'get'
+    })
+}
+
+// 保存节点视图配置
+export function SaveAssemblyConfig(ACTID, data){
+    return request({
+        url: `/SaveAssemblyConfig?ActID=${ACTID}`,
+        method: 'post',
+        data
+    })
+}
+
+// 组件信息操作接口
+export function AssemblyOperate(OPERTYPE, ASSEMBLYNAME, data){
+    return request({
+        url: `/AssemblyOperate?OperType=${OPERTYPE}&AssemblyName=${ASSEMBLYNAME}`,
+        method: 'post',
+        data
+    })
+}
+
+// 组件信息操作接口-查新
+export function GetAssemblyByTaskID(TASKID){
+    return request({
+        url: `/GetAssemblyByTaskID?TaskID=${TASKID}`,
+        method: 'get'
+    })
+}
+
+// 流程发起得时候，根据流程ID去查询视图
+export function GetAssembly_Start(FLOWDEFID){
+    return request({
+        url: `/GetAssembly_Start?FlowDefID=${FLOWDEFID}`,
+        method: 'get'
+    })
+}
+
+

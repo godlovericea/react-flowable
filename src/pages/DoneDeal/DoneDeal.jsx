@@ -4,8 +4,8 @@ import FormRender from 'form-render/lib/antd';
 import FormTransfer from '../../libs/transform/transform'
 import ConfigSchemaClass from '../../libs/configSchema/configSchema'
 import configData from '../../utils/config'
-import { Button, Modal, Input, Table, Space} from 'antd';
-import { getTableName, GetFormList, GetTaskBaseInfo, GetFlowProcessInfo, WorkflowFileOperation} from '../../apis/process'
+import { Button, Modal, Input, Table, Space, message} from 'antd';
+import { getTableName, GetFormList, GetTaskBaseInfo, GetFlowProcessInfo, WorkflowFileOperation, GetAssemblyByTaskID} from '../../apis/process'
 import './DoneDeal.less'
 import ProductInfo from '../../components/ProductInfo/ProductInfo'
 import FormRenderWidgets from '../../libs/FormRenderWidgets/FormRenderWidgets'
@@ -106,12 +106,21 @@ const NeedToDeal = (props) => {
         setValid(valid)
     }
     // 判断是否要加产品信息组件
-    const judgeShowProduct=(formKey)=>{
-        if (formKey === "事件_销售管理_项目新建审批表_技术员"){
-            setIsShowProduct(true)
-        } else {
-            setIsShowProduct(false)
-        }
+    const judgeShowExtraForm=(taskIdArg)=>{
+        GetAssemblyByTaskID(taskIdArg)
+        .then((res)=>{
+            if (res.data.say.statusCode === "0000") {
+                if (res.data.getMe.length > 0) {
+                    res.data.getMe.forEach((item)=>{
+                        if (item.AssemblyName === '产品信息') {
+                            setIsShowProduct(true)
+                        }
+                    })
+                }
+            } else {
+                message.error(res.data.say.errMsg)
+            }
+        })
     }
     // 子组件传值给父组件
     const getProductInfo=(data)=>{
@@ -151,6 +160,7 @@ const NeedToDeal = (props) => {
         searchArr.forEach((item)=>{
             if (item.indexOf("taskId") > -1) {
                 taskIdScope = decodeURI(item.split("=")[1])
+                judgeShowExtraForm(taskIdScope)
                 setTaskId(taskIdScope)
                 window.taskId = taskIdScope
             } else if (item.indexOf("formId") > -1) {
@@ -242,7 +252,6 @@ const NeedToDeal = (props) => {
                 setUserName(decodeURI(item.split("=")[1]))
             } else if (item.indexOf("FormKey") > -1) {
                 setFormKey(decodeURI(item.split("=")[1]))
-                judgeShowProduct(decodeURI(item.split("=")[1]))
             }
         })
     }

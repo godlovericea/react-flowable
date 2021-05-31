@@ -5,7 +5,7 @@ import { Button, message, Input, Modal, Radio } from 'antd';
 import FormTransfer from '../../libs/transform/transform'
 import FormDataValid from '../../libs/FormDataValid/FormDataValid'
 import ConfigSchemaClass from '../../libs/configSchema/configSchema'
-import { GetStartForm, WorkflowStart, getTableName, GetTransferList_FirstNode, AddProduct } from '../../apis/process'
+import { GetStartForm, WorkflowStart, getTableName, GetTransferList_FirstNode, AddProduct, GetAssembly_Start } from '../../apis/process'
 import "./StartForm.less"
 import ProductInfo from '../../components/ProductInfo/ProductInfo'
 import FormRenderWidgets from '../../libs/FormRenderWidgets/FormRenderWidgets'
@@ -45,12 +45,21 @@ const StartForm = (props) => {
         setValid(valid)
     }
     // 判断是否要加产品信息组件
-    const judgeShowProduct=(formKey)=>{
-        if (formKey === "事件_销售管理_项目新建审批表_技术员"){
-            setIsShowProduct(true)
-        } else {
-            setIsShowProduct(false)
-        }
+    const judgeShowExtraForm=(FlowDefIDArg)=>{
+        GetAssembly_Start(FlowDefIDArg)
+        .then((res)=>{
+            if (res.data.say.statusCode === "0000") {
+                if (res.data.getMe.length > 0) {
+                    res.data.getMe.forEach((item)=>{
+                        if (item.AssemblyName === '产品信息') {
+                            setIsShowProduct(true)
+                        }
+                    })
+                }
+            } else {
+                message.error(res.data.say.errMsg)
+            }
+        })
     }
     // 子组件传值给父组件
     const getProductInfo=(data)=>{
@@ -77,7 +86,7 @@ const StartForm = (props) => {
         }
         setFormId(res.data.FormID)
         setFormKey(res.data.FormKey)
-        judgeShowProduct(res.data.FormKey)
+        judgeShowExtraForm(FlowDefID)
 
         if (res.data.Type === "台账") {
             const tableName = res.data.Form

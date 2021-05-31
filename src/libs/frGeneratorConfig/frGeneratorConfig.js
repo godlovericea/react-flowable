@@ -1,4 +1,5 @@
 // 表单编辑器自定义组件配置文件
+import { defaultSettings } from 'fr-generator';
 const customizeSetting = {
   title: '自定义组件',
   widgets: [
@@ -225,5 +226,21 @@ const customizeSetting = {
   ],
 }
 
+defaultSettings.forEach((item)=>{
+    item.widgets.forEach((cItem)=>{
+        cItem.setting = {...cItem.setting,
+            api:{
+                title: "数据字典",
+                type: 'string'
+            },
+            isRequired:{
+                title: '必填',
+                type: 'boolean'
+            }
+        }
+    })
+})
 
-export default customizeSetting
+const settings = defaultSettings.push(customizeSetting)
+
+export default settings
