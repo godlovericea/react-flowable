@@ -14,6 +14,9 @@ class FormTransfer {
         let obj = {}
         let key = ""
         for(let i = 0; i< this.dataArr.length; i++) {
+            if (this.dataArr[i].Visible === 0) {
+                continue
+            }
             // 对象的key值
             key = `object_${i}`
             // 处理每一种台账的数据类型
@@ -44,7 +47,7 @@ class FormTransfer {
         let objKey = ""
         for(let i=0;i<schemaList.length;i++) {
             if (!schemaList[i].Visible){
-                return
+                continue
             }
             const shape = schemaList[i].Shape
             const type = schemaList[i].Type

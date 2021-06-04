@@ -60,6 +60,19 @@ const EditForm = (props) => {
         let flag = false
         // console.log(JSON.stringify(formData))
         const {properties} = formData.schema
+        let objTitleArr = []
+        let sum = 0
+        for (let key in properties) {
+            if (key.indexOf('object') > -1 && properties[key].hasOwnProperty('title')) {
+                objTitleArr.push(properties[key].title)
+                sum += 1
+            }
+        }
+        let setArr = Array.from(new Set(objTitleArr));
+        if (sum !== setArr.length) {
+            message.error("您提交的表单组件不可有重名，请检查！")
+            return
+        }
         for (let key in properties) {
             if (!properties[key].hasOwnProperty('properties')) {
                 if (key.indexOf('object') > -1) {

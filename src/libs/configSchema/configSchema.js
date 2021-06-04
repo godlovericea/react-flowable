@@ -12,7 +12,7 @@ class ConfigSchema {
         this.web4Config = web4Config
         // 编码生成器字段回填
         this.BackFillList = BackFillList
-        console.log(this.BackFillList, "this.BackFillList,constructor")
+        // console.log(this.BackFillList, "this.BackFillList,constructor")
         // schema表单的数据，formData的值
         this.values = values
         // 要导出的schema值
@@ -133,7 +133,6 @@ class ConfigSchema {
                 }
             }
         }
-        console.log(jsonData)
         return jsonData
     }
 }
