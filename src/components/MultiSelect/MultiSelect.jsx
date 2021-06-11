@@ -42,8 +42,8 @@ class MultiSelect extends React.Component {
 
     getData=async()=>{
         let resArr = this.props.schema.enum
-        if (this.props.schema.hasOwnProperty("api") && this.props.schema.api) {
-            let res =await getSelectName(this.props.schema.api)
+        if (this.props.schema.hasOwnProperty("fieldData") && this.props.schema.fieldData) {
+            let res =await getSelectName(this.props.schema.fieldData)
             resArr = res.data
         }
         let arr = ["全选"]

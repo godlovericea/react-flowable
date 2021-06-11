@@ -1,10 +1,11 @@
 // 外接表单管理
 import React, {useEffect, useState, useRef} from 'react'
 import {Table, Form, Input, Button, Modal, Space, message } from 'antd'
-import {GetAssemblyModel, SaveAssemblyConfig, AssemblyOperate, GetAssemblyByTaskID} from '../../apis/process'
+import {GetAssemblyModel, SaveAssemblyConfig, AssemblyOperate, flowableLogin} from '../../apis/process'
 import NoData from '../../components/NoData/NoData'
 import {ProductInfo} from '../../libs/extraFormMapping/extraFormMapping'
 import moment from 'moment'
+import reactCookie from 'react-cookies'
 import './ExtraForm.less'
 const { Search } = Input
 const { Column } = Table;
@@ -43,6 +44,58 @@ const ExtraForm=()=>{
                 setData(res.data.getMe)
                 setTotal(res.data.totalRcdNum)
             }
+        })
+    }
+
+    const queryDataFromWeb4=()=>{
+        // 处理任务ID，用户名称，用户所在部门
+        let hashData = ""
+        let searchData = ""
+        let search = ""
+        if (window.location.hash) {
+            hashData = window.location.hash
+            searchData = hashData.split("?")
+            search = searchData[1]
+        } else {
+            search = window.location.search.slice(1)
+        }
+        const searchArr = search.split("&")
+        searchArr.forEach((item)=>{
+            if (item.indexOf("loginName") > -1) {
+                // setUserName(decodeURI(item.split("=")[1]))
+                LoginToFlowable(item.split("=")[1])
+            }
+        })
+    }
+     // 登录到Flowable
+     const LoginToFlowable = (loginName)=>{
+        let obj = reactCookie.loadAll()
+        if (obj.FLOWABLE_REMEMBER_ME && obj.FLOWABLE_REMEMBER_ME !== 'undefined') {
+            return
+        }
+        const myData = {
+            _spring_security_remember_me:true,
+            j_password:"test",
+            j_username: loginName,
+            submit:"Login"
+        }
+        flowableLogin(myData)
+        .then((res)=>{
+            if (res.data.indexOf('FLOWABLE_REMEMBER_ME') < 0) {
+                message.error("流程引擎服务不可用，请联系管理员")
+                return
+            }
+            let resArr = res.data.split(';')
+            let cookieKeyVal = resArr[0]
+            let cookieArr = cookieKeyVal.split('=')
+            reactCookie.save(
+                cookieArr[0],
+                cookieArr[1],
+                { 
+                    path: '/',
+                    expires: new Date(new Date().getTime() + 7 * 24 * 3600 * 1000)
+                }
+            )
         })
     }
 
@@ -133,26 +186,6 @@ const ExtraForm=()=>{
 
     const getProductInfo=(data)=>{
 
-    }
-
-    const queryDataFromWeb4=()=>{
-        // 处理任务ID，用户名称，用户所在部门
-        let hashData = ""
-        let searchData = ""
-        let search = ""
-        if (window.location.hash) {
-            hashData = window.location.hash
-            searchData = hashData.split("?")
-            search = searchData[1]
-        } else {
-            search = window.location.search.slice(1)
-        }
-        const searchArr = search.split("&")
-        searchArr.forEach((item)=>{
-            if (item.indexOf("userName") > -1) {
-                setUserName(decodeURI(item.split("=")[1]))
-            }
-        })
     }
 
     useEffect(()=>{

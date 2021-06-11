@@ -148,11 +148,11 @@ const EditForm = (props) => {
         const {properties} = schema
         for(let key in properties) {
             for(let cKey in properties[key].properties) {
-                if (properties[key].properties[cKey].hasOwnProperty("api") && properties[key].properties[cKey].api && properties[key].properties[cKey].enum) {
+                if (properties[key].properties[cKey].hasOwnProperty("fieldData") && properties[key].properties[cKey].fieldData && properties[key].properties[cKey].enum) {
                     // console.log(properties[key].properties[cKey])
                     properties[key].properties[cKey].enum = []
                     properties[key].properties[cKey].enumNames = []
-                    let res =await getSelectName(properties[key].properties[cKey].api)
+                    let res =await getSelectName(properties[key].properties[cKey].fieldData)
                     res.data.forEach((item)=>{
                         properties[key].properties[cKey].enum.push(item.NODEVALUE)
                         properties[key].properties[cKey].enumNames.push(item.NODENAME)

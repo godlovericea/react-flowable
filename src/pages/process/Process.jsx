@@ -1,11 +1,12 @@
 // 表单管理的列表
 import React from "react";
-import { UpdateStatus, GetFormListInfo, DeleteFormLogic } from '../../apis/process'
+import { UpdateStatus, GetFormListInfo, DeleteFormLogic, flowableLogin } from '../../apis/process'
 // import Modeler from "../../components/Modeler";
 import { Table, Space, Button, Form, Input, Pagination, Modal, message } from 'antd';
 import './process.less'
 import moment from 'moment';
 import NoData from '../../components/NoData/NoData'
+import reactCookie from 'react-cookies'
 const { Search } = Input
 const { Column } = Table;
 class Process extends React.Component{
@@ -185,7 +186,60 @@ class Process extends React.Component{
             })
         }
     }
+    queryDataFromWeb4=()=>{
+        // 处理任务ID，用户名称，用户所在部门
+        let hashData = ""
+        let searchData = ""
+        let search = ""
+        if (window.location.hash) {
+            hashData = window.location.hash
+            searchData = hashData.split("?")
+            search = searchData[1]
+        } else {
+            search = window.location.search.slice(1)
+        }
+        const searchArr = search.split("&")
+        searchArr.forEach((item)=>{
+            if (item.indexOf("loginName") > -1) {
+                // setUserName(decodeURI(item.split("=")[1]))
+                this.LoginToFlowable(item.split("=")[1])
+            }
+        })
+    }
+
+    // 登录到Flowable
+    LoginToFlowable = (loginName)=>{
+        let obj = reactCookie.loadAll()
+        if (obj.FLOWABLE_REMEMBER_ME && obj.FLOWABLE_REMEMBER_ME !== 'undefined') {
+            return
+        }
+        const myData = {
+            _spring_security_remember_me:true,
+            j_password:"test",
+            j_username: loginName,
+            submit:"Login"
+        }
+        flowableLogin(myData)
+        .then((res)=>{
+            if (res.data.indexOf('FLOWABLE_REMEMBER_ME') < 0) {
+                message.error("流程引擎服务不可用，请联系管理员")
+                return
+            }
+            let resArr = res.data.split(';')
+            let cookieKeyVal = resArr[0]
+            let cookieArr = cookieKeyVal.split('=')
+            reactCookie.save(
+                cookieArr[0],
+                cookieArr[1],
+                { 
+                    path: '/',
+                    expires: new Date(new Date().getTime() + 7 * 24 * 3600 * 1000)
+                }
+            )
+        })
+    }
     componentDidMount() {
+        this.queryDataFromWeb4()
         this.computeHeight()
         let flowName = this.state.name
         if (this.props.location.state) {
@@ -210,7 +264,7 @@ class Process extends React.Component{
                     <Form layout="inline">
                         <Form.Item label="表单名称">
                             {/* <Input placeholder="请输入表单名称" className="input-text-content" allowClear onChange={this.handleProName}/> */}
-                            <Search placeholder="请输入表单名称" value={this.state.name} className="input-text-content" onChange={this.handleChange} onSearch={this.handleSearch} style={{ width: 200 }} />
+                            <Search placeholder="请输入表单名称" value={this.state.name} allowClear className="input-text-content" onChange={this.handleChange} onSearch={this.handleSearch} style={{ width: 200 }} />
                         </Form.Item>
                         {/* <Form.Item>
                             <Button className="localBtnClass" size="small" type="primary" onClick={this.getData}>查询</Button>

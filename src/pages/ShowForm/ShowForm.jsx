@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import FormRender from 'form-render/lib/antd';
 import './ShowForm.less'
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { GetFormJson } from '../../apis/process'
 import FormRenderWidgets from '../../libs/FormRenderWidgets/FormRenderWidgets'
 
@@ -22,8 +22,10 @@ const ShowForm = (props) => {
         const id = props.location.state.id
         GetFormJson(id)
         .then((res)=>{
-            if (res.status === 200) {
+            if (res.data && res.data !== '未将对象引用设置到对象的实例。') {
                 setSchema(JSON.parse(res.data))
+            } else {
+                message.error(res.data || '系统错误，请联系管理员')
             }
         })
     }

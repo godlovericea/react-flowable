@@ -603,6 +603,8 @@ const NeedToDeal = (props) => {
                     setFileTableData(arr)
                 }
                 setFileVisible(true)
+            } else {
+                message.error(res.data.errMsg)
             }
         })
     }
@@ -784,7 +786,7 @@ const NeedToDeal = (props) => {
             <div className="divider-box"></div>
             <Modal title="请选择候选人" visible={nextPersonVisible} onCancel={closeNextPersonModeler} onOk={sureNextPersonModeler} width={650}>
                 <div>
-                    <Search placeholder="请输入姓名" onSearch={onTransferSearch} enterButton className="cadidateinput"/>
+                    <Search placeholder="请输入姓名" allowClear onSearch={onTransferSearch} enterButton className="cadidateinput"/>
                     {
                         assigneeList.map((item, index)=>{
                             return(

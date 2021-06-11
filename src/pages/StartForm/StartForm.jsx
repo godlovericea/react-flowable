@@ -448,7 +448,7 @@ const StartForm = (props) => {
             </div>
             <Modal title="请选择候选人" visible={nextPersonVisible} onCancel={closeNextPersonModeler} onOk={sureNextPersonModeler} width={650}>
                 <div>
-                    <Search placeholder="请输入姓名" onSearch={onTransferSearch} enterButton />
+                    <Search placeholder="请输入姓名" onSearch={onTransferSearch} enterButton allowClear/>
                     {
                         assigneeList.map((item, index)=>{
                             return(

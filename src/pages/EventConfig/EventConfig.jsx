@@ -215,7 +215,7 @@ class EventConfig extends React.Component {
                         </Form.Item>
                         <Form.Item label="流程名称">
                             {/* <Input type="text" placeholder="请输入流程名称" className="input-text-content" allowClear onChange={this.getInput}></Input> */}
-                            <Search placeholder="请输入流程名称" className="input-text-content" onSearch={this.getData} style={{ width: 200 }} />
+                            <Search placeholder="请输入流程名称" allowClear className="input-text-content" onSearch={this.getData} style={{ width: 200 }} />
                         </Form.Item>
                         {/* <Form.Item>
                             <Button className="localBtnClass" size="small" type="primary" className="table-oper-btn" onClick={this.getData}>查询</Button>

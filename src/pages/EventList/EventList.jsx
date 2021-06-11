@@ -207,6 +207,7 @@ const EventList = (props) => {
                             className="input-text-content"
                             placeholder="请输入事件名称"
                             value={eventName}
+                            allowClear
                             onChange={handleOnChange}
                             onSearch={onSearch}
                             style={{width: 200}}

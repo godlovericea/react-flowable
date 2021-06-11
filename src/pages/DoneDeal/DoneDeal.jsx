@@ -293,6 +293,8 @@ const NeedToDeal = (props) => {
                     setFileTableData(arr)
                 }
                 setFileVisible(true)
+            } else {
+                message.error(res.data.errMsg)
             }
         })
     }

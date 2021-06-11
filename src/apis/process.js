@@ -348,9 +348,9 @@ export function getUserListForRole(){
 }
 
 // 台账的表查询
-export function GetAccountPageList(pageIndex, pageSize, accountName, info){
+export function GetAccountPageList(accountName, info){
     return request({
-        url: `/GetAccountPageList?pageIndex=${pageIndex}&pageSize=${pageSize}&sortFields=录入时间&direction=desc&accountName=${accountName}&info=${info}`,
+        url: `/GetAccountPageList?pageIndex=${1}&pageSize=${1000}&sortFields=录入时间&direction=desc&accountName=${accountName}&info=${info}`,
         method: 'get'
     })
 }

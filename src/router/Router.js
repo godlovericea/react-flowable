@@ -24,7 +24,8 @@ import EventStartPage from '../pages/EventStartPage/EventStartPage'// 事件发�
 import EventOnDealList from '../pages/EventOnDealList/EventOnDealList'// 在办事件
 import EventOperation from '../pages/EventOperation/EventOperation'// 操作在办事件
 import ProductInfo from '../components/ProductInfo/ProductInfo'// 操作在办事件
-import ExtraForm from '../pages/ExtraForm/ExtraForm'// 台账选择器测试
+import ExtraForm from '../pages/ExtraForm/ExtraForm'// 外接表单管理
+// import TableAccount from '../components/TableAccount/TableAccount'// 台账选择器测试
 
 import {Switch, Route, Redirect} from 'react-router-dom'
 
@@ -58,6 +59,7 @@ function MyRouter(){
             <Route exact path="/form-render/eventoper" component={EventOperation}/>
             <Route exact path="/form-render/extraform" component={ExtraForm}/>
             <Route exact path="/form-render/product" component={ProductInfo}/>
+            {/* <Route exact path="/form-render/table" component={TableAccount}/> */}
             <Redirect to="/form-render/home"></Redirect>
         </Switch>
     )

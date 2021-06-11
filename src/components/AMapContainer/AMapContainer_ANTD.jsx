@@ -77,6 +77,7 @@ class AMapContainer extends React.Component{
                         <Search
                             addonBefore="请输入关键字搜索"
                             placeholder="请输入地址"
+                            allowClear
                             onSearch={this.onSearch}
                             style={{width: 500}}
                         />

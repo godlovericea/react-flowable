@@ -1,6 +1,0 @@
-export const TEXT_INPUT = "文本"
-export const DATE_RANGE = "日期"
-export const DATETIME_RANGE = "时间日期"
-export const SELECT_ONLY = "选择器"
-export const SELECT_STAFF = "人员选择器"
-export const SELECT_COM = "分公司选择器"

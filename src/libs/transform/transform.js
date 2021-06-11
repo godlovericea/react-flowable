@@ -96,6 +96,9 @@ class FormTransfer {
             } else if (shape === "值选择器") {
                 objKey = `selecValtName_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.hanldeValueSelect(itemObj)
+            } else if (shape === "值复选器") {
+                objKey = `valueMultiSelect_${i}_${itemObj.Alias}`
+                obj[objKey] = await this.hanldeValueMultiSelect(itemObj)
             } else if (shape === "搜索选择器") {
                 objKey = `selectSearchName_${i}_${itemObj.Alias}`
                 obj[objKey] = await this.hanldeSearchSelect(itemObj)
@@ -129,39 +132,21 @@ class FormTransfer {
             obj.required = false
             return obj
         }
-        // 如果只有一条校验规则
-        if (ValidateRule.indexOf(',') < 0) {
-            if (ValidateRule.indexOf(':') > -1) {
-                let maxLengthArr = ValidateRule.split(':')
-                if (maxLengthArr[0] === 'maxlength') {
-                    obj.minLength = 0
-                    obj.maxLength = parseInt(maxLengthArr[1])
-                }
-            } else if (ValidateRule.indexOf(':') < 0) {
-                if (ValidateRule === 'required') {
-                    obj.required = true
-                } else {
-                    obj.required = false
-                }
-            }
+        // 处理必填
+        if (ValidateRule.indexOf("required") > -1) {
+            obj.required = true
         } else {
-            let arr = ValidateRule.split(',')
-            arr.forEach((item)=>{
-                if (item.indexOf(':') > -1) {
-                    let maxLengthArr = item.split(':')
-                    if (maxLengthArr[0] === 'maxlength') {
-                        obj.minLength = 0
-                        obj.maxLength = parseInt(maxLengthArr[1])
-                    }
-                } else {
-                    if (item === "required") {
-                        obj.required = true
-                    } else {
-                        obj.required = false
-                    }
-                }
-            })
+            obj.required = false
         }
+
+        // 处理maxlength类型
+        // maxlength类型不在校验规则中，该类型校验来自于数据库约束，例varchar(50)
+        if (ValidateRule.indexOf("maxlength") > -1) {
+            let maxLengthArr = ValidateRule.split(':')
+            obj.minLength = 0
+            obj.maxLength = parseInt(maxLengthArr[1])
+        }
+        
         return obj
     }
 
@@ -200,12 +185,13 @@ class FormTransfer {
             }
         }
     }
-    // 数字输入框
+    // 数字输入框 //FormRender存在bug，数值类型输入框，不支持前后Tab，添加属性也不生效，故此采用string类型
     handleNumberInput(dataObj){
         const { required } = this.handlePattern(dataObj.ValidateRule)
         return {
             title:dataObj.Alias,
-            type: "number",
+            type: "string",
+            // type: "number", // FormRender存在bug，数值类型输入框，不支持前后Tab，添加属性也不生效，故此采用string类型
             default: Number(dataObj.PresetValue) || 0,
             pattern: required ?  `^.{0,13}$` : "",
             message: {
@@ -287,6 +273,29 @@ class FormTransfer {
             message: {
                 pattern: "必填项"
             }
+        }
+    }
+    // 值复选器
+    hanldeValueMultiSelect(dataObj) {
+        if (!dataObj.ConfigInfo) {
+            return
+        }
+        const { required } = this.handlePattern(dataObj.ValidateRule)
+        let myOptions = dataObj.ConfigInfo.split(',')
+        return {
+            title: dataObj.Alias,
+            type: "array",
+            enum: myOptions,
+            enumNames: myOptions,
+            items: {
+                type: "string"
+            },
+            // default: dataObj.PresetValue,
+            pattern: required ? "^.{1,30}$" : "",
+            message: {
+                pattern: "必填项"
+            },
+            "ui:widget": "multiSelect"
         }
     }
     // 搜索选择器
@@ -392,14 +401,23 @@ class FormTransfer {
     }
     // 台账选择器
     handleTableAccount(dataObj){
-        // console.log(dataObj)
+        const str = dataObj.ConfigInfo
+        const strArr = str.split(".")
+        const name = strArr[0]
+        let value = ""
+        if (strArr[1].indexOf("|") > -1) {
+            value = strArr[1].split("|")[0]
+        } else {
+            value = strArr[1]
+        }
         const { required } = this.handlePattern(dataObj.ValidateRule)
         return {
             title: dataObj.Alias,
             type: "string",
-            "ui:widget": "table",
+            "ui:widget": "TableAccount",
             "ui:options": {
-                value: dataObj.ConfigInfo
+                accName: name,
+                accValue: value
             },
             pattern: required ? "^.{1,100}$" : "",
             message: {
@@ -412,7 +430,6 @@ class FormTransfer {
         // console.log(objData)
         let requireList = []
         for(let ckey in objData) {
-            
             if (objData[ckey].pattern && objData[ckey].pattern !== "") {
                 if (objData[ckey].enum && objData[ckey].enum.length === 0) {
                     continue
