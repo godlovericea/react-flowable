@@ -187,26 +187,6 @@ const customizeSetting = {
             },
         },
         {
-            text: '日期时间',
-            name: 'DateTimePicker',
-            schema: {
-                title: '日期时间',
-                type: 'string',
-                'ui:widget': 'DateTimePicker',
-            },
-            widget: 'DateTimePicker',
-            setting: {
-                fieldData: {
-                    title: "数据字典",
-                    type: 'string'
-                },
-                isRequired: {
-                    title: '必填',
-                    type: 'boolean'
-                }
-            },
-        },
-        {
             text: '编码生成器',
             name: 'CodeGenerator',
             schema: {
@@ -273,7 +253,6 @@ const validArr = [
 defaultSettings.forEach((item)=>{
     if (item.title === "基础组件") {
         item.widgets.forEach((cItem)=>{
-            
             if (cItem.setting.hasOwnProperty('pattern')){
                 let namesArr = []
                 let valArr = []
@@ -284,6 +263,7 @@ defaultSettings.forEach((item)=>{
                 }
                 cItem.setting.pattern.enumNames = namesArr
                 cItem.setting.pattern.enum = valArr
+
             }
         })
     }
@@ -304,10 +284,6 @@ defaultSettings.forEach((item) => {
         }
     })
 })
-
-// defaultSettings[0].widgets[3].setting["ui:options"] = defaultSettings[0].widgets[0].setting["ui:options"]
-
-console.log(defaultSettings)
 
 let settings = defaultSettings.push(customizeSetting)
 

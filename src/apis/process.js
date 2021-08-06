@@ -37,7 +37,7 @@ export function CreateModel (cookie, data) {
 // 查询表单列表
 export function GetFormListInfo (FormName, pageIndex, pageSize) {
     return request({
-        url: `/GetFormListInfo?FormName=${FormName}&pageIndex=${pageIndex}&pageSize=${pageSize}&sortFields=created&direction=desc`,
+        url: `/GetFormListInfo_WithoutForm?FormName=${FormName}&pageIndex=${pageIndex}&pageSize=${pageSize}&sortFields=created&direction=desc`,
         method: 'get'
     })
 }

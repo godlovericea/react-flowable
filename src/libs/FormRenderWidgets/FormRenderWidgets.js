@@ -14,7 +14,7 @@ import CodeGenerator from '../../components/CodeGenerator/CodeGenerator' // ç¼–ç
 
 const FormRenderWidgets = {
     staff: StaffSelectWidget,
-    cascader: TreeCascader,
+    customizeSelect: TreeCascader,
     search: SearchSelect,
     TableAccount: TableAccount,
     file: UploadFile,

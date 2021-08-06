@@ -23,7 +23,6 @@ const FormRenderTrans=(props)=>{
                 const dataArr = res.data.getMe[0].Groups
                 let formTransfer = new FormTransfer(dataArr)
                 let schema =await formTransfer.handleGroup()
-                console.log(schema)
                 setSchema(schema)
                 props.handleSchema(schema)
             } else {

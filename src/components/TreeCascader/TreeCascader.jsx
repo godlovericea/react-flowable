@@ -1,82 +1,70 @@
 import React from 'react'
 import {getSelectName} from '../../apis/process'
-import { TreeSelect } from 'antd';
+import { message, Select } from 'antd';
+const { Option } = Select;
 
 class Demo extends React.Component {
     state = {
-        routeParams: '所在分公司.所在大区',
         value: undefined,
         treeData: [],
+        placeholderText: ''
     };
 
-    genTreeNode = (parentId, id, title, isLeaf = false) => {
-        return {
-            id,
-            pId: parentId,
-            title,
-            isLeaf,
-        };
-    };
-
-    onLoadData = treeNode =>
-        new Promise(resolve => {
-            let routeArr= this.state.routeParams.split('.')
-            const { id } = treeNode.props;
-            let len = treeNode.pos.split('-')
-            let clickIndex = len.length - 1
-            // console.log(treeNode)
-            getSelectName(routeArr[clickIndex])
-            .then((res)=>{
-                res.data.forEach((item)=>{
-                    if (item.NODENAME === treeNode.value) {
-                        this.setState({
-                            treeData: this.state.treeData.concat([
-                                this.genTreeNode(id, item.NODEVALUE, item.NODEVALUE)
-                            ])
-                        })
-                    }
-                })
-                resolve();
-            })
-        });
-
-    onChange = value => {
-        // console.log(value);
-        this.setState({ value });
-        this.props.onChange(this.props.name, value)
-    };
     getFirstNode=()=>{
-        let arr = this.state.routeParams.split('.')
-        getSelectName(arr[0])
-        .then((res)=>{
-            let firArr = []
-            res.data.forEach((item)=>{
-                firArr.push({
-                    id: item.NODEVALUE, pId: 0, value: item.NODEVALUE, title: item.NODENAME, isLeaf: false
-                })
+        let firstName = ""
+        let lastName = ""
+        let arr = []
+        if (this.props.options.firstName && this.props.options.lastName) {
+            firstName = this.props.options.firstName
+            lastName = this.props.options.lastName
+            getSelectName(lastName)
+            .then((res)=>{
+                if (res.data.length > 0) {
+                    arr = res.data
+                    this.setState({
+                        treeData: arr,
+                        placeholderText: `请根据${firstName}的值，选择${lastName}`
+                    })
+                } else {
+                    message.error("台账联动字段配置错误，请联系管理员！")
+                }
             })
-            this.setState({
-                treeData: firArr
-            })
-        })
+        } else {
+            message.error("台账联动字段配置错误，请联系管理员！")
+            return
+        }
     }
+
+    handleChange=(val)=> {
+        this.props.onChange(this.props.name, val)
+    }
+    
     componentDidMount(){
         this.getFirstNode()
     }
 
     render() {
-        const { treeData } = this.state;
         return (
-            <TreeSelect
-                treeDataSimpleMode
-                style={{ width: '100%' }}
-                value={this.state.value}
-                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                placeholder="Please select"
-                onChange={this.onChange}
-                loadData={this.onLoadData}
-                treeData={treeData}
-            />
+            <Select 
+                style={{ width: '100%' }} 
+                placeholder={this.state.placeholderText} 
+                onChange={this.handleChange}
+                defaultValue={this.props.value}
+                optionLabelProp="label">
+                {
+                    this.state.treeData.map((item)=>{
+                        return (
+                            <Option value={item.NODEVALUE} key={item.NODEID}>
+                                <div className="demo-option-label-item">
+                                    <span role="img" aria-label="China">
+                                        {`${item.NODENAME}(${item.NODEVALUE})`}
+                                    </span>
+                                </div>
+                            </Option>
+                        )
+                    })   
+                }
+            </Select>
         );
     }
 }

@@ -36,7 +36,7 @@ class FormTransfer {
                 properties: obj
             },
             displayType: "row",
-            showDescIcon: false,
+            showDescIcon: true,
             column: this.column,
             labelWidth: 80
         }
@@ -72,8 +72,9 @@ class FormTransfer {
                 obj[objKey] = await this.handleDateTime(itemObj)
             } else if (shape === "选择器") {
                 if (ConfigInfo.indexOf('.') > -1) {
-                    objKey = `selectTreeNode_${i}_${ConfigInfo}`
-                    obj[objKey] = await this.hanldeSelectTreeNode(name)
+                    const str = ConfigInfo.split(".")[1]
+                    objKey = `selectTreeNode_${i}_${str}`
+                    obj[objKey] = await this.hanldeSelectTreeNode(itemObj)
                 } else {
                     objKey = `selectName_${i}_${itemObj.Alias}`
                     obj[objKey] = await this.hanldeSelect(itemObj)
@@ -478,12 +479,21 @@ class FormTransfer {
         return obj
     }
 
-    // 多级联动
-    hanldeSelectTreeNode(name){
+    // 二级联动
+    hanldeSelectTreeNode(dataObj){
+        const str = dataObj.ConfigInfo
+        const strArr = str.split(".")
+        const firstName = strArr[0]
+        const lastName= strArr[1]
         return {
-            title: name,
+            title: dataObj.Alias,
             type: "string",
-            "ui:widget": "cascader"
+            "ui:widget": "customizeSelect",
+            "description": `请根据${firstName}的值，选择${lastName}`,
+            "ui:options": {
+                firstName: firstName,
+                lastName: lastName
+            },
         }
     }
 

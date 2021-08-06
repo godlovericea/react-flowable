@@ -81,6 +81,7 @@ const StaffSelect =(props)=> {
                 <Search
                     placeholder="请输入姓名"
                     allowClear
+                    className="personModalSearchClass"
                     onSearch={onSearch}
                     enterButton 
                 />

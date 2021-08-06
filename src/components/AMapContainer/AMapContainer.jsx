@@ -11,17 +11,17 @@ class AMapContainer extends React.Component{
     }
 
     componentDidMount(){
-        // console.log(this.props)
         
         this.setState({
             pos: this.props.value
         })
         
         window.addEventListener("message", e=>{
-            // console.log(e.data.position)
+            console.log(e.data.position, "e.data.position")
             this.setState({
                 pos: e.data.position
             }, ()=>{
+                console.log(this.state.pos, "this.state.pos")
                 this.props.onChange(this.props.name, this.state.pos)
             })
         })
