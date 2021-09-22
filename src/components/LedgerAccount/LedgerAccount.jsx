@@ -30,7 +30,7 @@ class LedgerAccount extends React.Component {
               title: '台账名称',
               dataIndex: 'name'
             }
-          ];
+        ];
         let dataArr = []
         result.data.root.forEach((item)=>{
             dataArr.push({
